@@ -1,6 +1,6 @@
 package musify;
 
-import musify.handlers.BiomeMusicConfig;
+import musify.config.BiomeMusicConfig;
 import musify.handlers.PauseEventHandler;
 import musify.proxy.CommonProxy;
 import net.minecraftforge.common.MinecraftForge;
@@ -18,8 +18,8 @@ import java.io.File;
 @Mod(modid = Musify.MODID, version = Musify.VERSION, name = Musify.NAME, clientSideOnly = true)
 public class Musify {
     public static final String MODID = "musify";
-    public static final String VERSION = "Beta 0.1.10";
-    public static final String NAME = "BiomeMusic!";
+    public static final String VERSION = "Beta 1.2.0";
+    public static final String NAME = "Musify!";
     public static final Logger LOGGER = LogManager.getLogger();
 	
     @SidedProxy(clientSide = "musify.proxy.ClientProxy", serverSide = "musify.proxy.CommonProxy")
@@ -34,7 +34,7 @@ public class Musify {
     public void preInit(FMLPreInitializationEvent event) {
 
         File minecraftDir = event.getModConfigurationDirectory().getParentFile();
-        musicFolder = new File(minecraftDir, "biomemusic");
+        musicFolder = new File(minecraftDir, "music");
 
         if (!musicFolder.exists()) {
             musicFolder.mkdirs();

@@ -1,4 +1,4 @@
-package musify.handlers;
+package musify.config;
 
 import musify.Musify;
 import net.minecraft.world.biome.Biome;
@@ -122,7 +122,7 @@ public class BiomeMusicConfig {
 
 		@Config.Name("Vanilla Fade-out")
 		@Config.Comment("Vanilla Music Fade-out Time. Default: 10000 | [INT / MS]")
-		public int vanillaMusicFadeOutTime = 10000;
+		public int vanillaMusicFadeOutTime = 7000;
 
 		@Config.Name("Biome Music Fade-in")
 		@Config.Comment("Custom Music Fade-in Time. Default: 20000 | [INT / MS]")

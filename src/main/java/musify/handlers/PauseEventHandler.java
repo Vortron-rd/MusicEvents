@@ -1,6 +1,6 @@
 package musify.handlers;
 
-import musify.musicplayer.CustomMusicPlayer;
+import musify.Musify;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.*;
 import net.minecraft.client.gui.achievement.GuiStats;
@@ -12,51 +12,64 @@ import net.minecraftforge.fml.common.gameevent.TickEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-import static musify.handlers.MainMenuMusicHandler.isMainMenuMusicPlaying;
-import static musify.handlers.MainMenuMusicHandler.isMainMenuScreen;
-import static musify.musicplayer.CustomMusicPlayer.*;
+import static musify.handlers.BiomeMusicEventHandler.activeMusic;
+import static musify.handlers.BiomeMusicEventHandler.activeTagMusic;
 
-@Mod.EventBusSubscriber
 @SideOnly(Side.CLIENT)
+@Mod.EventBusSubscriber
 public class PauseEventHandler {
 
-    private boolean hasQueueBeenReset = false;
+    private boolean donePause = false;
 
     @SubscribeEvent
     public void onClientTick(TickEvent.ClientTickEvent event) {
         Minecraft mc = Minecraft.getMinecraft();
 
-        if (mc.world == null && !isMainMenuMusicPlaying) {
-            if (CustomMusicPlayer.isMusicPlaying()) {
-                CustomMusicPlayer.stopMusic();
-
+        if (mc.world == null && !MainMenuMusicHandler.isMainMenuMusicPlaying) {
+            if (activeMusic != null) {
+                Musify.LOGGER.debug("TRIED STOPPING BIOME MUSIC FOR MAIN MENU");
+                activeMusic.stop();
+                activeMusic = null;
             }
-            return;
+            if (activeTagMusic != null) {
+                activeTagMusic.stop();
+                activeTagMusic = null;
+            }
         }
 
-        if (isPauseMenuOpen(mc)) {
-            if (CustomMusicPlayer.isMusicPlaying() && !CustomMusicPlayer.isPaused()) {
-                CustomMusicPlayer.pauseMusic();
-            } else if (combatMusicClip != null) {
-                if (combatMusicClip.isRunning() && !CustomMusicPlayer.isPaused()) {
-                    CustomMusicPlayer.pauseCombatMusic();
+        if (isPauseMenuOpen(mc) && !donePause) {
+            Musify.LOGGER.debug("PASSED PAUSE MENU CHECK");
+            if (activeMusic != null) {
+                Musify.LOGGER.debug("PASSED NULL CHECK");
+                if (!activeMusic.isPaused()) {
+                    Musify.LOGGER.debug("PAUSING MUSIC");
+                    activeMusic.pause();
                 }
             }
-        } else {
-
-            if (CustomMusicPlayer.isPaused() && !isMainMenuScreen(mc)) {
-                if (!CustomMusicPlayer.isFading && !isSilent) {
-                    CustomMusicPlayer.adjustVolume();
+            if (activeTagMusic != null) {
+                if (!activeTagMusic.isPaused()) {
+                    activeTagMusic.pause();
                 }
-                CustomMusicPlayer.resumeMusic();
-            } else if (CustomMusicPlayer.isPaused() && isMainMenuScreen(mc)) {
-                if (!CustomMusicPlayer.isFading && !isSilent) {
-                    CustomMusicPlayer.adjustVolume();
-                }
-                resumeMusic();
             }
+            donePause = true;
+        } else if (donePause && !isPauseMenuOpen(mc)) {
+            if (activeMusic != null) {
+                if (activeMusic.isPaused()) {
+                    activeMusic.adjustVolume();
+                    activeMusic.resume();
+                }
+            }
+            if (activeTagMusic != null) {
+                if (activeTagMusic.isPaused()) {
+                    activeTagMusic.adjustVolume();
+                    activeTagMusic.resume();
+                }
+            }
+            donePause = false;
         }
     }
+
+
 
     private boolean isPauseMenuOpen(Minecraft mc) {
         if (mc.currentScreen == null) {
@@ -90,5 +103,4 @@ public class PauseEventHandler {
 
         return isKnownPauseMenu;
     }
-
 }

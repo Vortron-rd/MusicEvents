@@ -1,4 +1,4 @@
-package musify.handlers;
+package musify.config;
 
 import musify.Musify;
 import net.minecraftforge.fml.relauncher.Side;
@@ -17,7 +17,7 @@ public class MusicFileHandler {
         File folder = Musify.musicFolder;
 
         if (folder != null && folder.exists() && folder.isDirectory()) {
-            File[] files = folder.listFiles((dir, name) -> name.toLowerCase().endsWith(".ogg"));
+            File[] files = folder.listFiles((dir, name) -> name.toLowerCase().endsWith(".mp3"));
 
             if (files != null) {
                 for (File file : files) {

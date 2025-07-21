@@ -3,6 +3,7 @@ package musify.handlers;
 import musify.Musify;
 import musify.config.BiomeMusicConfig;
 import musify.musicplayer.MusicPlayer;
+import musify.utils.TargetingUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.audio.ISound;
 import net.minecraft.client.audio.MusicTicker;
@@ -25,8 +26,10 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import java.lang.reflect.Field;
 import java.util.*;
 
-import static musify.config.BiomeMusicConfig.adambientMode;
-import static musify.config.BiomeMusicConfig.fadeOptions;
+import static musify.config.BiomeMusicConfig.*;
+import static musify.handlers.HandleCombatMusic.*;
+import static musify.handlers.HandleUndergroundMusic.handleUndergroundMusic;
+import static musify.handlers.HandleUndergroundMusic.isUndergroundMusicPlaying;
 
 @SideOnly(Side.CLIENT)
 @Mod.EventBusSubscriber
@@ -49,9 +52,10 @@ public class BiomeMusicEventHandler {
     private static EntityPlayer player;
     private static final Random random = new Random();
     private static int tickCounter = 0;
-    private static boolean isVanillaMusicFading = false;
+    public static boolean isVanillaMusicFading = false;
 
     private static net.minecraft.world.World lastWorld = null;
+    private static int aggroCounter = 0;
 
     /**
      * Handles the player tick event to manage biome music.
@@ -69,7 +73,6 @@ public class BiomeMusicEventHandler {
             player = event.player;
         }
 
-        tickCounter++;
 
         if (fadeOptions.pollingRate == 0) {
             if (tickCounter % 1000 == 0) {
@@ -78,13 +81,79 @@ public class BiomeMusicEventHandler {
             return;
         }
 
-        if (tickCounter % fadeOptions.pollingRate == 0 && event.player != null && event.player.world != null) {
+        tickCounter++;
+        if (aggroCounter > 0) {
+            aggroCounter--;
 
+            if (tickCounter % (fadeOptions.pollingRate / 4) == 0 && event.player != null && event.player.world != null) {
+                int aggrocount = TargetingUtils.countMobsTargetingPlayer(event.player, combatOptions.combatRadius);
+                if (aggrocount >= combatOptions.combatStopNumber) {
+                    aggroCounter = 400;
+                }
+            }
+            if (isCombatMusicPlaying()) {
+                if (!isVanillaMusicFading) {
+                    stopVanillaMusic();
+                }
+                return;
+            }
+
+            return;
+        }
+
+
+        if (tickCounter % fadeOptions.pollingRate == 0 && event.player != null && event.player.world != null && aggroCounter == 0 && !isCombatMusicFading) {
+
+            // COMBAT MUSIC HANDLING
+            if (combatOptions.enableCombatMusic && !isAllFading()) {
+                int aggrocount = TargetingUtils.countMobsTargetingPlayer(event.player, combatOptions.combatRadius);
+                if (aggrocount >= combatOptions.combatStartNumber) {
+                    aggroCounter = 400;
+                    handleCombatMusic();
+                    return;
+                }
+            }
+            if (isCombatMusicPlaying() && !isCombatMusicFading) {
+                if (getCombatMusicPlayer() != null && getCombatMusicPlayer().isPlaying()) {
+                    getCombatMusicPlayer().fadeOut(7500);
+                    setCombatMusicPlaying(false);
+                } else if (getCombatMusicPlayer() != null && !getCombatMusicPlayer().isPlaying()) {
+                    getCombatMusicPlayer().stop();
+                    setCombatMusicPlaying(false);
+                    combatMusicPlayer = null;
+                }
+                if (activeMusic != null && !activeMusic.isFading() && activeMusic.isPaused()) {
+                    activeMusic.resumeWithFadeIn(8500);
+                    return;
+                }
+                else if (activeTagMusic != null && !activeTagMusic.isFading() && activeTagMusic.isPaused()) {
+                    activeTagMusic.resumeWithFadeIn(8500);
+                    return;
+                }
+            }
+
+            if (event.player.world != null && event.player.posY <= cpundergroundOptions.undergroundMusicYLevelStart && event.player.world.provider.getDimension() == 0 && !isUndergroundMusicPlaying) {
+                handleUndergroundMusic();
+                return;
+            }
+            if (isUndergroundMusicPlaying && event.player.world != null && event.player.posY <= cpundergroundOptions.undergroundMusicYLevelStop && event.player.world.provider.getDimension() == 0) {
+                return;
+            } else {
+                isUndergroundMusicPlaying = false;
+            }
+
+            // BIOME MUSIC HANDLING
             BlockPos pos = event.player.getPosition();
             Biome biome = event.player.world.getBiome(pos);
             handleBiomeMusic(biome);
-
+            stopVanillaMusic();
         }
+    }
+
+    public static boolean isAllFading() {
+        boolean activeMusicFading = activeMusic != null && activeMusic.isFading();
+        boolean activeTagMusicFading = activeTagMusic != null && activeTagMusic.isFading();
+        return activeMusicFading || activeTagMusicFading;
     }
 
     @SideOnly(Side.CLIENT)
@@ -101,7 +170,8 @@ public class BiomeMusicEventHandler {
 
             if (musicFile != null && !configSet.equals("default_music") && !BiomeDictionary.hasType(biome, BiomeDictionary.Type.RIVER)) {
                 Musify.LOGGER.debug("PASSED BIOME SPECIFIC MUSIC CHECK");
-                if (activeMusic != null && !isMusicBiomeCorrect(currentMusicFile, configSet)) {
+                // specific music not null, tag null
+                if (activeMusic != null && !isMusicBiomeCorrect(currentMusicFile, configSet) && !activeMusic.isFading() && activeTagMusic == null) {
                     Musify.LOGGER.debug("PASSED NON NULL CHECK AND CORRECT CHECK");
                     if (activeTagMusic != null) {
                         activeTagMusic.stopWithFadeOut(12500);
@@ -109,21 +179,33 @@ public class BiomeMusicEventHandler {
                     }
                     activeMusic.stopWithFadeOut(12500);
                     Musify.LOGGER.debug("ACTIVE MUSIC NOT NULL, PLAYING NEW MUSIC: {}", musicFile);
-                    activeMusic = new MusicPlayer(musicFile);
+                    activeMusic = new MusicPlayer(musicFile, false);
                     currentMusicFile = musicFile;
                     activeMusic.playWithFadeIn(15000);
-                } else if (activeMusic == null) {
-                    activeMusic = new MusicPlayer(musicFile);
+                }
+                //specific music null, tag not null
+                else if (activeMusic == null && activeTagMusic != null && !activeTagMusic.isFading()) {
+                    activeMusic = new MusicPlayer(musicFile, false);
                     currentMusicFile = musicFile;
                     activeMusic.playWithFadeIn(15000);
                     fadeOutVanillaMusic();
-                    Musify.LOGGER.debug("ACTIVE MUSIC NULL, PLAYING NEW MUSIC: {}", musicFile);
+                    Musify.LOGGER.debug("ACTIVE MUSIC NULL AND TAG NOT NULL, PLAYING NEW MUSIC: {}", musicFile);
                     if (activeTagMusic != null) {
                         activeTagMusic.stopWithFadeOut(12500);
                         activeTagMusic = null;
                     }
                 }
-
+                // specific music null, tag null
+                else if (activeMusic == null && activeTagMusic == null) {
+                    activeMusic = new MusicPlayer(musicFile, false);
+                    currentMusicFile = musicFile;
+                    activeMusic.playWithFadeIn(15000);
+                    fadeOutVanillaMusic();
+                    Musify.LOGGER.debug("ACTIVE MUSIC NULL, PLAYING NEW MUSIC: {}", musicFile);
+                }
+                if (activeTagMusic != null && activeTagMusic.isPlaying() && !isVanillaMusicFading) {
+                    stopVanillaMusic();
+                }
             } else {
                 // getting the biome and checking the config
                 Set<BiomeDictionary.Type> biomeTags = BiomeDictionary.getTypes(biome);
@@ -146,37 +228,38 @@ public class BiomeMusicEventHandler {
                             possibleSongs.addAll(Arrays.asList(songList));
                         }
 
-                        if (activeTagMusic == null) {
-                            if (activeMusic != null && activeMusic.isPlaying()) {
-                                activeMusic.stopWithFadeOut(12500);
-                            }
-                            activeTagMusic = new MusicPlayer(randomTagMusicFile);
-                            activeTagMusic.playWithFadeIn(15000);
+                        if (activeTagMusic == null && activeMusic != null && !activeMusic.isFading() && !possibleSongs.contains(activeMusic.getFileName())) {
+                            FadeOutActiveMusicAndPlayNew(musicFile, randomTagMusicFile);
+                        }
+                        else if (activeTagMusic != null && activeMusic != null && (!activeTagMusic.isPlaying() || !possibleSongs.contains(activeTagMusic.getFileName())) && !activeTagMusic.isFading() && !activeMusic.isFading()) {
+                            FadeOutActiveMusicAndPlayNew(musicFile, randomTagMusicFile);
+                        }
+                        else if (activeMusic == null && activeTagMusic == null) {
+                            activeTagMusic = new MusicPlayer(randomTagMusicFile, false);
                             currentMusicFile = musicFile;
-                            if (!isVanillaMusicFading && !adambientMode) {
-                                fadeOutVanillaMusic();
-                            }
-                        } else if (!activeTagMusic.isPlaying() || !possibleSongs.contains(activeTagMusic.getFileName())) {
-                            if (activeMusic != null && activeMusic.isPlaying()) {
-                                activeMusic.stopWithFadeOut(12500);
-                            }
-                            activeTagMusic = new MusicPlayer(randomTagMusicFile);
                             activeTagMusic.playWithFadeIn(15000);
+                            Musify.LOGGER.debug("ACTIVE MUSIC NULL, PLAYING NEW TAG MUSIC: {}", randomTagMusicFile);
+                            fadeOutVanillaMusic();
+                        }
+                        else if (activeTagMusic != null && activeMusic == null && !activeTagMusic.isFading() && !possibleSongs.contains(activeTagMusic.getFileName())) {
+                            Musify.LOGGER.debug("ACTIVE TAG MUSIC NOT NULL, PLAYING NEW TAG MUSIC: {}", randomTagMusicFile);
+                            activeTagMusic.stopWithFadeOut(12500);
+                            activeTagMusic = new MusicPlayer(randomTagMusicFile, false);
                             currentMusicFile = musicFile;
-                            if (!isVanillaMusicFading && !adambientMode) {
-                                fadeOutVanillaMusic();
-                            }
+                            activeTagMusic.playWithFadeIn(15000);
+                            fadeOutVanillaMusic();
                         }
                         if (!isVanillaMusicFading && activeTagMusic != null && !adambientMode) {
                             stopVanillaMusic();
                         }
                     } else {
                         Musify.LOGGER.debug("FAILD DEFAULT CHECK BIOME TAGS");
-                        if (activeTagMusic != null && activeTagMusic.isPlaying()) {
+                        if (activeTagMusic != null && activeTagMusic.isPlaying() && !activeTagMusic.isFading()) {
                             Musify.LOGGER.debug("PASSED TAG MUSIC CHECK");
                             activeTagMusic.stopWithFadeOut(12500);
+                            activeTagMusic = null;
                         }
-                        if (activeMusic != null) {
+                        if (activeMusic != null && activeMusic.isPlaying() && !activeMusic.isFading()) {
                             activeMusic.stopWithFadeOut(15000);
                             activeMusic = null;
                         }
@@ -192,6 +275,19 @@ public class BiomeMusicEventHandler {
         }
     }
 
+    private static void FadeOutActiveMusicAndPlayNew(String musicFile, String randomTagMusicFile) {
+        if (activeMusic != null && activeMusic.isPlaying()) {
+            activeMusic.stopWithFadeOut(12500);
+            activeMusic = null;
+        }
+        activeTagMusic = new MusicPlayer(randomTagMusicFile, false);
+        activeTagMusic.playWithFadeIn(15000);
+        currentMusicFile = musicFile;
+        if (!isVanillaMusicFading && !adambientMode) {
+            fadeOutVanillaMusic();
+        }
+    }
+
 // ----------------------- VANILLA MUSIC STUFF -----------------------
 
     /**
@@ -199,7 +295,10 @@ public class BiomeMusicEventHandler {
      * This method retrieves the current music from the MusicTicker and fades it out.
      */
     @SideOnly(Side.CLIENT)
-    private static void fadeOutVanillaMusic() {
+    public static void fadeOutVanillaMusic() {
+        if (isVanillaMusicFading || Minecraft.getMinecraft().world == null) {
+            return;
+        }
         try {
             isVanillaMusicFading = true;
             Minecraft mc = Minecraft.getMinecraft();

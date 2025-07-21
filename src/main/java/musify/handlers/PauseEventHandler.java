@@ -14,6 +14,8 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 import static musify.handlers.BiomeMusicEventHandler.activeMusic;
 import static musify.handlers.BiomeMusicEventHandler.activeTagMusic;
+import static musify.handlers.HandleCombatMusic.getCombatMusicPlayer;
+import static musify.handlers.HandleCombatMusic.isCombatMusicPlaying;
 
 @SideOnly(Side.CLIENT)
 @Mod.EventBusSubscriber
@@ -51,18 +53,29 @@ public class PauseEventHandler {
                     activeTagMusic.pause();
                 }
             }
+            if (getCombatMusicPlayer() != null) {
+                getCombatMusicPlayer().pause();
+            }
             donePause = true;
         } else if (donePause && !isPauseMenuOpen(mc)) {
             if (activeMusic != null) {
-                if (activeMusic.isPaused()) {
-                    activeMusic.adjustVolume();
+                if (activeMusic.isPaused() && !isCombatMusicPlaying()) {
                     activeMusic.resume();
+                    activeMusic.adjustVolume();
                 }
             }
             if (activeTagMusic != null) {
-                if (activeTagMusic.isPaused()) {
-                    activeTagMusic.adjustVolume();
+                if (activeTagMusic.isPaused() && !isCombatMusicPlaying()) {
                     activeTagMusic.resume();
+                    activeTagMusic.adjustVolume();
+                }
+            }
+            if (getCombatMusicPlayer() != null) {
+                if (getCombatMusicPlayer().isPaused()) {
+                    getCombatMusicPlayer().resume();
+                    if (isCombatMusicPlaying()) {
+                        getCombatMusicPlayer().adjustVolume();
+                    }
                 }
             }
             donePause = false;

@@ -100,7 +100,7 @@ public class MainMenuMusicHandler {
             mainMenuMusicPlayer.stop();
         }
 
-        mainMenuMusicPlayer = new musify.musicplayer.MusicPlayer(mainMenuMusic);
+        mainMenuMusicPlayer = new musify.musicplayer.MusicPlayer(mainMenuMusic, false);
         mainMenuMusicPlayer.play();
 
         isMainMenuMusicPlaying = true;

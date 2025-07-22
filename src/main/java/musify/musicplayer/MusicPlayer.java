@@ -301,6 +301,9 @@ public class MusicPlayer implements Runnable {
         new Thread(() -> {
             try {
                 isFading = true;
+                if (this.isCombatMusic) {
+                    HandleCombatMusic.isCombatMusicFading = true;
+                }
                 int steps = 50;
                 long sleep = fadeMillis / steps;
                 for (int i = 1; i <= steps && playing && !paused; i++) {
@@ -312,6 +315,9 @@ public class MusicPlayer implements Runnable {
             } catch (InterruptedException ignored) {
             } finally {
                 isFading = false;
+                if (this.isCombatMusic) {
+                    HandleCombatMusic.isCombatMusicFading = false;
+                }
             }
         }, "MusicPlayer-ResumeFadeIn-" + mp3File.getName()).start();
     }

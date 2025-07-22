@@ -3,6 +3,8 @@ package musify.handlers;
 import musify.Musify;
 import musify.config.BiomeMusicConfig;
 import musify.musicplayer.MusicPlayer;
+import musify.utils.BossTargetUtils;
+import musify.utils.JukeboxUtils;
 import musify.utils.TargetingUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.audio.ISound;
@@ -30,11 +32,14 @@ import static musify.config.BiomeMusicConfig.*;
 import static musify.handlers.HandleCombatMusic.*;
 import static musify.handlers.HandleUndergroundMusic.handleUndergroundMusic;
 import static musify.handlers.HandleUndergroundMusic.isUndergroundMusicPlaying;
+import static musify.utils.BossTargetUtils.handleBossMusic;
+import static musify.utils.BossTargetUtils.isBossMusicPlaying;
 
 @SideOnly(Side.CLIENT)
 @Mod.EventBusSubscriber
 public class BiomeMusicEventHandler {
 
+    private static final Random random = new Random();
 
     /**
      * The original music volume setting value for fading vanilla music.
@@ -46,16 +51,15 @@ public class BiomeMusicEventHandler {
      */
     public static MusicPlayer activeMusic = null;
     public static MusicPlayer activeTagMusic = null;
-
-    private static String currentMusicFile = null;
-
-    private static EntityPlayer player;
-    private static final Random random = new Random();
-    private static int tickCounter = 0;
+    public static String currentMusicFile = null;
     public static boolean isVanillaMusicFading = false;
 
-    private static net.minecraft.world.World lastWorld = null;
+    private static EntityPlayer player;
     private static int aggroCounter = 0;
+    private static int tickCounter = 0;
+
+    private static int jukeboxTicks = 0;
+    private static boolean jukeboxPause = false;
 
     /**
      * Handles the player tick event to manage biome music.
@@ -73,7 +77,6 @@ public class BiomeMusicEventHandler {
             player = event.player;
         }
 
-
         if (fadeOptions.pollingRate == 0) {
             if (tickCounter % 1000 == 0) {
                 Musify.LOGGER.error("POLLING RATE IS SET TO 0 IN MUSIFY CONFIG! THIS WILL BREAK THE MOD! \n (forcibly stopped the mod to prevent a crash.)");
@@ -81,7 +84,18 @@ public class BiomeMusicEventHandler {
             return;
         }
 
+        stopVanillaMusic();
+
         tickCounter++;
+
+        if (jukeboxTicks > 0) {
+            jukeboxTicks--;
+            if (JukeboxUtils.isJukeBoxNearAndPlaying(event.player, miscOptions.jukeboxRange)) {
+                jukeboxTicks = 200;
+            }
+            return;
+        }
+
         if (aggroCounter > 0) {
             aggroCounter--;
 
@@ -95,58 +109,114 @@ public class BiomeMusicEventHandler {
                 if (!isVanillaMusicFading) {
                     stopVanillaMusic();
                 }
-                return;
             }
-
-            return;
         }
 
 
-        if (tickCounter % fadeOptions.pollingRate == 0 && event.player != null && event.player.world != null && aggroCounter == 0 && !isCombatMusicFading) {
+        if (tickCounter % fadeOptions.pollingRate == 0 && event.player != null && event.player.world != null && !isCombatMusicFading && jukeboxTicks == 0 && !isAllFading()) {
 
-            // COMBAT MUSIC HANDLING
-            if (combatOptions.enableCombatMusic && !isAllFading()) {
-                int aggrocount = TargetingUtils.countMobsTargetingPlayer(event.player, combatOptions.combatRadius);
-                if (aggrocount >= combatOptions.combatStartNumber) {
-                    aggroCounter = 400;
-                    handleCombatMusic();
-                    return;
-                }
-            }
-            if (isCombatMusicPlaying() && !isCombatMusicFading) {
-                if (getCombatMusicPlayer() != null && getCombatMusicPlayer().isPlaying()) {
-                    getCombatMusicPlayer().fadeOut(7500);
-                    setCombatMusicPlaying(false);
-                } else if (getCombatMusicPlayer() != null && !getCombatMusicPlayer().isPlaying()) {
-                    getCombatMusicPlayer().stop();
-                    setCombatMusicPlaying(false);
-                    combatMusicPlayer = null;
-                }
-                if (activeMusic != null && !activeMusic.isFading() && activeMusic.isPaused()) {
-                    activeMusic.resumeWithFadeIn(8500);
-                    return;
-                }
-                else if (activeTagMusic != null && !activeTagMusic.isFading() && activeTagMusic.isPaused()) {
-                    activeTagMusic.resumeWithFadeIn(8500);
-                    return;
-                }
-            }
+            Musify.LOGGER.debug("ENTERED HANDLER");
+            // -----------------------  JUKEBOX HANDLING  -----------------------
+            if (JukeboxUtils.isJukeBoxNearAndPlaying(event.player, miscOptions.jukeboxRange)) {
+                Musify.LOGGER.debug("Jukebox found nearby, pausing music.");
+                jukeboxTicks = 200;
+                if (activeMusic != null && !activeMusic.isFading() && !activeMusic.isPaused()) {
+                    Musify.LOGGER.debug("Stopping active music due to jukebox presence.");
+                    activeMusic.pauseWithFadeOut(7500);
 
-            if (event.player.world != null && event.player.posY <= cpundergroundOptions.undergroundMusicYLevelStart && event.player.world.provider.getDimension() == 0 && !isUndergroundMusicPlaying) {
-                handleUndergroundMusic();
+                }
+                if (activeTagMusic != null && !activeTagMusic.isFading() && !activeTagMusic.isPaused()) {
+                    Musify.LOGGER.debug("Stopping active tag music due to jukebox presence.");
+                    activeTagMusic.pauseWithFadeOut(7500);
+                }
+                if (combatMusicPlayer != null && !combatMusicPlayer.isFading()) {
+                    combatMusicPlayer.pauseWithFadeOut(7500);
+                }
+                jukeboxPause = true;
                 return;
             }
-            if (isUndergroundMusicPlaying && event.player.world != null && event.player.posY <= cpundergroundOptions.undergroundMusicYLevelStop && event.player.world.provider.getDimension() == 0) {
+
+            if (jukeboxPause) {
+                if (!isCombatMusicPlaying()) {
+                    if (activeMusic != null && !activeMusic.isFading() && activeMusic.isPaused()) {
+                        activeMusic.resumeWithFadeIn(10000);
+                    }
+                    if (activeTagMusic != null && !activeTagMusic.isFading() && activeTagMusic.isPaused()) {
+                        activeTagMusic.resumeWithFadeIn(10000);
+                    }
+                } else {
+                    if (combatMusicPlayer != null && !combatMusicPlayer.isFading() && combatMusicPlayer.isPaused()) {
+                        combatMusicPlayer.resumeWithFadeIn(10000);
+                    }
+                    if (activeMusic != null && !activeMusic.isFading() && activeMusic.isPaused()) {
+                        activeMusic.resume();
+                    }
+                    if (activeTagMusic != null && !activeTagMusic.isFading() && activeTagMusic.isPaused()) {
+                        activeTagMusic.resume();
+                    }
+                }
+                jukeboxPause = false;
                 return;
-            } else {
-                isUndergroundMusicPlaying = false;
             }
 
-            // BIOME MUSIC HANDLING
-            BlockPos pos = event.player.getPosition();
-            Biome biome = event.player.world.getBiome(pos);
-            handleBiomeMusic(biome);
-            stopVanillaMusic();
+            if (aggroCounter == 0) {
+
+                // ----------------------- BOSS MUSIC HANDLING -----------------------
+                if (bossMusicOptions.enableBossMusic) {
+                    String bossMusic = BossTargetUtils.bossMusicFile(event.player);
+                    if (bossMusic != null && !bossMusic.isEmpty()) {
+                        handleBossMusic(bossMusic);
+                        return;
+                    }
+                }
+                if (BossTargetUtils.isBossMusicPlaying) {
+                    isBossMusicPlaying = false;
+                }
+
+                // ----------------------- COMBAT MUSIC HANDLING -----------------------
+                if (combatOptions.enableCombatMusic) {
+                    int aggrocount = TargetingUtils.countMobsTargetingPlayer(event.player, combatOptions.combatRadius);
+                    if (aggrocount >= combatOptions.combatStartNumber) {
+                        aggroCounter = 400;
+                        handleCombatMusic();
+                        return;
+                    }
+                }
+                if (isCombatMusicPlaying() && !isCombatMusicFading) {
+                    if (getCombatMusicPlayer() != null && getCombatMusicPlayer().isPlaying()) {
+                        getCombatMusicPlayer().fadeOut(7500);
+                        setCombatMusicPlaying(false);
+                    } else if (getCombatMusicPlayer() != null && !getCombatMusicPlayer().isPlaying()) {
+                        getCombatMusicPlayer().stop();
+                        setCombatMusicPlaying(false);
+                        combatMusicPlayer = null;
+                    }
+                    if (activeMusic != null && !activeMusic.isFading()) {
+                        activeMusic.fadeIn(8500);
+                        return;
+                    } else if (activeTagMusic != null && !activeTagMusic.isFading()) {
+                        activeTagMusic.fadeIn(8500);
+                        return;
+                    }
+                }
+
+                // --w--------------------- UNDERGROUND MUSIC HANDLING -----------------------
+                if (event.player.world != null && event.player.posY <= cpundergroundOptions.undergroundMusicYLevelStart && event.player.world.provider.getDimension() == 0 && !isUndergroundMusicPlaying) {
+                    handleUndergroundMusic();
+                    return;
+                }
+                if (isUndergroundMusicPlaying && event.player.world != null && event.player.posY <= cpundergroundOptions.undergroundMusicYLevelStop && event.player.world.provider.getDimension() == 0) {
+                    return;
+                } else {
+                    isUndergroundMusicPlaying = false;
+                }
+
+                // // ----------------------- BIOME MUSIC HANDLING -----------------------
+                BlockPos pos = event.player.getPosition();
+                Biome biome = event.player.world.getBiome(pos);
+                handleBiomeMusic(biome);
+                stopVanillaMusic();
+            }
         }
     }
 
@@ -169,16 +239,13 @@ public class BiomeMusicEventHandler {
             }
 
             if (musicFile != null && !configSet.equals("default_music") && !BiomeDictionary.hasType(biome, BiomeDictionary.Type.RIVER)) {
-                Musify.LOGGER.debug("PASSED BIOME SPECIFIC MUSIC CHECK");
                 // specific music not null, tag null
                 if (activeMusic != null && !isMusicBiomeCorrect(currentMusicFile, configSet) && !activeMusic.isFading() && activeTagMusic == null) {
-                    Musify.LOGGER.debug("PASSED NON NULL CHECK AND CORRECT CHECK");
                     if (activeTagMusic != null) {
                         activeTagMusic.stopWithFadeOut(12500);
                         activeTagMusic = null;
                     }
                     activeMusic.stopWithFadeOut(12500);
-                    Musify.LOGGER.debug("ACTIVE MUSIC NOT NULL, PLAYING NEW MUSIC: {}", musicFile);
                     activeMusic = new MusicPlayer(musicFile, false);
                     currentMusicFile = musicFile;
                     activeMusic.playWithFadeIn(15000);
@@ -189,7 +256,6 @@ public class BiomeMusicEventHandler {
                     currentMusicFile = musicFile;
                     activeMusic.playWithFadeIn(15000);
                     fadeOutVanillaMusic();
-                    Musify.LOGGER.debug("ACTIVE MUSIC NULL AND TAG NOT NULL, PLAYING NEW MUSIC: {}", musicFile);
                     if (activeTagMusic != null) {
                         activeTagMusic.stopWithFadeOut(12500);
                         activeTagMusic = null;
@@ -201,7 +267,6 @@ public class BiomeMusicEventHandler {
                     currentMusicFile = musicFile;
                     activeMusic.playWithFadeIn(15000);
                     fadeOutVanillaMusic();
-                    Musify.LOGGER.debug("ACTIVE MUSIC NULL, PLAYING NEW MUSIC: {}", musicFile);
                 }
                 if (activeTagMusic != null && activeTagMusic.isPlaying() && !isVanillaMusicFading) {
                     stopVanillaMusic();
@@ -217,8 +282,6 @@ public class BiomeMusicEventHandler {
                             .orElse("default_music");
 
                     if (!randomTagMusicFile.equals("default_music")) {
-
-                        Musify.LOGGER.debug("PASSED DEFAULT CHECK BIOME TAGS");
 
                         Set<String> possibleSongs = new HashSet<>();
                         // picking one random song from the config list
@@ -238,11 +301,9 @@ public class BiomeMusicEventHandler {
                             activeTagMusic = new MusicPlayer(randomTagMusicFile, false);
                             currentMusicFile = musicFile;
                             activeTagMusic.playWithFadeIn(15000);
-                            Musify.LOGGER.debug("ACTIVE MUSIC NULL, PLAYING NEW TAG MUSIC: {}", randomTagMusicFile);
                             fadeOutVanillaMusic();
                         }
                         else if (activeTagMusic != null && activeMusic == null && !activeTagMusic.isFading() && !possibleSongs.contains(activeTagMusic.getFileName())) {
-                            Musify.LOGGER.debug("ACTIVE TAG MUSIC NOT NULL, PLAYING NEW TAG MUSIC: {}", randomTagMusicFile);
                             activeTagMusic.stopWithFadeOut(12500);
                             activeTagMusic = new MusicPlayer(randomTagMusicFile, false);
                             currentMusicFile = musicFile;
@@ -253,9 +314,7 @@ public class BiomeMusicEventHandler {
                             stopVanillaMusic();
                         }
                     } else {
-                        Musify.LOGGER.debug("FAILD DEFAULT CHECK BIOME TAGS");
                         if (activeTagMusic != null && activeTagMusic.isPlaying() && !activeTagMusic.isFading()) {
-                            Musify.LOGGER.debug("PASSED TAG MUSIC CHECK");
                             activeTagMusic.stopWithFadeOut(12500);
                             activeTagMusic = null;
                         }
@@ -370,21 +429,22 @@ public class BiomeMusicEventHandler {
     public static void stopVanillaMusic() {
         try {
             Minecraft mc = Minecraft.getMinecraft();
-            originalMusicVolume = mc.gameSettings.getSoundLevel(SoundCategory.MUSIC);
             MusicTicker musicTicker = mc.getMusicTicker();
+
+            // Stop current vanilla music
             Field currentMusicField = ObfuscationReflectionHelper.findField(MusicTicker.class, "field_147678_c");
             currentMusicField.setAccessible(true);
             ISound currentMusic = (ISound) currentMusicField.get(musicTicker);
-
-            if (currentMusic != null && !isVanillaMusicFading) {
-                isVanillaMusicFading = true;
-                new Thread(() -> {
-                    mc.getSoundHandler().stopSound(currentMusic);
-                    isVanillaMusicFading = false;
-                    restoreMusicVolume();
-                }).start();
+            if (currentMusic != null) {
+                mc.getSoundHandler().stopSound(currentMusic);
             }
-        } catch (IllegalAccessException e) {
+
+            // Reset the music timer to a high value to delay next vanilla music
+            Field timeUntilNextMusicField = ObfuscationReflectionHelper.findField(MusicTicker.class, "field_147676_d");
+            timeUntilNextMusicField.setAccessible(true);
+            timeUntilNextMusicField.setInt(musicTicker, 100000); // Large value to delay next music
+
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }

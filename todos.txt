@@ -1,0 +1,3 @@
+jukebox off switch
+ambient mode
+find a better way to stop vanilla music

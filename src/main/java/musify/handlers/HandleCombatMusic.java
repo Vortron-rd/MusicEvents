@@ -25,10 +25,10 @@ public class HandleCombatMusic {
         if (!isCombatMusicPlaying && backgroundCombatMusic) {
             isCombatMusicPlaying = true;
             if (activeMusic != null && !activeMusic.isFading()) {
-                activeMusic.pauseWithFadeOut(7500);
+                activeMusic.fadeOut(7500);
             }
             if (activeTagMusic != null && !activeTagMusic.isFading()) {
-                activeTagMusic.pauseWithFadeOut(7500);
+                activeTagMusic.fadeOut(7500);
             }
 
             if (!isVanillaMusicFading) {

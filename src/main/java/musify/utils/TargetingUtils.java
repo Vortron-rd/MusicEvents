@@ -1,6 +1,7 @@
 package musify.utils;
 
 import musify.Musify;
+import net.minecraft.client.Minecraft;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.IEntityOwnable;
@@ -33,46 +34,31 @@ public class TargetingUtils {
      * @param radius The radius to search for mobs.
      * @return The count of hostile mobs currently targeting the player.
      */
-    public synchronized static int countMobsTargetingPlayer(EntityPlayer player, double radius) {
+    public static int countMobsTargetingPlayer(EntityPlayer player, double radius) {
         World world = player.getEntityWorld();
-        long currentTime = world.getTotalWorldTime();
-
-        resetCache();
 
         AxisAlignedBB searchArea = new AxisAlignedBB(
                 player.posX - radius, player.posY - radius, player.posZ - radius,
                 player.posX + radius, player.posY + radius, player.posZ + radius
         );
-        List<EntityLivingBase> entities = world.getEntitiesWithinAABB(EntityLivingBase.class, searchArea);
+        List<EntityLiving> entities = world.getEntitiesWithinAABB(EntityLiving.class, searchArea);
 
-        for (EntityLivingBase entity : entities) {
-            if ((entity instanceof IAnimals || entity instanceof IEntityOwnable || entity instanceof EntityLiving)) {
-                EntityLiving hostileMob = (EntityLiving) entity;
+        int count = 0;
+        for (EntityLiving mob : entities) {
+            // Only count mobs that are alive and not peaceful
+            if (!mob.isEntityAlive() || mob.isAIDisabled()) continue;
 
-                boolean isTargetingPlayer = false;
-                if (hostileMob.getAttackTarget() != null &&
-                        hostileMob.getAttackTarget().getUniqueID().equals(player.getUniqueID())) {
-                    isTargetingPlayer = true;
-                } else if (hostileMob.getRevengeTarget() != null &&
-                        hostileMob.getRevengeTarget().getUniqueID().equals(player.getUniqueID())) {
-                    isTargetingPlayer = true;
-                }
+            if (mob.getAttackTarget() != null && mob.getAttackTarget().getUniqueID().equals(Minecraft.getMinecraft().player.getUniqueID())) {
+                count++;
+                continue;
+            }
 
-                if (isTargetingPlayer) {
-                    targetingMobs.put(hostileMob.getUniqueID(), currentTime);
-                }
+            if (mob.getRevengeTarget() != null && mob.getRevengeTarget().getUniqueID().equals(Minecraft.getMinecraft().player.getUniqueID())) {
+                count++;
+                continue;
             }
         }
-
-        targetingMobs.entrySet().removeIf(entry -> currentTime - entry.getValue() > CACHE_TIMEOUT);
-        Musify.LOGGER.debug("Targeting cache size: " + targetingMobs.size());
-        return targetingMobs.size();
-    }
-
-    /**
-     * Resets the targeting cache, clearing all tracked mobs.
-     */
-    public synchronized static void resetCache() {
-        targetingMobs.clear();
+        Musify.LOGGER.debug("TARGET COUNT: {} for player: {}", count, player.getName());
+        return count;
     }
 }

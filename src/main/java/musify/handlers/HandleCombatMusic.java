@@ -32,7 +32,7 @@ public class HandleCombatMusic {
             }
 
             if (!isVanillaMusicFading) {
-                fadeOutVanillaMusic();
+                stopVanillaMusic();
             }
             combatMusicPlayer.fadeIn(8500);
         } else if (!isCombatMusicPlaying && !backgroundCombatMusic) {

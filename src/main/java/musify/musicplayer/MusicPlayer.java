@@ -61,6 +61,13 @@ public class MusicPlayer implements Runnable {
         }
     }
 
+    public String getFilename() {
+        if (fileName != null) {
+            return fileName;
+        }
+        else return "No Music Set";
+    }
+
     /**
      * Plays the music file with a fade-in effect.
      * @param fadeMillis The duration of the fade-in effect in milliseconds.

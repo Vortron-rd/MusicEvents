@@ -84,8 +84,6 @@ public class BiomeMusicEventHandler {
             return;
         }
 
-        stopVanillaMusic();
-
         tickCounter++;
 
         if (jukeboxTicks > 0) {
@@ -215,7 +213,6 @@ public class BiomeMusicEventHandler {
                 BlockPos pos = event.player.getPosition();
                 Biome biome = event.player.world.getBiome(pos);
                 handleBiomeMusic(biome);
-                stopVanillaMusic();
             }
         }
     }
@@ -255,7 +252,7 @@ public class BiomeMusicEventHandler {
                     activeMusic = new MusicPlayer(musicFile, false);
                     currentMusicFile = musicFile;
                     activeMusic.playWithFadeIn(15000);
-                    fadeOutVanillaMusic();
+                    stopVanillaMusic();
                     if (activeTagMusic != null) {
                         activeTagMusic.stopWithFadeOut(12500);
                         activeTagMusic = null;
@@ -266,7 +263,7 @@ public class BiomeMusicEventHandler {
                     activeMusic = new MusicPlayer(musicFile, false);
                     currentMusicFile = musicFile;
                     activeMusic.playWithFadeIn(15000);
-                    fadeOutVanillaMusic();
+                    stopVanillaMusic();
                 }
                 if (activeTagMusic != null && activeTagMusic.isPlaying() && !isVanillaMusicFading) {
                     stopVanillaMusic();
@@ -301,14 +298,14 @@ public class BiomeMusicEventHandler {
                             activeTagMusic = new MusicPlayer(randomTagMusicFile, false);
                             currentMusicFile = musicFile;
                             activeTagMusic.playWithFadeIn(15000);
-                            fadeOutVanillaMusic();
+                            stopVanillaMusic();
                         }
                         else if (activeTagMusic != null && activeMusic == null && !activeTagMusic.isFading() && !possibleSongs.contains(activeTagMusic.getFileName())) {
                             activeTagMusic.stopWithFadeOut(12500);
                             activeTagMusic = new MusicPlayer(randomTagMusicFile, false);
                             currentMusicFile = musicFile;
                             activeTagMusic.playWithFadeIn(15000);
-                            fadeOutVanillaMusic();
+                            stopVanillaMusic();
                         }
                         if (!isVanillaMusicFading && activeTagMusic != null && !adambientMode) {
                             stopVanillaMusic();
@@ -321,6 +318,11 @@ public class BiomeMusicEventHandler {
                         if (activeMusic != null && activeMusic.isPlaying() && !activeMusic.isFading()) {
                             activeMusic.stopWithFadeOut(15000);
                             activeMusic = null;
+                        }
+                        if (getCombatMusicPlayer() != null && getCombatMusicPlayer().isPlaying() && !getCombatMusicPlayer().isFading()) {
+                            getCombatMusicPlayer().stopWithFadeOut(15000);
+                            setCombatMusicPlaying(false);
+                            combatMusicPlayer = null;
                         }
                     }
                     if (activeTagMusic != null && activeTagMusic.isPlaying() && !isVanillaMusicFading) {
@@ -343,87 +345,11 @@ public class BiomeMusicEventHandler {
         activeTagMusic.playWithFadeIn(15000);
         currentMusicFile = musicFile;
         if (!isVanillaMusicFading && !adambientMode) {
-            fadeOutVanillaMusic();
+            stopVanillaMusic();
         }
     }
 
 // ----------------------- VANILLA MUSIC STUFF -----------------------
-
-    /**
-     * Fades out the vanilla music when custom music is played.
-     * This method retrieves the current music from the MusicTicker and fades it out.
-     */
-    @SideOnly(Side.CLIENT)
-    public static void fadeOutVanillaMusic() {
-        if (isVanillaMusicFading || Minecraft.getMinecraft().world == null) {
-            return;
-        }
-        try {
-            isVanillaMusicFading = true;
-            Minecraft mc = Minecraft.getMinecraft();
-            originalMusicVolume = mc.gameSettings.getSoundLevel(SoundCategory.MUSIC);
-            MusicTicker musicTicker = mc.getMusicTicker();
-
-            Field currentMusicField = ObfuscationReflectionHelper.findField(MusicTicker.class, "field_147678_c");
-            currentMusicField.setAccessible(true);
-
-            ISound currentMusic = (ISound) currentMusicField.get(musicTicker);
-
-            if (currentMusic != null) {
-
-                new Thread(() -> {
-                    try {
-                        float volume = mc.gameSettings.getSoundLevel(SoundCategory.MUSIC);
-                        float fadeDuration = (float) fadeOptions.vanillaMusicFadeOutTime;
-                        float fadeSteps = 100;
-                        float stepTime = fadeDuration / fadeSteps;
-                        float volumeStep = volume / fadeSteps;
-
-                        for (int i = 0; i < fadeSteps; i++) {
-                            volume -= volumeStep;
-                            setMusicVolume(SoundCategory.MUSIC, Math.max(0, volume));
-                            Thread.sleep((long) stepTime);
-                        }
-
-                        mc.getSoundHandler().stopSound(currentMusic);
-
-                        restoreMusicVolume();
-                        isVanillaMusicFading = false;
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
-                }).start();
-
-            }
-        } catch (IllegalAccessException e) {
-            e.printStackTrace();
-        }
-    }
-
-    @SideOnly(Side.CLIENT)
-    private static void setMusicVolume(SoundCategory category, float volume) {
-        Minecraft mc = Minecraft.getMinecraft();
-
-        mc.gameSettings.setSoundLevel(category, volume);
-
-        try {
-            Field sndManagerField = ObfuscationReflectionHelper.findField(SoundHandler.class, "field_147694_f");
-            sndManagerField.setAccessible(true);
-
-            SoundManager soundManager = (SoundManager) sndManagerField.get(mc.getSoundHandler());
-
-            soundManager.setVolume(category, volume);
-
-        } catch (IllegalAccessException e) {
-            e.printStackTrace();
-        }
-    }
-
-    @SideOnly(Side.CLIENT)
-    private static void restoreMusicVolume() {
-        Minecraft mc = Minecraft.getMinecraft();
-        setMusicVolume(SoundCategory.MUSIC, originalMusicVolume);
-    }
 
     @SideOnly(Side.CLIENT)
     public static void stopVanillaMusic() {
@@ -438,11 +364,6 @@ public class BiomeMusicEventHandler {
             if (currentMusic != null) {
                 mc.getSoundHandler().stopSound(currentMusic);
             }
-
-            // Reset the music timer to a high value to delay next vanilla music
-            Field timeUntilNextMusicField = ObfuscationReflectionHelper.findField(MusicTicker.class, "field_147676_d");
-            timeUntilNextMusicField.setAccessible(true);
-            timeUntilNextMusicField.setInt(musicTicker, 100000); // Large value to delay next music
 
         } catch (Exception e) {
             e.printStackTrace();

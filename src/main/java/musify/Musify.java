@@ -1,5 +1,6 @@
 package musify;
 
+import musify.commands.getMusicCommand;
 import musify.config.BiomeMusicConfig;
 import musify.handlers.PauseEventHandler;
 import musify.proxy.CommonProxy;
@@ -10,6 +11,7 @@ import net.minecraftforge.fml.common.SidedProxy;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
+import net.minecraftforge.fml.common.event.FMLServerStartingEvent;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -52,5 +54,10 @@ public class Musify {
         BiomeMusicConfig.updateBiomeList();
         BiomeMusicConfig.updateBiomeTagList();
         BiomeMusicConfig.updateMusicList();
+    }
+
+    @Mod.EventHandler
+    public void onServerStarting(FMLServerStartingEvent event) {
+        event.registerServerCommand(new getMusicCommand());
     }
 }

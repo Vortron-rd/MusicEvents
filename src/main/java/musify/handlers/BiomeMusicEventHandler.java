@@ -105,7 +105,9 @@ public class BiomeMusicEventHandler {
             }
             if (isCombatMusicPlaying()) {
                 if (!isVanillaMusicFading) {
-                    stopVanillaMusic();
+                    if (!adambientMode) {
+                        stopVanillaMusic();
+                    }
                 }
             }
         }
@@ -254,7 +256,9 @@ public class BiomeMusicEventHandler {
                     activeMusic = new MusicPlayer(musicFile, false);
                     currentMusicFile = musicFile;
                     activeMusic.playWithFadeIn(fadeOptions.customMusicFadeInTime);
-                    stopVanillaMusic();
+                    if (!adambientMode) {
+                        stopVanillaMusic();
+                    }
                     if (activeTagMusic != null) {
                         activeTagMusic.stopWithFadeOut(fadeOptions.customMusicFadeOutTime);
                         activeTagMusic = null;
@@ -265,10 +269,14 @@ public class BiomeMusicEventHandler {
                     activeMusic = new MusicPlayer(musicFile, false);
                     currentMusicFile = musicFile;
                     activeMusic.playWithFadeIn(fadeOptions.customMusicFadeInTime);
-                    stopVanillaMusic();
+                    if (!adambientMode) {
+                        stopVanillaMusic();
+                    }
                 }
                 if (activeTagMusic != null && activeTagMusic.isPlaying() && !isVanillaMusicFading) {
-                    stopVanillaMusic();
+                    if (!adambientMode) {
+                        stopVanillaMusic();
+                    }
                 }
             } else {
                 // getting the biome and checking the config
@@ -300,17 +308,23 @@ public class BiomeMusicEventHandler {
                             activeTagMusic = new MusicPlayer(randomTagMusicFile, false);
                             currentMusicFile = musicFile;
                             activeTagMusic.playWithFadeIn(fadeOptions.customMusicFadeInTime);
-                            stopVanillaMusic();
+                            if (!adambientMode) {
+                                stopVanillaMusic();
+                            }
                         }
                         else if (activeTagMusic != null && activeMusic == null && !activeTagMusic.isFading() && !possibleSongs.contains(activeTagMusic.getFileName())) {
                             activeTagMusic.stopWithFadeOut(fadeOptions.customMusicFadeOutTime);
                             activeTagMusic = new MusicPlayer(randomTagMusicFile, false);
                             currentMusicFile = musicFile;
                             activeTagMusic.playWithFadeIn(fadeOptions.customMusicFadeInTime);
-                            stopVanillaMusic();
+                            if (!adambientMode) {
+                                stopVanillaMusic();
+                            }
                         }
                         if (!isVanillaMusicFading && activeTagMusic != null && !adambientMode) {
-                            stopVanillaMusic();
+                            if (!adambientMode) {
+                                stopVanillaMusic();
+                            }
                         }
                     } else {
                         if (activeTagMusic != null && activeTagMusic.isPlaying() && !activeTagMusic.isFading()) {
@@ -328,7 +342,9 @@ public class BiomeMusicEventHandler {
                         }
                     }
                     if (activeTagMusic != null && activeTagMusic.isPlaying() && !isVanillaMusicFading) {
-                        stopVanillaMusic();
+                        if (!adambientMode) {
+                            stopVanillaMusic();
+                        }
                     }
                 }
             }
@@ -346,8 +362,10 @@ public class BiomeMusicEventHandler {
         activeTagMusic = new MusicPlayer(randomTagMusicFile, false);
         activeTagMusic.playWithFadeIn(fadeOptions.customMusicFadeInTime);
         currentMusicFile = musicFile;
-        if (!isVanillaMusicFading && !adambientMode) {
-            stopVanillaMusic();
+        if (!isVanillaMusicFading) {
+            if (!adambientMode) {
+                stopVanillaMusic();
+            }
         }
     }
 

@@ -31,7 +31,9 @@ public class HandleCombatMusic {
             }
 
             if (!isVanillaMusicFading) {
-                stopVanillaMusic();
+                if (!adambientMode) {
+                    stopVanillaMusic();
+                }
             }
             combatMusicPlayer.fadeIn(fadeOptions.combatMusicFadeInTime);
         } else if (!isCombatMusicPlaying && !backgroundCombatMusic) {

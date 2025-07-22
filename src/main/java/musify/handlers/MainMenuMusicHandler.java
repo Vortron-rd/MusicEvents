@@ -36,7 +36,6 @@ public class MainMenuMusicHandler {
         if (isMainMenuScreen(mc)) {
             stopVanillaMusicMainMenu();
             if (activeMusic != null) {
-                Musify.LOGGER.debug("TRIED STOPPING BIOME MUSIC FOR MAIN MENU");
                 activeMusic.stop();
                 activeMusic = null;
             }
@@ -60,14 +59,12 @@ public class MainMenuMusicHandler {
             }
 
             if (isMainMenuMusicPlaying && !isMainMenuScreen(mc) && !isPaused) {
-                Musify.LOGGER.debug("STOPPING MAIN MENU MUSIC");
                 mainMenuMusicPlayer.pause();
 
                 isPaused = true;
             }
         } else {
             if (isMainMenuMusicPlaying && !isPaused) {
-                Musify.LOGGER.debug("STOPPING MAIN MENU MUSIC");
                 mainMenuMusicPlayer.pause();
                 isPaused = true;
             }
@@ -93,7 +90,10 @@ public class MainMenuMusicHandler {
         String[] musicFiles = mainMenuMusicConfig.split(",");
         String mainMenuMusic = musicFiles[(int) (Math.random() * musicFiles.length)].trim();
 
-        Musify.LOGGER.debug("PLAYING MAIN MENU MUSIC: {}", mainMenuMusic);
+        if (mainMenuMusic.equals("default_music")) {
+            Musify.LOGGER.warn("Main menu music enabled, but set to default. Please disable it or set a custom music file.");
+            return;
+        }
 
         // Stop previous player if running
         if (mainMenuMusicPlayer != null && mainMenuMusicPlayer.isPlaying()) {

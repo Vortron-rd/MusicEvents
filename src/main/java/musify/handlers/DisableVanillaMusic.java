@@ -20,15 +20,12 @@ public class DisableVanillaMusic {
         if (event.getSound().getCategory() == SoundCategory.MUSIC && !adambientMode) {
             if (activeMusic != null && activeMusic.isPlaying()) {
                 event.setResultSound(null);
-                Musify.LOGGER.debug("Disabling Vanilla Music 1");
             }
             if (activeTagMusic != null && activeTagMusic.isPlaying()) {
                 event.setResultSound(null);
-                Musify.LOGGER.debug("Disabling Vanilla Music 2");
             }
             if (getCombatMusicPlayer() != null && getCombatMusicPlayer().isPlaying()) {
                 event.setResultSound(null);
-                Musify.LOGGER.debug("Disabling Vanilla Music 3");
             }
         }
     }

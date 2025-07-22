@@ -60,6 +60,12 @@ public class BiomeMusicConfig {
 	@Config.Comment("Boss Music Options.")
 	public static final BossMusicOptions bossMusicOptions = new BossMusicOptions();
 
+	@Config.Name("Dungeon Definition Options")
+	@Config.Comment("Dungeon Definition Options. This is used to define what a dungeon is and what music to play in it." +
+					"\nA dungeon consists of a certain block and a certain amount of spawners within a radius." +
+					"\nThis option is moreso for custom and modded dungeons than vanilla ones.")
+	public static final DungeonDefinitionOptions dungeonDefinitionOptions = new DungeonDefinitionOptions();
+
 	@Config.Name("Misc Options.")
 	@Config.Comment("Miscelanious Options.")
 	public static final MiscOptions miscOptions = new MiscOptions();
@@ -203,6 +209,29 @@ public class BiomeMusicConfig {
 		@Config.Name("Jukebox Detection range")
 		@Config.Comment("Range in which the mod will detect Jukeboxes and silence the music when in range of Jukebox that is playing.")
 		public int jukeboxRange = 25;
+	}
+
+	public static class DungeonDefinitionOptions {
+
+		@Config.Name("Enable Dungeon Music")
+		@Config.Comment("Enable or Disable Dungeon Music.")
+		public boolean enableDungeonMusic = false;
+
+		@Config.Name("Dungeon Music List")
+		@Config.Comment("Put any music you want to be played in dungeons in here.")
+		public String[] dungeonDefinitionList = new String[0];
+
+		@Config.Name("Dungeon check Radius")
+		@Config.Comment("The radius in which the mod will detect a dungeon. Default: 40.")
+		public int dungeonRadius = 40;
+
+		@Config.Name("Min Spawners to consider a dungeon")
+		@Config.Comment("The minimum amount of spawners that need to be present in a dungeon for the music to play. Default: 3.")
+		public int minSpawners = 3;
+
+		@Config.Name("Min blocks")
+		@Config.Comment("The minimum amount of blocks defined in the dungeon list that need to be present to consider a dungeon. Default: 10.")
+		public int minBlocks = 20;
 	}
 
 }

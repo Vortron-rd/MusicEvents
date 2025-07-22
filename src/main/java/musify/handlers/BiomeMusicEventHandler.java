@@ -4,6 +4,7 @@ import musify.Musify;
 import musify.config.BiomeMusicConfig;
 import musify.musicplayer.MusicPlayer;
 import musify.utils.BossTargetUtils;
+import musify.utils.DungeonUtils;
 import musify.utils.JukeboxUtils;
 import musify.utils.TargetingUtils;
 import net.minecraft.client.Minecraft;
@@ -42,11 +43,6 @@ public class BiomeMusicEventHandler {
     private static final Random random = new Random();
 
     /**
-     * The original music volume setting value for fading vanilla music.
-     */
-    private static float originalMusicVolume;
-
-    /**
      * The active music player instance that is currently playing music.
      */
     public static MusicPlayer activeMusic = null;
@@ -57,6 +53,7 @@ public class BiomeMusicEventHandler {
     private static EntityPlayer player;
     private static int aggroCounter = 0;
     private static int tickCounter = 0;
+    private static int dungeonCount = 0;
 
     private static int jukeboxTicks = 0;
     private static boolean jukeboxPause = false;
@@ -94,6 +91,16 @@ public class BiomeMusicEventHandler {
             return;
         }
 
+        if (dungeonCount > 0) {
+            dungeonCount--;
+            if (dungeonCount % 40 == 0) {
+                if (DungeonUtils.getDungeonMusic(event.player) != null && !DungeonUtils.getDungeonMusic(event.player).isEmpty()) {
+                    dungeonCount = 200;
+                }
+            }
+            return;
+        }
+
         if (aggroCounter > 0) {
             aggroCounter--;
 
@@ -115,18 +122,14 @@ public class BiomeMusicEventHandler {
 
         if (tickCounter % fadeOptions.pollingRate == 0 && event.player != null && event.player.world != null && !isCombatMusicFading && jukeboxTicks == 0 && !isAllFading()) {
 
-            Musify.LOGGER.debug("ENTERED HANDLER");
             // -----------------------  JUKEBOX HANDLING  -----------------------
             if (JukeboxUtils.isJukeBoxNearAndPlaying(event.player, miscOptions.jukeboxRange)) {
-                Musify.LOGGER.debug("Jukebox found nearby, pausing music.");
                 jukeboxTicks = 200;
                 if (activeMusic != null && !activeMusic.isFading() && !activeMusic.isPaused()) {
-                    Musify.LOGGER.debug("Stopping active music due to jukebox presence.");
                     activeMusic.pauseWithFadeOut(fadeOptions.customMusicFadeOutTime);
 
                 }
                 if (activeTagMusic != null && !activeTagMusic.isFading() && !activeTagMusic.isPaused()) {
-                    Musify.LOGGER.debug("Stopping active tag music due to jukebox presence.");
                     activeTagMusic.pauseWithFadeOut(fadeOptions.customMusicFadeOutTime);
                 }
                 if (combatMusicPlayer != null && !combatMusicPlayer.isFading()) {
@@ -159,20 +162,49 @@ public class BiomeMusicEventHandler {
                 return;
             }
 
-            if (aggroCounter == 0) {
+            // ----------------------- BOSS MUSIC HANDLING -----------------------
+            if (bossMusicOptions.enableBossMusic) {
+                String bossMusic = BossTargetUtils.bossMusicFile(event.player);
+                if (bossMusic != null && !bossMusic.isEmpty()) {
+                    handleBossMusic(bossMusic);
+                    return;
+                }
+            }
+            if (BossTargetUtils.isBossMusicPlaying) {
+                isBossMusicPlaying = false;
+            }
 
-                // ----------------------- BOSS MUSIC HANDLING -----------------------
-                if (bossMusicOptions.enableBossMusic) {
-                    String bossMusic = BossTargetUtils.bossMusicFile(event.player);
-                    if (bossMusic != null && !bossMusic.isEmpty()) {
-                        handleBossMusic(bossMusic);
-                        return;
+            // ----------------------- DUNGEON MUSIC HANDLING -----------------------
+
+            Musify.LOGGER.debug("PRE CHECK DUNGEON MUSIC");
+            if (dungeonDefinitionOptions.enableDungeonMusic) {
+                Musify.LOGGER.debug("ENTERED DUNGEON MUSIC HANDLER");
+                String dungeonMusic = DungeonUtils.getDungeonMusic(event.player);
+                if (dungeonMusic != null && !dungeonMusic.isEmpty()) {
+                    if (activeMusic != null && !activeMusic.isFading() && !activeMusic.getFileName().equals(dungeonMusic)) {
+                        activeMusic.stopWithFadeOut(fadeOptions.customMusicFadeOutTime);
+                        activeMusic = new MusicPlayer(dungeonMusic, true);
+                        currentMusicFile = dungeonMusic;
+                        activeMusic.playWithFadeIn(fadeOptions.customMusicFadeInTime);
+                    } else if (activeTagMusic != null && !activeTagMusic.isFading() && !activeTagMusic.getFileName().equals(dungeonMusic)) {
+                        activeTagMusic.stopWithFadeOut(fadeOptions.customMusicFadeOutTime);
+                        activeTagMusic = new MusicPlayer(dungeonMusic, true);
+                        currentMusicFile = dungeonMusic;
+                        activeTagMusic.playWithFadeIn(fadeOptions.customMusicFadeInTime);
+                    } else if (activeTagMusic == null && activeMusic == null) {
+                        activeMusic = new MusicPlayer(dungeonMusic, true);
+                        currentMusicFile = dungeonMusic;
+                        activeMusic.playWithFadeIn(fadeOptions.customMusicFadeInTime);
                     }
+                    if (!adambientMode) {
+                        stopVanillaMusic();
+                    }
+                    dungeonCount = 200;
+                    return;
                 }
-                if (BossTargetUtils.isBossMusicPlaying) {
-                    isBossMusicPlaying = false;
-                }
+            }
 
+            if (aggroCounter == 0) {
                 // ----------------------- COMBAT MUSIC HANDLING -----------------------
                 if (combatOptions.enableCombatMusic) {
                     int aggrocount = TargetingUtils.countMobsTargetingPlayer(event.player, combatOptions.combatRadius);
@@ -216,8 +248,12 @@ public class BiomeMusicEventHandler {
                 // // ----------------------- BIOME MUSIC HANDLING -----------------------
                 BlockPos pos = event.player.getPosition();
                 Biome biome = event.player.world.getBiome(pos);
+                Musify.LOGGER.debug("HANDLING BIOME MUSIC");
                 handleBiomeMusic(biome);
             }
+        }
+        if (tickCounter % 10000 == 0) {
+            tickCounter = 0;
         }
     }
 

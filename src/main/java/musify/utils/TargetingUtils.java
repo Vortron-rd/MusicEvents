@@ -58,7 +58,6 @@ public class TargetingUtils {
                 continue;
             }
         }
-        Musify.LOGGER.debug("TARGET COUNT: {} for player: {}", count, player.getName());
         return count;
     }
 }

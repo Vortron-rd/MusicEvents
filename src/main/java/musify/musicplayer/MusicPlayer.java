@@ -36,7 +36,6 @@ public class MusicPlayer implements Runnable {
         this.mp3File = new File(filePath);
         fileName = name;
         this.isCombatMusic = isCombatMusic;
-        Musify.LOGGER.debug("FILE PATH: {}", filePath);
     }
 
     /**

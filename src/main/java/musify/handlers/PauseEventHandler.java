@@ -29,7 +29,6 @@ public class PauseEventHandler {
 
         if (mc.world == null && !MainMenuMusicHandler.isMainMenuMusicPlaying) {
             if (activeMusic != null) {
-                Musify.LOGGER.debug("TRIED STOPPING BIOME MUSIC FOR MAIN MENU");
                 activeMusic.stop();
                 activeMusic = null;
             }
@@ -40,11 +39,8 @@ public class PauseEventHandler {
         }
 
         if (isPauseMenuOpen(mc) && !donePause) {
-            Musify.LOGGER.debug("PASSED PAUSE MENU CHECK");
             if (activeMusic != null) {
-                Musify.LOGGER.debug("PASSED NULL CHECK");
                 if (!activeMusic.isPaused()) {
-                    Musify.LOGGER.debug("PAUSING MUSIC");
                     activeMusic.pause();
                 }
             }

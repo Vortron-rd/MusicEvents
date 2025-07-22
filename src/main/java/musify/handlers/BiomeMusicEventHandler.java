@@ -120,15 +120,15 @@ public class BiomeMusicEventHandler {
                 jukeboxTicks = 200;
                 if (activeMusic != null && !activeMusic.isFading() && !activeMusic.isPaused()) {
                     Musify.LOGGER.debug("Stopping active music due to jukebox presence.");
-                    activeMusic.pauseWithFadeOut(7500);
+                    activeMusic.pauseWithFadeOut(fadeOptions.customMusicFadeOutTime);
 
                 }
                 if (activeTagMusic != null && !activeTagMusic.isFading() && !activeTagMusic.isPaused()) {
                     Musify.LOGGER.debug("Stopping active tag music due to jukebox presence.");
-                    activeTagMusic.pauseWithFadeOut(7500);
+                    activeTagMusic.pauseWithFadeOut(fadeOptions.customMusicFadeOutTime);
                 }
                 if (combatMusicPlayer != null && !combatMusicPlayer.isFading()) {
-                    combatMusicPlayer.pauseWithFadeOut(7500);
+                    combatMusicPlayer.pauseWithFadeOut(fadeOptions.combatMusicFadeInTime);
                 }
                 jukeboxPause = true;
                 return;
@@ -137,14 +137,14 @@ public class BiomeMusicEventHandler {
             if (jukeboxPause) {
                 if (!isCombatMusicPlaying()) {
                     if (activeMusic != null && !activeMusic.isFading() && activeMusic.isPaused()) {
-                        activeMusic.resumeWithFadeIn(10000);
+                        activeMusic.resumeWithFadeIn(fadeOptions.customMusicFadeInTime);
                     }
                     if (activeTagMusic != null && !activeTagMusic.isFading() && activeTagMusic.isPaused()) {
-                        activeTagMusic.resumeWithFadeIn(10000);
+                        activeTagMusic.resumeWithFadeIn(fadeOptions.customMusicFadeInTime);
                     }
                 } else {
                     if (combatMusicPlayer != null && !combatMusicPlayer.isFading() && combatMusicPlayer.isPaused()) {
-                        combatMusicPlayer.resumeWithFadeIn(10000);
+                        combatMusicPlayer.resumeWithFadeIn(fadeOptions.customMusicFadeInTime);
                     }
                     if (activeMusic != null && !activeMusic.isFading() && activeMusic.isPaused()) {
                         activeMusic.resume();
@@ -182,7 +182,7 @@ public class BiomeMusicEventHandler {
                 }
                 if (isCombatMusicPlaying() && !isCombatMusicFading) {
                     if (getCombatMusicPlayer() != null && getCombatMusicPlayer().isPlaying()) {
-                        getCombatMusicPlayer().fadeOut(7500);
+                        getCombatMusicPlayer().fadeOut(fadeOptions.combatMusicFadeInTime);
                         setCombatMusicPlaying(false);
                     } else if (getCombatMusicPlayer() != null && !getCombatMusicPlayer().isPlaying()) {
                         getCombatMusicPlayer().stop();
@@ -190,18 +190,20 @@ public class BiomeMusicEventHandler {
                         combatMusicPlayer = null;
                     }
                     if (activeMusic != null && !activeMusic.isFading()) {
-                        activeMusic.fadeIn(8500);
+                        activeMusic.fadeIn(fadeOptions.customMusicFadeInTime);
                         return;
                     } else if (activeTagMusic != null && !activeTagMusic.isFading()) {
-                        activeTagMusic.fadeIn(8500);
+                        activeTagMusic.fadeIn(fadeOptions.customMusicFadeInTime);
                         return;
                     }
                 }
 
-                // --w--------------------- UNDERGROUND MUSIC HANDLING -----------------------
-                if (event.player.world != null && event.player.posY <= cpundergroundOptions.undergroundMusicYLevelStart && event.player.world.provider.getDimension() == 0 && !isUndergroundMusicPlaying) {
-                    handleUndergroundMusic();
-                    return;
+                // ----------------------- UNDERGROUND MUSIC HANDLING -----------------------
+                if (cpundergroundOptions.enableUndergroundMusic) {
+                    if (event.player.world != null && event.player.posY <= cpundergroundOptions.undergroundMusicYLevelStart && event.player.world.provider.getDimension() == 0 && !isUndergroundMusicPlaying) {
+                        handleUndergroundMusic();
+                        return;
+                    }
                 }
                 if (isUndergroundMusicPlaying && event.player.world != null && event.player.posY <= cpundergroundOptions.undergroundMusicYLevelStop && event.player.world.provider.getDimension() == 0) {
                     return;
@@ -239,22 +241,22 @@ public class BiomeMusicEventHandler {
                 // specific music not null, tag null
                 if (activeMusic != null && !isMusicBiomeCorrect(currentMusicFile, configSet) && !activeMusic.isFading() && activeTagMusic == null) {
                     if (activeTagMusic != null) {
-                        activeTagMusic.stopWithFadeOut(12500);
+                        activeTagMusic.stopWithFadeOut(fadeOptions.customMusicFadeOutTime);
                         activeTagMusic = null;
                     }
-                    activeMusic.stopWithFadeOut(12500);
+                    activeMusic.stopWithFadeOut(fadeOptions.customMusicFadeOutTime);
                     activeMusic = new MusicPlayer(musicFile, false);
                     currentMusicFile = musicFile;
-                    activeMusic.playWithFadeIn(15000);
+                    activeMusic.playWithFadeIn(fadeOptions.customMusicFadeInTime);
                 }
                 //specific music null, tag not null
                 else if (activeMusic == null && activeTagMusic != null && !activeTagMusic.isFading()) {
                     activeMusic = new MusicPlayer(musicFile, false);
                     currentMusicFile = musicFile;
-                    activeMusic.playWithFadeIn(15000);
+                    activeMusic.playWithFadeIn(fadeOptions.customMusicFadeInTime);
                     stopVanillaMusic();
                     if (activeTagMusic != null) {
-                        activeTagMusic.stopWithFadeOut(12500);
+                        activeTagMusic.stopWithFadeOut(fadeOptions.customMusicFadeOutTime);
                         activeTagMusic = null;
                     }
                 }
@@ -262,7 +264,7 @@ public class BiomeMusicEventHandler {
                 else if (activeMusic == null && activeTagMusic == null) {
                     activeMusic = new MusicPlayer(musicFile, false);
                     currentMusicFile = musicFile;
-                    activeMusic.playWithFadeIn(15000);
+                    activeMusic.playWithFadeIn(fadeOptions.customMusicFadeInTime);
                     stopVanillaMusic();
                 }
                 if (activeTagMusic != null && activeTagMusic.isPlaying() && !isVanillaMusicFading) {
@@ -297,14 +299,14 @@ public class BiomeMusicEventHandler {
                         else if (activeMusic == null && activeTagMusic == null) {
                             activeTagMusic = new MusicPlayer(randomTagMusicFile, false);
                             currentMusicFile = musicFile;
-                            activeTagMusic.playWithFadeIn(15000);
+                            activeTagMusic.playWithFadeIn(fadeOptions.customMusicFadeInTime);
                             stopVanillaMusic();
                         }
                         else if (activeTagMusic != null && activeMusic == null && !activeTagMusic.isFading() && !possibleSongs.contains(activeTagMusic.getFileName())) {
-                            activeTagMusic.stopWithFadeOut(12500);
+                            activeTagMusic.stopWithFadeOut(fadeOptions.customMusicFadeOutTime);
                             activeTagMusic = new MusicPlayer(randomTagMusicFile, false);
                             currentMusicFile = musicFile;
-                            activeTagMusic.playWithFadeIn(15000);
+                            activeTagMusic.playWithFadeIn(fadeOptions.customMusicFadeInTime);
                             stopVanillaMusic();
                         }
                         if (!isVanillaMusicFading && activeTagMusic != null && !adambientMode) {
@@ -312,15 +314,15 @@ public class BiomeMusicEventHandler {
                         }
                     } else {
                         if (activeTagMusic != null && activeTagMusic.isPlaying() && !activeTagMusic.isFading()) {
-                            activeTagMusic.stopWithFadeOut(12500);
+                            activeTagMusic.stopWithFadeOut(fadeOptions.customMusicFadeOutTime);
                             activeTagMusic = null;
                         }
                         if (activeMusic != null && activeMusic.isPlaying() && !activeMusic.isFading()) {
-                            activeMusic.stopWithFadeOut(15000);
+                            activeMusic.stopWithFadeOut(fadeOptions.customMusicFadeOutTime);
                             activeMusic = null;
                         }
                         if (getCombatMusicPlayer() != null && getCombatMusicPlayer().isPlaying() && !getCombatMusicPlayer().isFading()) {
-                            getCombatMusicPlayer().stopWithFadeOut(15000);
+                            getCombatMusicPlayer().stopWithFadeOut(fadeOptions.customMusicFadeOutTime);
                             setCombatMusicPlaying(false);
                             combatMusicPlayer = null;
                         }
@@ -331,7 +333,7 @@ public class BiomeMusicEventHandler {
                 }
             }
         } else if (activeMusic != null) {
-            activeMusic.stopWithFadeOut(12500);
+            activeMusic.stopWithFadeOut(fadeOptions.customMusicFadeOutTime);
             activeMusic = null;
         }
     }
@@ -342,7 +344,7 @@ public class BiomeMusicEventHandler {
             activeMusic = null;
         }
         activeTagMusic = new MusicPlayer(randomTagMusicFile, false);
-        activeTagMusic.playWithFadeIn(15000);
+        activeTagMusic.playWithFadeIn(fadeOptions.customMusicFadeInTime);
         currentMusicFile = musicFile;
         if (!isVanillaMusicFading && !adambientMode) {
             stopVanillaMusic();

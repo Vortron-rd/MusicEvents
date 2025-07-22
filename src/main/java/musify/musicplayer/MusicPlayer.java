@@ -12,8 +12,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Random;
 
-import static musify.config.BiomeMusicConfig.combatOptions;
-import static musify.config.BiomeMusicConfig.musicLink;
+import static musify.config.BiomeMusicConfig.*;
 
 public class MusicPlayer implements Runnable {
     private final File mp3File;
@@ -121,7 +120,7 @@ public class MusicPlayer implements Runnable {
                     float targetVolume = Minecraft.getMinecraft().gameSettings.getSoundLevel(SoundCategory.MUSIC);
                     float min = gainControl.getMinimum();
                     float max = gainControl.getMaximum();
-                    float targetDb = (targetVolume == 0.0f) ? min : (float) (20.0 * Math.log10(targetVolume));
+                    float targetDb = (targetVolume == 0.0f) ? min : (float) (fadeOptions.musicVolumeMultiplier * (20.0 * Math.log10(targetVolume)));
                     targetDb = Math.max(min, Math.min(targetDb, max));
                     gainControl.setValue(min);
 
@@ -299,7 +298,7 @@ public class MusicPlayer implements Runnable {
         float min = gainControl.getMinimum();
         float max = gainControl.getMaximum();
         float targetVolume = Minecraft.getMinecraft().gameSettings.getSoundLevel(SoundCategory.MUSIC);
-        float targetDb = (targetVolume == 0.0f) ? min : (float) (20.0 * Math.log10(targetVolume));
+        float targetDb = (targetVolume == 0.0f) ? min : (float) (fadeOptions.musicVolumeMultiplier * (20.0 * Math.log10(targetVolume)));
         targetDb = Math.max(min, Math.min(targetDb, max));
         gainControl.setValue(min);
         line.start();
@@ -342,7 +341,7 @@ public class MusicPlayer implements Runnable {
                 float min = gainControl.getMinimum();
                 float max = gainControl.getMaximum();
                 float targetVolume = Minecraft.getMinecraft().gameSettings.getSoundLevel(SoundCategory.MUSIC);
-                float targetDb = (targetVolume == 0.0f) ? min : (float) (20.0 * Math.log10(targetVolume));
+                float targetDb = (targetVolume == 0.0f) ? min : (float) (fadeOptions.musicVolumeMultiplier * (20.0 * Math.log10(targetVolume)));
                 targetDb = Math.max(min, Math.min(targetDb, max));
                 float currentDb = gainControl.getValue();
                 int steps = 50;

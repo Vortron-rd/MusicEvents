@@ -116,25 +116,25 @@ public class BiomeMusicConfig {
 
 	public static class FadeOptions {
 
-		@Config.Name("Polling Rate")
-		@Config.Comment("Polling rate for the music change. Default: 140 | [INT / TICKS]")
+		@Config.Name("DANGEROUS OPTION! | Polling Rate")
+		@Config.Comment("Polling rate for the music change. This is a dangerous option to change if you don't know what you are doing! Default: 140 | [INT / TICKS]")
 		public int pollingRate = 140;
 
-		@Config.Name("Vanilla Fade-out")
-		@Config.Comment("Vanilla Music Fade-out Time. Default: 10000 | [INT / MS]")
-		public int vanillaMusicFadeOutTime = 7000;
+//		@Config.Name("DEPRECATED UNUSED | Vanilla Fade-out")
+//		@Config.Comment("Vanilla Music Fade-out Time. Default: 10000 | [INT / MS]")
+//		public int vanillaMusicFadeOutTime = 7000;
 
 		@Config.Name("Biome Music Fade-in")
 		@Config.Comment("Custom Music Fade-in Time. Default: 20000 | [INT / MS]")
-		public int customMusicFadeInTime = 20000;
+		public int customMusicFadeInTime = 12500;
 
 		@Config.Name("Biome Music Fade-out")
 		@Config.Comment("Custom Music Fade-out Time. Default: 20000 | [INT / MS]")
-		public int customMusicFadeOutTime = 20000;
+		public int customMusicFadeOutTime = 10000;
 
 		@Config.Name("Combat Music Fade-in Time")
 		@Config.Comment("Custom Combat Music Fade-in Time. Default: 10000 | [INT / MS]")
-		public int combatMusicFadeInTime = 10000;
+		public int combatMusicFadeInTime = 8500;
 
 		@Config.Name("Music Volume Multiplier")
 		@Config.Comment("The Volume Multiplier for custom music.")

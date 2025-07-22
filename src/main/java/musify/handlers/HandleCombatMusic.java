@@ -7,8 +7,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.util.Objects;
 
-import static musify.config.BiomeMusicConfig.combatOptions;
-import static musify.config.BiomeMusicConfig.musicLink;
+import static musify.config.BiomeMusicConfig.*;
 import static musify.handlers.BiomeMusicEventHandler.*;
 import static musify.musicplayer.MusicPlayer.getRandomSongForCombat;
 
@@ -25,16 +24,16 @@ public class HandleCombatMusic {
         if (!isCombatMusicPlaying && backgroundCombatMusic) {
             isCombatMusicPlaying = true;
             if (activeMusic != null && !activeMusic.isFading()) {
-                activeMusic.fadeOut(7500);
+                activeMusic.fadeOut(fadeOptions.combatMusicFadeInTime);
             }
             if (activeTagMusic != null && !activeTagMusic.isFading()) {
-                activeTagMusic.fadeOut(7500);
+                activeTagMusic.fadeOut(fadeOptions.combatMusicFadeInTime);
             }
 
             if (!isVanillaMusicFading) {
                 stopVanillaMusic();
             }
-            combatMusicPlayer.fadeIn(8500);
+            combatMusicPlayer.fadeIn(fadeOptions.combatMusicFadeInTime);
         } else if (!isCombatMusicPlaying && !backgroundCombatMusic) {
             isCombatMusicPlaying = true;
 
@@ -45,11 +44,11 @@ public class HandleCombatMusic {
             }
             linkedMusic = getRandomSongForCombat();
             if (activeMusic != null && !activeMusic.isFading()) {
-                activeMusic.stopWithFadeOut(7500);
+                activeMusic.stopWithFadeOut(fadeOptions.combatMusicFadeInTime);
                 activeMusic = null;
             }
             if (activeTagMusic != null && !activeTagMusic.isFading()) {
-                activeTagMusic.stopWithFadeOut(7500);
+                activeTagMusic.stopWithFadeOut(fadeOptions.combatMusicFadeInTime);
                 activeTagMusic = null;
             }
             startCombatMusicWithFadeIn(linkedMusic);
@@ -64,7 +63,7 @@ public class HandleCombatMusic {
 
     public static void startCombatMusicWithFadeIn(String music) {
         combatMusicPlayer = new MusicPlayer(music, true);
-        combatMusicPlayer.playWithFadeIn(15000);
+        combatMusicPlayer.playWithFadeIn(fadeOptions.combatMusicFadeInTime);
         backgroundCombatMusic = true;
     }
     public static boolean isCombatMusicPlaying() {

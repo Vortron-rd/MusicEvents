@@ -35,7 +35,6 @@ public class DungeonUtils {
      * @return The music file if a dungeon is found, otherwise null.
      */
     public static String scanForDungeonMusic(EntityPlayer player) {
-        Musify.LOGGER.debug("ENTERED DUNGEON MUSIC CHECK");
         World world = player.world;
         BlockPos playerPos = player.getPosition();
 
@@ -49,7 +48,6 @@ public class DungeonUtils {
             if (parts.length < 3) continue;
             String blockName = parts[0] + ":" + parts[1];
             String music = parts[2];
-            Musify.LOGGER.debug("BLOCK TO CHECK: " + blockName + " for music: " + music);
 
             Block block = Block.getBlockFromName(blockName);
             if (block == null) continue;
@@ -73,9 +71,6 @@ public class DungeonUtils {
                     }
                 }
             }
-
-            Musify.LOGGER.debug("BLOCKS COUNTED: " + blockCount + ", SPAWNERS COUNTED: " + spawnerCount);
-            Musify.LOGGER.debug("RETURNED DUNGEON MUSIC: " + music + " for block: " + blockName);
             if (blockCount >= minBlocks && spawnerCount >= minSpawners) {
                 return music;
             }

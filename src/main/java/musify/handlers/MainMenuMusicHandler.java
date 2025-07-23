@@ -6,6 +6,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.audio.ISound;
 import net.minecraft.client.audio.MusicTicker;
 import net.minecraft.client.gui.GuiMainMenu;
+import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
@@ -23,6 +24,7 @@ import static musify.handlers.BiomeMusicEventHandler.activeTagMusic;
 public class MainMenuMusicHandler {
 
     private static musify.musicplayer.MusicPlayer mainMenuMusicPlayer = null;
+    private static boolean errq = false;
 
     public static boolean isMainMenuMusicPlaying = false;
     public static boolean isPaused = false;
@@ -33,48 +35,87 @@ public class MainMenuMusicHandler {
         String mainMenuMusicPath = BiomeMusicConfig.acmainMenuMusic;
         Minecraft mc = Minecraft.getMinecraft();
 
-        if (isMainMenuScreen(mc)) {
-            stopVanillaMusicMainMenu();
-            if (activeMusic != null) {
-                activeMusic.stop();
-                activeMusic = null;
-            }
-            if (activeTagMusic != null) {
-                activeTagMusic.stop();
-                activeTagMusic = null;
-            }
+        if (mainMenuMusicPath != null && !mainMenuMusicPath.equals("default_music")) {
 
-            try {
-                if (isPaused && isMainMenuMusicPlaying) {
-                    if (mainMenuMusicPlayer != null) {
-                        mainMenuMusicPlayer.resume();
-                        mainMenuMusicPlayer.adjustVolume();
+            if (!Loader.isModLoaded("custommainmenu")) {
+
+                if (isMainMenuScreen(mc)) {
+                    stopVanillaMusicMainMenu();
+                    mainMenuMusicSetup(mainMenuMusicPath);
+
+                }
+                else {
+                    if (mainMenuMusicPlayer != null && isMainMenuMusicPlaying && !isMainMenuScreen(mc) && !isPaused) {
+                        mainMenuMusicPlayer.pause();
+
+                        isPaused = true;
+                    }
+                    if (mainMenuMusicPlayer != null && mc.world != null) {
+                        mainMenuMusicPlayer.stop();
+                        isMainMenuMusicPlaying = false;
                         isPaused = false;
                     }
-                } else {
-                    playMainMenuMusic();
                 }
-            } catch (Exception e) {
-                Musify.LOGGER.error("Failed to play main menu music. File not found or invalid: {}", mainMenuMusicPath, e);
             }
+            else if (Loader.isModLoaded("custommainmenu")) {
+                if (mc.currentScreen != null && mc.currentScreen.getClass().getName().contains("lumien.custommainmenu")) {
+                    stopVanillaMusicMainMenu();
+                    mainMenuMusicSetup(mainMenuMusicPath);
+                } else {
+                    if (mainMenuMusicPlayer != null && isMainMenuMusicPlaying && !isPaused) {
+                        mainMenuMusicPlayer.pause();
+                        isPaused = true;
+                        if (mainMenuMusicPlayer != null && mc.world != null) {
+                            mainMenuMusicPlayer.stop();
+                            isMainMenuMusicPlaying = false;
+                            isPaused = false;
+                        }
+                    }
 
-            if (isMainMenuMusicPlaying && !isMainMenuScreen(mc) && !isPaused) {
-                mainMenuMusicPlayer.pause();
-
-                isPaused = true;
+                }
             }
-        } else {
-            if (isMainMenuMusicPlaying && !isPaused) {
-                mainMenuMusicPlayer.pause();
-                isPaused = true;
+            else {
+                if (mainMenuMusicPlayer != null && mc.world != null) {
+                    mainMenuMusicPlayer.stop();
+                    isMainMenuMusicPlaying = false;
+                    isPaused = false;
+                }
             }
-            if (mc.world != null) {
+        }
+        else {
+            if (mainMenuMusicPath.equals("default_music") && isMainMenuMusicPlaying && mainMenuMusicPlayer != null) {
                 mainMenuMusicPlayer.stop();
+
                 isMainMenuMusicPlaying = false;
-                isPaused = false;
             }
         }
     }
+
+    private static void mainMenuMusicSetup(String mainMenuMusicPath) {
+        if (activeMusic != null) {
+            activeMusic.stop();
+            activeMusic = null;
+        }
+        if (activeTagMusic != null) {
+            activeTagMusic.stop();
+            activeTagMusic = null;
+        }
+
+        try {
+            if (isPaused && isMainMenuMusicPlaying) {
+                if (mainMenuMusicPlayer != null) {
+                    mainMenuMusicPlayer.resume();
+                    mainMenuMusicPlayer.adjustVolume();
+                    isPaused = false;
+                }
+            } else {
+                playMainMenuMusic();
+            }
+        } catch (Exception e) {
+            Musify.LOGGER.error("Failed to play main menu music. File not found or invalid: {}", mainMenuMusicPath, e);
+        }
+    }
+
 
     public static boolean isMainMenuScreen(Minecraft mc) {
         return mc.currentScreen instanceof GuiMainMenu;
@@ -82,7 +123,7 @@ public class MainMenuMusicHandler {
 
     private static void playMainMenuMusic() throws Exception {
 
-        if (isMainMenuMusicPlaying) {
+        if (isMainMenuMusicPlaying || errq) {
             return;
         }
 
@@ -92,6 +133,7 @@ public class MainMenuMusicHandler {
 
         if (mainMenuMusic.equals("default_music")) {
             Musify.LOGGER.warn("Main menu music enabled, but set to default. Please disable it or set a custom music file.");
+            errq = true;
             return;
         }
 

@@ -12,6 +12,11 @@ buildscript {
         classpath group: 'net.minecraftforge.gradle', name: 'ForgeGradle', version: '5.1.+', changing: true
     }
 }
+
+plugins {
+    id 'com.github.johnrengelman.shadow' version '7.1.2'
+}
+
 apply plugin: 'net.minecraftforge.gradle'
 
 version = "${mod_version}"
@@ -62,16 +67,27 @@ repositories {
     mavenCentral()
 }
 
+configurations {
+    shadeOnly
+}
+
 dependencies {
     minecraft "net.minecraftforge:forge:${minecraft_version}-${forge_version}"
+
+    // Only these go in the shaded jar
+    shadeOnly 'com.googlecode.soundlibs:mp3spi:1.9.5.4'
+    shadeOnly 'com.googlecode.soundlibs:tritonus-share:0.3.7.4'
+
+    // These are compile-time only
     implementation 'com.googlecode.soundlibs:mp3spi:1.9.5.4'
     implementation 'com.googlecode.soundlibs:tritonus-share:0.3.7.4'
-    compileOnly 'org.ow2.asm:asm-util:6.2'              // Available only at compile time
+
+    compileOnly 'org.ow2.asm:asm-util:6.2'
     compileOnly 'org.ow2.asm:asm:6.2'
     compileOnly 'org.ow2.asm:asm-tree:6.2'
     compileOnly 'org.ow2.asm:asm-analysis:6.2'
-
 }
+
 
 processResources {
     inputs.property "version", project.version
@@ -88,6 +104,13 @@ configurations.all {
     resolutionStrategy {
         force 'org.ow2.asm:asm:5.2' // Use an older, compatible ASM version
     }
+}
+
+
+shadowJar {
+    configurations = [project.configurations.shadeOnly]
+    archiveClassifier.set('')
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
 }
 
 // Additionally, exclude problematic files during dependency resolution
@@ -124,4 +147,12 @@ jar {
     }
     duplicatesStrategy = DuplicatesStrategy.EXCLUDE
 }
+
+reobf {
+    shadowJar {}
+}
+
+build.dependsOn shadowJar, reobfShadowJar
+jar.enabled = true
+
 jar.finalizedBy('reobfJar')

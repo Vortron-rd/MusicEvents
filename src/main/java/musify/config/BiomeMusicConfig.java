@@ -66,6 +66,8 @@ public class BiomeMusicConfig {
 					"\nThis option is moreso for custom and modded dungeons than vanilla ones.")
 	public static final DungeonDefinitionOptions dungeonDefinitionOptions = new DungeonDefinitionOptions();
 
+	public static final RecurrentComplexOptions recurrentComplexOptions = new RecurrentComplexOptions();
+
 	@Config.Name("Misc Options.")
 	@Config.Comment("Miscelanious Options.")
 	public static final MiscOptions miscOptions = new MiscOptions();
@@ -232,6 +234,16 @@ public class BiomeMusicConfig {
 		@Config.Name("Min blocks")
 		@Config.Comment("The minimum amount of blocks defined in the dungeon list that need to be present to consider a dungeon. Default: 10.")
 		public int minBlocks = 20;
+	}
+
+	public static class RecurrentComplexOptions {
+		@Config.Name("Recurrent Complex Dungeon Music")
+		@Config.Comment("Enable or Disable Recurrent Complex Dungeon Music. This will play music when a Recurrent Complex structure is detected.")
+		public boolean enableRecurrentComplexMusic = false;
+
+		@Config.Name("Recurrent Complex Music List")
+		@Config.Comment("Put any music you want to be played in Recurrent Complex structures in here. \nThis will play when a Recurrent Complex structure is detected.")
+		public String[] recurrentComplexMusicList = new String[0];
 	}
 
 }

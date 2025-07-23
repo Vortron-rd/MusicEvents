@@ -63,7 +63,9 @@ repositories {
     maven {
         url = 'https://repo.spongepowered.org/maven'
     }
-
+    flatDir {
+        dirs 'build/libs'
+    }
     mavenCentral()
 }
 
@@ -76,16 +78,20 @@ dependencies {
 
     // Only these go in the shaded jar
     shadeOnly 'com.googlecode.soundlibs:mp3spi:1.9.5.4'
+    shadeOnly 'com.googlecode.soundlibs:vorbisspi:1.0.3.3'
     shadeOnly 'com.googlecode.soundlibs:tritonus-share:0.3.7.4'
 
     // These are compile-time only
     implementation 'com.googlecode.soundlibs:mp3spi:1.9.5.4'
+    implementation 'com.googlecode.soundlibs:vorbisspi:1.0.3.3'
     implementation 'com.googlecode.soundlibs:tritonus-share:0.3.7.4'
 
     compileOnly 'org.ow2.asm:asm-util:6.2'
     compileOnly 'org.ow2.asm:asm:6.2'
     compileOnly 'org.ow2.asm:asm-tree:6.2'
     compileOnly 'org.ow2.asm:asm-analysis:6.2'
+    compileOnly files('RecurrentComplex-1.4.8.6.jar')
+    implementation name: 'RecurrentComplex-1.4.8.6'
 }
 
 
@@ -110,7 +116,9 @@ configurations.all {
 shadowJar {
     configurations = [project.configurations.shadeOnly]
     archiveClassifier.set('')
-    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+    duplicatesStrategy = DuplicatesStrategy.INCLUDE
+
+    mergeServiceFiles()
 }
 
 // Additionally, exclude problematic files during dependency resolution

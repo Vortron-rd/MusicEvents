@@ -29,11 +29,21 @@ public class MainMenuMusicHandler {
     public static boolean isMainMenuMusicPlaying = false;
     public static boolean isPaused = false;
 
+    private static int ticksSinceStart = 0;
+
     @SubscribeEvent
     public static void onClientTick(TickEvent.ClientTickEvent event) throws Exception {
+        if (event.phase != TickEvent.Phase.END) {
+            return;
+        }
+
+        ticksSinceStart++;
+        if (ticksSinceStart < 20) return; // wait 1 second (20 ticks)
 
         String mainMenuMusicPath = BiomeMusicConfig.acmainMenuMusic;
         Minecraft mc = Minecraft.getMinecraft();
+
+        if (mc == null) return;
 
         if (mainMenuMusicPath != null && !mainMenuMusicPath.equals("default_music")) {
 

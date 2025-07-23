@@ -21,10 +21,15 @@ import static musify.handlers.HandleCombatMusic.isCombatMusicPlaying;
 @Mod.EventBusSubscriber
 public class PauseEventHandler {
 
-    private boolean donePause = false;
+    private static boolean donePause = false;
+    private static int ticksSinceStart = 0;
 
     @SubscribeEvent
-    public void onClientTick(TickEvent.ClientTickEvent event) {
+    public static void onClientTick(TickEvent.ClientTickEvent event) {
+
+        ticksSinceStart++;
+        if (ticksSinceStart < 20) return; // wait 1 second (20 ticks)
+
         Minecraft mc = Minecraft.getMinecraft();
 
         if (mc.world == null && !MainMenuMusicHandler.isMainMenuMusicPlaying) {
@@ -80,7 +85,7 @@ public class PauseEventHandler {
 
 
 
-    private boolean isPauseMenuOpen(Minecraft mc) {
+    private static boolean isPauseMenuOpen(Minecraft mc) {
         if (mc.currentScreen == null) {
             return false;
         }

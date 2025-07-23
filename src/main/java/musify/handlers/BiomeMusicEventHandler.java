@@ -33,6 +33,8 @@ import static musify.config.BiomeMusicConfig.*;
 import static musify.handlers.HandleCombatMusic.*;
 import static musify.handlers.HandleUndergroundMusic.handleUndergroundMusic;
 import static musify.handlers.HandleUndergroundMusic.isUndergroundMusicPlaying;
+import static musify.handlers.RecurrentHandler.checkCorrectDungeon;
+import static musify.handlers.RecurrentHandler.handleRecurrentComplexMusic;
 import static musify.utils.BossTargetUtils.handleBossMusic;
 import static musify.utils.BossTargetUtils.isBossMusicPlaying;
 
@@ -47,16 +49,19 @@ public class BiomeMusicEventHandler {
      */
     public static MusicPlayer activeMusic = null;
     public static MusicPlayer activeTagMusic = null;
-    public static String currentMusicFile = null;
+    public static String currentMusicFile = "";
     public static boolean isVanillaMusicFading = false;
 
     private static EntityPlayer player;
     private static int aggroCounter = 0;
     private static int tickCounter = 0;
     private static int dungeonCount = 0;
+    public static int recurrentCount = 0;
 
     private static int jukeboxTicks = 0;
     private static boolean jukeboxPause = false;
+
+    public static boolean isDungeonMusicPlaying = false;
 
     /**
      * Handles the player tick event to manage biome music.
@@ -69,6 +74,8 @@ public class BiomeMusicEventHandler {
     @SideOnly(Side.CLIENT)
     @SubscribeEvent
     public static void onPlayerTick(TickEvent.PlayerTickEvent event) throws Exception {
+
+        if (event.phase != TickEvent.Phase.END) return;
 
         if (player == null || player != event.player || player.getUniqueID() != event.player.getUniqueID()) {
             player = event.player;
@@ -87,6 +94,14 @@ public class BiomeMusicEventHandler {
             jukeboxTicks--;
             if (JukeboxUtils.isJukeBoxNearAndPlaying(event.player, miscOptions.jukeboxRange)) {
                 jukeboxTicks = 200;
+            }
+            return;
+        }
+
+        if (recurrentCount > 0) {
+            recurrentCount--;
+            if (recurrentCount % 10 == 0) {
+                checkCorrectDungeon(event.player);
             }
             return;
         }
@@ -174,82 +189,91 @@ public class BiomeMusicEventHandler {
                 isBossMusicPlaying = false;
             }
 
-            // ----------------------- DUNGEON MUSIC HANDLING -----------------------
+            // ----------------------- RECURRENT COMPLEX HANDLING -----------------------
 
-            Musify.LOGGER.debug("PRE CHECK DUNGEON MUSIC");
-            if (dungeonDefinitionOptions.enableDungeonMusic) {
-                Musify.LOGGER.debug("ENTERED DUNGEON MUSIC HANDLER");
-                String dungeonMusic = DungeonUtils.getDungeonMusic(event.player);
-                if (dungeonMusic != null && !dungeonMusic.isEmpty()) {
-                    if (activeMusic != null && !activeMusic.isFading() && !activeMusic.getFileName().equals(dungeonMusic)) {
-                        activeMusic.stopWithFadeOut(fadeOptions.customMusicFadeOutTime);
-                        activeMusic = new MusicPlayer(dungeonMusic, true);
-                        currentMusicFile = dungeonMusic;
-                        activeMusic.playWithFadeIn(fadeOptions.customMusicFadeInTime);
-                    } else if (activeTagMusic != null && !activeTagMusic.isFading() && !activeTagMusic.getFileName().equals(dungeonMusic)) {
-                        activeTagMusic.stopWithFadeOut(fadeOptions.customMusicFadeOutTime);
-                        activeTagMusic = new MusicPlayer(dungeonMusic, true);
-                        currentMusicFile = dungeonMusic;
-                        activeTagMusic.playWithFadeIn(fadeOptions.customMusicFadeInTime);
-                    } else if (activeTagMusic == null && activeMusic == null) {
-                        activeMusic = new MusicPlayer(dungeonMusic, true);
-                        currentMusicFile = dungeonMusic;
-                        activeMusic.playWithFadeIn(fadeOptions.customMusicFadeInTime);
-                    }
-                    if (!adambientMode) {
-                        stopVanillaMusic();
-                    }
-                    dungeonCount = 200;
+            if (recurrentComplexOptions.enableRecurrentComplexMusic) {
+                handleRecurrentComplexMusic(event.player);
+                if (isDungeonMusicPlaying) {
+                    isDungeonMusicPlaying = false;
                     return;
                 }
             }
 
-            if (aggroCounter == 0) {
-                // ----------------------- COMBAT MUSIC HANDLING -----------------------
-                if (combatOptions.enableCombatMusic) {
-                    int aggrocount = TargetingUtils.countMobsTargetingPlayer(event.player, combatOptions.combatRadius);
-                    if (aggrocount >= combatOptions.combatStartNumber) {
-                        aggroCounter = 400;
-                        handleCombatMusic();
-                        return;
-                    }
-                }
-                if (isCombatMusicPlaying() && !isCombatMusicFading) {
-                    if (getCombatMusicPlayer() != null && getCombatMusicPlayer().isPlaying()) {
-                        getCombatMusicPlayer().fadeOut(fadeOptions.combatMusicFadeInTime);
-                        setCombatMusicPlaying(false);
-                    } else if (getCombatMusicPlayer() != null && !getCombatMusicPlayer().isPlaying()) {
-                        getCombatMusicPlayer().stop();
-                        setCombatMusicPlaying(false);
-                        combatMusicPlayer = null;
-                    }
-                    if (activeMusic != null && !activeMusic.isFading()) {
-                        activeMusic.fadeIn(fadeOptions.customMusicFadeInTime);
-                        return;
-                    } else if (activeTagMusic != null && !activeTagMusic.isFading()) {
-                        activeTagMusic.fadeIn(fadeOptions.customMusicFadeInTime);
+            // ----------------------- DUNGEON MUSIC HANDLING -----------------------
+
+            if (recurrentCount == 0) {
+                if (dungeonDefinitionOptions.enableDungeonMusic) {
+                    String dungeonMusic = DungeonUtils.getDungeonMusic(event.player);
+                    if (dungeonMusic != null && !dungeonMusic.isEmpty()) {
+                        if (activeMusic != null && !activeMusic.isFading() && !activeMusic.getFileName().equals(dungeonMusic)) {
+                            activeMusic.stopWithFadeOut(fadeOptions.customMusicFadeOutTime);
+                            activeMusic = new MusicPlayer(dungeonMusic, true);
+                            currentMusicFile = dungeonMusic;
+                            activeMusic.playWithFadeIn(fadeOptions.customMusicFadeInTime);
+                        } else if (activeTagMusic != null && !activeTagMusic.isFading() && !activeTagMusic.getFileName().equals(dungeonMusic)) {
+                            activeTagMusic.stopWithFadeOut(fadeOptions.customMusicFadeOutTime);
+                            activeTagMusic = new MusicPlayer(dungeonMusic, true);
+                            currentMusicFile = dungeonMusic;
+                            activeTagMusic.playWithFadeIn(fadeOptions.customMusicFadeInTime);
+                        } else if (activeTagMusic == null && activeMusic == null) {
+                            activeMusic = new MusicPlayer(dungeonMusic, true);
+                            currentMusicFile = dungeonMusic;
+                            activeMusic.playWithFadeIn(fadeOptions.customMusicFadeInTime);
+                        }
+                        if (!adambientMode) {
+                            stopVanillaMusic();
+                        }
+                        dungeonCount = 200;
                         return;
                     }
                 }
 
-                // ----------------------- UNDERGROUND MUSIC HANDLING -----------------------
-                if (cpundergroundOptions.enableUndergroundMusic) {
-                    if (event.player.world != null && event.player.posY <= cpundergroundOptions.undergroundMusicYLevelStart && event.player.world.provider.getDimension() == 0 && !isUndergroundMusicPlaying) {
-                        handleUndergroundMusic();
-                        return;
+                if (aggroCounter == 0) {
+                    // ----------------------- COMBAT MUSIC HANDLING -----------------------
+                    if (combatOptions.enableCombatMusic) {
+                        int aggrocount = TargetingUtils.countMobsTargetingPlayer(event.player, combatOptions.combatRadius);
+                        if (aggrocount >= combatOptions.combatStartNumber) {
+                            aggroCounter = 400;
+                            handleCombatMusic();
+                            return;
+                        }
                     }
-                }
-                if (isUndergroundMusicPlaying && event.player.world != null && event.player.posY <= cpundergroundOptions.undergroundMusicYLevelStop && event.player.world.provider.getDimension() == 0) {
-                    return;
-                } else {
-                    isUndergroundMusicPlaying = false;
-                }
+                    if (isCombatMusicPlaying() && !isCombatMusicFading) {
+                        if (getCombatMusicPlayer() != null && getCombatMusicPlayer().isPlaying()) {
+                            getCombatMusicPlayer().fadeOut(fadeOptions.combatMusicFadeInTime);
+                            setCombatMusicPlaying(false);
+                        } else if (getCombatMusicPlayer() != null && !getCombatMusicPlayer().isPlaying()) {
+                            getCombatMusicPlayer().stop();
+                            setCombatMusicPlaying(false);
+                            combatMusicPlayer = null;
+                        }
+                        if (activeMusic != null && !activeMusic.isFading()) {
+                            activeMusic.fadeIn(fadeOptions.customMusicFadeInTime);
+                            return;
+                        } else if (activeTagMusic != null && !activeTagMusic.isFading()) {
+                            activeTagMusic.fadeIn(fadeOptions.customMusicFadeInTime);
+                            return;
+                        }
+                    }
 
-                // // ----------------------- BIOME MUSIC HANDLING -----------------------
-                BlockPos pos = event.player.getPosition();
-                Biome biome = event.player.world.getBiome(pos);
-                Musify.LOGGER.debug("HANDLING BIOME MUSIC");
-                handleBiomeMusic(biome);
+                    // ----------------------- UNDERGROUND MUSIC HANDLING -----------------------
+                    if (cpundergroundOptions.enableUndergroundMusic) {
+                        if (event.player.world != null && event.player.posY <= cpundergroundOptions.undergroundMusicYLevelStart && event.player.world.provider.getDimension() == 0 && !isUndergroundMusicPlaying) {
+                            handleUndergroundMusic();
+                            return;
+                        }
+                    }
+                    if (isUndergroundMusicPlaying && event.player.world != null && event.player.posY <= cpundergroundOptions.undergroundMusicYLevelStop && event.player.world.provider.getDimension() == 0) {
+                        return;
+                    } else {
+                        isUndergroundMusicPlaying = false;
+                    }
+
+                    // // ----------------------- BIOME MUSIC HANDLING -----------------------
+                    BlockPos pos = event.player.getPosition();
+                    Biome biome = event.player.world.getBiome(pos);
+                    handleBiomeMusic(biome);
+                }
             }
         }
         if (tickCounter % 10000 == 0) {

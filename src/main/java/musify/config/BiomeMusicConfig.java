@@ -66,7 +66,14 @@ public class BiomeMusicConfig {
 					"\nThis option is moreso for custom and modded dungeons than vanilla ones.")
 	public static final DungeonDefinitionOptions dungeonDefinitionOptions = new DungeonDefinitionOptions();
 
+	@Config.Name("Recurrent Complex Structure Options")
+	@Config.Comment("Recurrent Complex Structure Options. This is used to define what music to play in Recurrent Complex structures.")
 	public static final RecurrentComplexOptions recurrentComplexOptions = new RecurrentComplexOptions();
+
+	@Config.Name("Doomlike Dungeons Options")
+	@Config.Comment("Doomlike Dungeons Options. This is used to define what music to play in Doomlike Dungeons structures. It works based on the Doomlike Dungeon Themes.")
+	public static final DoomlikeDungeonsOptions doomlikeDungeonsOptions = new DoomlikeDungeonsOptions();
+
 
 	@Config.Name("Misc Options.")
 	@Config.Comment("Miscelanious Options.")
@@ -242,8 +249,26 @@ public class BiomeMusicConfig {
 		public boolean enableRecurrentComplexMusic = false;
 
 		@Config.Name("Recurrent Complex Music List")
-		@Config.Comment("Put any music you want to be played in Recurrent Complex structures in here. \nThis will play when a Recurrent Complex structure is detected.")
+		@Config.Comment("Put any music you want to be played in Recurrent Complex structures in here. \nThis will play when a Recurrent Complex structure is detected." + "\nExample: [structure_name:music_file.ogg]\n")
 		public String[] recurrentComplexMusicList = new String[0];
 	}
 
+	public static class DoomlikeDungeonsOptions {
+
+		@Config.Name("Doomlike Dungeons Music")
+		@Config.Comment("Enable or Disable Doomlike Dungeons Music. This will play music when a Doomlike Dungeon is detected.")
+		public boolean enableDoomlikeDungeonsMusic = false;
+
+		@Config.Name("Doomlike Dungeons Music List")
+		@Config.Comment("Put any music you want to be played for any Doomlike Dungeon theme in here. \nThis will play when a Doomlike Dungeon is detected." + "\nExample: [structure_name:music_file.ogg]\n")
+		public String[] doomlikeDungeonsMusicList = new String[0];
+
+		@Config.Name("Doomlike Dungeons max distance")
+		@Config.Comment("The maximum distance from the player in which the mod will detect a Doomlike Dungeon. Default: 40.")
+		public int DoomlikeDistance = 40;
+
+		@Config.Name("Doomlike Dungeons max Y level")
+		@Config.Comment("The maximum Y level difference in which the mod will detect a Doomlike Dungeon. Default: 7.")
+		public int DoomlikeMaxYLevel = 7;
+	}
 }

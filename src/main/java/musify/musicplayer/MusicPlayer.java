@@ -144,13 +144,17 @@ public class MusicPlayer implements Runnable {
                     fadeThread.start();
 
                     byte[] buffer = new byte[4096];
-                    int bytesRead;
-                    while (playing && (bytesRead = decodedIn.read(buffer, 0, buffer.length)) != -1) {
-                        while (paused) {
-                            Thread.sleep(10);
+                    do {
+                        try (AudioInputStream loopStream = AudioSystem.getAudioInputStream(decodedFormat, AudioSystem.getAudioInputStream(mp3File))) {
+                            int bytesRead;
+                            while (playing && (bytesRead = loopStream.read(buffer, 0, buffer.length)) != -1) {
+                                while (paused) {
+                                    Thread.sleep(10);
+                                }
+                                line.write(buffer, 0, bytesRead);
+                            }
                         }
-                        line.write(buffer, 0, bytesRead);
-                    }
+                    } while (playing);
                     line.drain();
                     line.stop();
                     line.close();
@@ -197,13 +201,18 @@ public class MusicPlayer implements Runnable {
                     line.start();
 
                     byte[] buffer = new byte[4096];
-                    int bytesRead;
-                    while (playing && (bytesRead = decodedIn.read(buffer, 0, buffer.length)) != -1) {
-                        while (paused) {
-                            Thread.sleep(10);
+                    do {
+                        try (AudioInputStream loopStream = AudioSystem.getAudioInputStream(decodedFormat, AudioSystem.getAudioInputStream(mp3File))) {
+                            int bytesRead;
+                            while (playing && (bytesRead = loopStream.read(buffer, 0, buffer.length)) != -1) {
+                                while (paused) {
+                                    Thread.sleep(10);
+                                }
+                                line.write(buffer, 0, bytesRead);
+                            }
                         }
-                        line.write(buffer, 0, bytesRead);
-                    }
+                    } while (playing);
+
                     line.drain();
                     line.stop();
                     line.close();
@@ -452,13 +461,18 @@ public class MusicPlayer implements Runnable {
                 line.start();
 
                 byte[] buffer = new byte[4096];
-                int bytesRead;
-                while (playing && (bytesRead = decodedIn.read(buffer, 0, buffer.length)) != -1) {
-                    while (paused) {
-                        Thread.sleep(10);
+                do {
+                    try (AudioInputStream loopStream = AudioSystem.getAudioInputStream(decodedFormat, AudioSystem.getAudioInputStream(mp3File))) {
+                        int bytesRead;
+                        while (playing && (bytesRead = loopStream.read(buffer, 0, buffer.length)) != -1) {
+                            while (paused) {
+                                Thread.sleep(10);
+                            }
+                            line.write(buffer, 0, bytesRead);
+                        }
                     }
-                    line.write(buffer, 0, bytesRead);
-                }
+                } while (playing);
+
                 line.drain();
                 line.stop();
                 line.close();

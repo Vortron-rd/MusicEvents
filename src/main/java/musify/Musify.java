@@ -3,6 +3,7 @@ package musify;
 import musify.commands.getMusicCommand;
 import musify.config.BiomeMusicConfig;
 import musify.handlers.PauseEventHandler;
+import musify.network.NetworkManager;
 import musify.proxy.CommonProxy;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.Mod;
@@ -47,6 +48,7 @@ public class Musify {
     @Mod.EventHandler
     public void init(FMLInitializationEvent event) {
         MinecraftForge.EVENT_BUS.register(new PauseEventHandler());
+        NetworkManager.registerPackets();
     }
 
     @Mod.EventHandler

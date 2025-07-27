@@ -1,0 +1,14 @@
+{
+  "required": true,
+  "minVersion": "0.8",
+  "package": "musify.recurrent",
+  "refmap": "musify.refmap.json",
+  "target": "@env(DEFAULT)",
+  "mixins": [
+    "RecurrentStructureLoggerMixin"
+  ],
+  "injectors": {
+    "maxShiftBy": 10,
+    "defaultRequire": 1
+  }
+}

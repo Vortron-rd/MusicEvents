@@ -1,14 +1,14 @@
 {
-  "required": true,
+  "required": false,
   "minVersion": "0.8",
   "package": "musify.doomlike",
   "refmap": "musify.refmap.json",
-  "target": "@env(DEFAULT)",
+  "target": "@env(SERVER)",
   "mixins": [
     "MapMatrixMixin"
   ],
   "injectors": {
     "maxShiftBy": 10,
-    "defaultRequire": 1
+    "defaultRequire": 0
   }
 }

@@ -16,6 +16,7 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.biome.Biome;
 import net.minecraftforge.common.BiomeDictionary;
+import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
@@ -218,7 +219,7 @@ public class BiomeMusicEventHandler {
 
             // ----------------------- DOOMLIKE DUNGEONS HANDLING -----------------------
 
-            if (doomlikeDungeonsOptions.enableDoomlikeDungeonsMusic) {
+            if (doomlikeDungeonsOptions.enableDoomlikeDungeonsMusic && Loader.isModLoaded("dldungeonsjbg")) {
                 if (tickCounter % (fadeOptions.pollingRate * 2) == 0) {
                     HandleDoomlikeDungeonsMusic(event.player, doomlikeDungeonsOptions.DoomlikeDistance);
                 }
@@ -229,7 +230,7 @@ public class BiomeMusicEventHandler {
 
             if (doomlikeCount == 0) {
                 if ((tickCounter % (fadeOptions.pollingRate * 2) == 0)) {
-                    if (recurrentComplexOptions.enableRecurrentComplexMusic) {
+                    if (recurrentComplexOptions.enableRecurrentComplexMusic && Loader.isModLoaded("reccomplex")) {
                         handleRecurrentMusic(event.player, false);
                         if (isDungeonMusicPlaying) {
                             isDungeonMusicPlaying = false;

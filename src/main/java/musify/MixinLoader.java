@@ -1,5 +1,7 @@
 package musify;
 
+import com.llamalad7.mixinextras.MixinExtrasBootstrap;
+import fermiumbooter.FermiumRegistryAPI;
 import net.minecraftforge.fml.relauncher.IFMLLoadingPlugin;
 import org.spongepowered.asm.launch.MixinBootstrap;
 import org.spongepowered.asm.mixin.Mixins;
@@ -12,8 +14,9 @@ public class MixinLoader implements IFMLLoadingPlugin {
 
     public MixinLoader() {
         MixinBootstrap.init();
-        Mixins.addConfiguration("mixins.musify.json");
-        Mixins.addConfiguration("mixins.musify.recurrent.json");
+
+        FermiumRegistryAPI.enqueueMixin(true,"mixins.musify.recurrent.json");
+        FermiumRegistryAPI.enqueueMixin(true, "mixins.musify.doomlike.json");
     }
 
     @Override

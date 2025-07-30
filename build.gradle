@@ -104,6 +104,7 @@ dependencies {
     implementation name: 'RecurrentComplex-1.4.8.6'
     implementation name: 'DoomlikeDungeons-1.14.12-MC1.12.2'
     implementation name: 'IvToolkit-1.3.3-1.12'
+    implementation name: 'RLTweaker-1.12.2-0.5.3'
 }
 
 

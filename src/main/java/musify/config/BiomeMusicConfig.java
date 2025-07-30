@@ -251,6 +251,10 @@ public class BiomeMusicConfig {
 		@Config.Name("Recurrent Complex Music List")
 		@Config.Comment("Put any music you want to be played in Recurrent Complex structures in here. \nThis will play when a Recurrent Complex structure is detected." + "\nExample: [structure_name:music_file.ogg]\n")
 		public String[] recurrentComplexMusicList = new String[0];
+
+		@Config.Name("Recurrent Complex minimal structure volume")
+		@Config.Comment("The minimum volume of a Recurrent Complex structure to be considered for music playback. \nThis is calculated as width * height * depth of the structure. Default: 200.")
+		public int recurrentMinimalStructureVolume = 200;
 	}
 
 	public static class DoomlikeDungeonsOptions {

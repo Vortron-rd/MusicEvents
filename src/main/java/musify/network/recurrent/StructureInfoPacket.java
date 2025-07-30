@@ -90,7 +90,9 @@ public class StructureInfoPacket {
                 } else {
                     // Select appropriate music for the structure
                     String musicFile = findStructureMusic(structureName, message.musicList);
-                    return new Response(structureName, musicFile, true);
+                    if (musicFile != null) {
+                        return new Response(structureName, musicFile, true);
+                    }
                 }
             }
 

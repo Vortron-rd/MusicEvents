@@ -15,7 +15,6 @@ public class MixinLoader implements IFMLLoadingPlugin {
     public MixinLoader() {
         MixinBootstrap.init();
 
-        FermiumRegistryAPI.enqueueMixin(true,"mixins.musify.recurrent.json");
         FermiumRegistryAPI.enqueueMixin(true, "mixins.musify.doomlike.json");
     }
 

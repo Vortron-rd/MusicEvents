@@ -3,30 +3,39 @@
 ### *Musify!* is a versatile client-side mod designed to improve the immersion and auditory experience of Minecraft for both modpack developers and regular players. This mod allows for dynamic music customization based on in-game events like PvE Combat, Biome Exploration, Caving, and more, giving you complete control over Minecraft's soundtrack. Whether you’re crafting an immersive modpack or just want to personalize your solo adventures, *Musify!* provides a way to bring your world to life with the perfect soundtrack.
 
 ## Features
-This mod has a bunch of different features revolving around Minecraft's soundtrack:
-- **Customizable Biome Music!** This Mod allows you to customize and set up music for specific biomes, or for certain biome types. Great for that immersive feel when exploring!
+**Musify supports both .ogg and .mp3 files!**
+<br>This mod has a bunch of different features revolving around Minecraft's soundtrack. The following features are available and are polled in the specified order*:
+- **JukeBox Music Mute** The mod will mute custom music when a JukeBox is playing a record, and will resume the music once the record stops playing.
+- **Boss Music!** Customize music for boss mobs for a truely unique experience!
+- **Doomlike Dungeons Support!** The mod will automatically save the locations of Doomlike Dungeons and can play custom music when the player is in range of a Doomlike Dungeon based on the dungeon's theme.
+- **Recurrent Complex Structure Support!** The mod will automatically save the locations of Recurrent Complex structures and can play custom music when the player is in range of a Structure. What structures to save and which to not save can be configured in the config menu.
+- **Dungeon Definitions!** The mod supports custom dungeon definitions, allowing you to set up custom music for specific dungeons that do not come from Recurrent or Doomlike's. This is useful for modpacks that add custom dungeons or for players who want to create their own unique dungeons.
 - **Combat Music!** Enhance your battle experience by setting up custom combat music!
 - **Cavern Music!** Want to feel a true Dwarf when mining underground? Customize your worlds underground music for a new experience when mining!
-- **Boss Music!** Customize music for boss mobs for a truely unique experience!
+- **Customizable Biome Music!** This Mod allows you to customize and set up music for specific biomes, or for certain biome types. Great for that immersive feel when exploring!
+
+<sup>* Polling order here means that the mod will check for conditions in the order specified above. it will first check for jukeboxes, then bosses, ect.
+
 - **Main Menu Music!** Set up some custom music for Minecraft's main menu to personalize your modpack or client!
 - **Ambient Mode!** Want to use sound effects or ambient tracks instead of music? Enable ambient mode to add to vanilla music instead of replacing it!
 
 ## How to use:
-1. The mod will take .ogg sound files from the folder called "biomemusic". This folder is located in the instance path (the same folder where your clients mod, resourcepack and config folders are.) which is usually your .minecraft folder, but can be a different folder depending on if you are using another launcher like curseforge. If this folder does not exist it will be created by the mod upon first startup. If you are a modpack developer that wants to use this mod you will have to mark this folder for export. once you have created the folder or once the mod has created the folder for you, you can put any .ogg sound files you need in the folder.
+### 1. Set up the music folder.
+The mod will take .ogg and .mp3 sound files from the folder called "music". This folder is located in the minecraft instance path (the same folder where your clients mods, resource packs and config folders are located.) which is usually your .minecraft directory, but can be in a different directory depending on if you are using another launcher like CurseForge. If this folder does not exist it will be created by the mod upon first startup. If you are a modpack developer that wants to use this mod you will have to mark this folder for export. Once you have created the folder or once the mod has created the folder for you, you can put any .ogg or .mp3 sound files you need in the folder.
 
 ![folder PNG](https://github.com/user-attachments/assets/6f74f571-86af-4b90-a194-370bc8083aa7)
-
-In the biomemusic folder, put the sound files. Make sure they are .ogg files!
-
+<br><sup>Put the .ogg or .mp3 files in the music folder. Make sure they are .ogg or .mp3 files!
 ![image](https://github.com/user-attachments/assets/e1c3f13d-3f9c-44c0-88c5-eff1e8559d73)
 
 
-2. While it is possible to use the config file to set up the mod, it is recommended to use to in-game config menu in the forge mod list.
+### 2. Set up the config.
+While it is possible to use the config file to set up the mod, it is recommended to use the Forge in-game config menu in the Forge mod list.
 
 ![image](https://github.com/user-attachments/assets/beeb4fcf-086d-4dfc-93c0-cceb6b1f58ae)
 ![image](https://github.com/user-attachments/assets/064b70ef-3142-46fe-85e2-4340733141e4)
 
-By default Combat Music, Cavern Music and Boss Music are disabled. At the top of the config menu there will be a list called "Available Music Files", this can be used to see what sound files in the biomemusic folder are recognized and can be used. For all music except boss music and the main menu music, you can specify more then one track by seperating them with a comma e.g. [song1.ogg,song2.ogg]. If ambient Mode is enabled custom music will not fade out and stop vanilla music. [The Biome Music Mapping] is used to specify custom music for individual biomes, this will overwrite the music set for tags of the biome. Setting music for a biome tag in the [Biome Tag Music Mapping] will play this music in all biomes with that tag. If a biome has more than one tag, a random song from any tag will play with slight priority set in the biomes tag order. For example, if you set up two music tracks for the dry and the savanna tags, it one of them randomly when you enter a savanna, but will more often choose a song from the savanna tag then from the dry tag, because savanna is the first tag for the savanna biome. If a custom song is already playing and you enter a new biome the song will not change if the song is specified in one of the tags for that biome, unless you specify a different song in the [Biome Music Mapping].
+### 3. Set up the music.
+By default most features are disabled. This is because while leaving enabled features empty does not impact performance too much, they do still use some resources in the background. At the top of the config menu there will be a list called "Available Music Files", this can be used to see what sound files in the biomemusic folder are recognized and can be used. For all music except boss music and the main menu music, you can specify more then one track by seperating them with a comma e.g. [song1.ogg,song2.ogg]. If ambient Mode is enabled custom music will not fade out and stop vanilla music. [The Biome Music Mapping] is used to specify custom music for individual biomes, this will overwrite the music set for tags of the biome. Setting music for a biome tag in the [Biome Tag Music Mapping] will play this music in all biomes with that tag. If a biome has more than one tag, a random song from any tag will play with slight priority set in the biomes tag order. For example, if you set up two music tracks for the dry and the savanna tags, it one of them randomly when you enter a savanna, but will more often choose a song from the savanna tag then from the dry tag, because savanna is the first tag for the savanna biome. If a custom song is already playing and you enter a new biome the song will not change if the song is specified in one of the tags for that biome, unless you specify a different song in the [Biome Music Mapping].
 
    For **Boss Music**, There is an option to set the detection range for bosses. If a boss is detected within that radius the music will change if the mob is specified as a boss mob. To set up the music for a boss mob there is the [Boss Music List]. For each boss mob you want to set up music for, create a new line and specify the mob and the music seperated by a comma: [modid:mobid,bossmusic1.ogg]. Keep in mind to not forget the Mod Id from the mob! (e.g. [lycanitesmobs:rahovart,bossmusic1.ogg]). The Boss Music has priority based on the index of the list. It will always try to play the muscic for the boss mob it can find first in the list. So if you have both the wither and the Ender Dragon in the list and you spawn in both of them, it will play the music from whichever mob is first in the list.
 

@@ -255,6 +255,14 @@ public class BiomeMusicConfig {
 		@Config.Name("Recurrent Complex minimal structure volume")
 		@Config.Comment("The minimum volume of a Recurrent Complex structure to be considered for music playback. \nThis is calculated as width * height * depth of the structure. Default: 200.")
 		public int recurrentMinimalStructureVolume = 200;
+
+		@Config.Name("Recurrent Complex ignored structures list")
+		@Config.Comment("The Recurrent Complex structures that the mod should ignore. \nThis is useful for structures that are too small or not suitable for music playback.")
+		public String[] recurrentComplexIgnoreStructure = new String[]{"LodgepolePine", "AlascaCedar", "WhiteWillowLarge", "QuakingAspen", "Basswood", "Fiberpalm"};
+
+		@Config.Name("Recurrent Complex ignore structure if name contains")
+		@Config.Comment("The mod will not save data on Recurrent Complex structure if their name contains any of the specified strings. \nThis is useful to ignore trees for example.")
+		public String[] recurrentComplexIgnoreNameContains = new String[]{"Tree"};
 	}
 
 	public static class DoomlikeDungeonsOptions {

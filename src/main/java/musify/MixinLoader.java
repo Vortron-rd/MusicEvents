@@ -12,10 +12,15 @@ import java.util.Map;
 @IFMLLoadingPlugin.MCVersion("1.12.2")
 public class MixinLoader implements IFMLLoadingPlugin {
 
-    public MixinLoader() {
-        MixinBootstrap.init();
-
-        FermiumRegistryAPI.enqueueMixin(true, "mixins.musify.doomlike.json");
+    public MixinLoader() throws ClassNotFoundException {
+        try {
+            Class<?> mixinLoader = Class.forName("fermiumbooter.FermiumRegistryAPI");
+            FermiumRegistryAPI.enqueueMixin(true, "mixins.musify.doomlike.json");
+        } catch (ClassNotFoundException ignored) {
+            System.out.println("====================================MUSIFY====================================");
+            System.out.println("FermiumBooter not found. The mod will load but certain features may not work.");
+            System.out.println("==============================================================================");
+        }
     }
 
     @Override

@@ -13,6 +13,7 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.Arrays;
 
 public class RecurrentEventHandler {
     private static final String LOG_FILE_NAME = "recurrent_structures.csv";
@@ -22,6 +23,17 @@ public class RecurrentEventHandler {
         String structureName = event.getStructureName();
         StructureBoundingBox bb = event.getBoundingBox();
         int dim = event.getWorld().provider.getDimension();
+
+        if (Arrays.asList(BiomeMusicConfig.recurrentComplexOptions.recurrentComplexIgnoreStructure)
+                .contains(structureName)) {
+            return;
+        }
+
+        for (String ignore : BiomeMusicConfig.recurrentComplexOptions.recurrentComplexIgnoreNameContains) {
+            if (structureName.toLowerCase().contains(ignore.toLowerCase())) {
+                return;
+            }
+        }
 
         int width = bb.maxX - bb.minX + 1;
         int height = bb.maxY - bb.minY + 1;

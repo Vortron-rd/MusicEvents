@@ -33,7 +33,6 @@ import static musify.handlers.HandleCombatMusic.*;
 import static musify.handlers.HandleUndergroundMusic.handleUndergroundMusic;
 import static musify.handlers.HandleUndergroundMusic.isUndergroundMusicPlaying;
 import static musify.handlers.RecurrentMusicHandler.handleRecurrentMusic;
-import static musify.handlers.RecurrentMusicHandler.removeDuplicateStructures;
 import static musify.utils.BossTargetUtils.handleBossMusic;
 import static musify.utils.BossTargetUtils.isBossMusicPlaying;
 
@@ -88,18 +87,12 @@ public class BiomeMusicEventHandler {
 
         tickCounter++;
 
-        if (tickCounter % (7500) == 0) {
-            if (player.world != null) {
-                if (!event.player.world.isRemote) {
-                    removeDuplicatesFromDungeonFile(event.player.world);
-                }
-            }
-        }
-
-        if (tickCounter % (7100) == 0) {
-            if (player.world != null) {
-                if (!event.player.world.isRemote) {
-                    removeDuplicateStructures(event.player.world);
+        if (Loader.isModLoaded("dldungeonsjbg")) {
+            if (tickCounter % (7500) == 0) {
+                if (player.world != null) {
+                    if (!event.player.world.isRemote) {
+                        removeDuplicatesFromDungeonFile(event.player.world);
+                    }
                 }
             }
         }

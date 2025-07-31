@@ -165,7 +165,6 @@ jar {
                 "ForceLoadAsMod": "true", // Comment out for dev environment, uncomment for build
                 'FMLAT': 'biomemusic_at.cfg',  // Point to the access transformer config
                 'FMLCorePlugin': 'musify.MixinLoader',
-                "TweakClass": "org.spongepowered.asm.launch.MixinTweaker"
         ])
     }
     duplicatesStrategy = DuplicatesStrategy.EXCLUDE

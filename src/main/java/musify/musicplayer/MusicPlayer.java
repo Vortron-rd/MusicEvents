@@ -89,11 +89,11 @@ public class MusicPlayer implements Runnable {
                     isFading = true;
 
                     // COMBAT MUSIC STUFF
-                    if (combatOptions.enableCombatMusic && !this.isCombatMusic) {
+                    if (hcombatOptions.enableCombatMusic && !this.isCombatMusic) {
                         String linkedMusic = null;
-                        linkedMusic = musicLink.get(fileName);
+                        linkedMusic = mmusicLink.get(fileName);
                         if (Objects.equals(linkedMusic, "") || Objects.equals(linkedMusic, null)) {
-                            if (Objects.equals(combatOptions.combatMusicList, "default_music")) {
+                            if (Objects.equals(hcombatOptions.combatMusicList, "default_music")) {
                                 Musify.LOGGER.warn("No combat music specified. If you do not plan on using combat music, please disable it in the config.");
                             }
                             linkedMusic = getRandomSongForCombat();
@@ -119,7 +119,7 @@ public class MusicPlayer implements Runnable {
                     float targetVolume = Minecraft.getMinecraft().gameSettings.getSoundLevel(SoundCategory.MUSIC);
                     float min = gainControl.getMinimum();
                     float max = gainControl.getMaximum();
-                    float targetDb = (targetVolume == 0.0f) ? min : (float) (fadeOptions.musicVolumeMultiplier * (20.0 * Math.log10(targetVolume)));
+                    float targetDb = (targetVolume == 0.0f) ? min : (float) (lfadeOptions.musicVolumeMultiplier * (20.0 * Math.log10(targetVolume)));
                     targetDb = Math.max(min, Math.min(targetDb, max));
                     gainControl.setValue(min);
 
@@ -306,7 +306,7 @@ public class MusicPlayer implements Runnable {
         float min = gainControl.getMinimum();
         float max = gainControl.getMaximum();
         float targetVolume = Minecraft.getMinecraft().gameSettings.getSoundLevel(SoundCategory.MUSIC);
-        float targetDb = (targetVolume == 0.0f) ? min : (float) (fadeOptions.musicVolumeMultiplier * (20.0 * Math.log10(targetVolume)));
+        float targetDb = (targetVolume == 0.0f) ? min : (float) (lfadeOptions.musicVolumeMultiplier * (20.0 * Math.log10(targetVolume)));
         targetDb = Math.max(min, Math.min(targetDb, max));
         gainControl.setValue(min);
         line.start();
@@ -349,7 +349,7 @@ public class MusicPlayer implements Runnable {
                 float min = gainControl.getMinimum();
                 float max = gainControl.getMaximum();
                 float targetVolume = Minecraft.getMinecraft().gameSettings.getSoundLevel(SoundCategory.MUSIC);
-                float targetDb = (targetVolume == 0.0f) ? min : (float) (fadeOptions.musicVolumeMultiplier * (20.0 * Math.log10(targetVolume)));
+                float targetDb = (targetVolume == 0.0f) ? min : (float) (lfadeOptions.musicVolumeMultiplier * (20.0 * Math.log10(targetVolume)));
                 targetDb = Math.max(min, Math.min(targetDb, max));
                 float currentDb = gainControl.getValue();
                 int steps = 50;
@@ -493,7 +493,7 @@ public class MusicPlayer implements Runnable {
 
     // ------------- HELPER METHODS ------------- //
     public static String getRandomSongForCombat() {
-        String songList = (combatOptions.combatMusicList);
+        String songList = (hcombatOptions.combatMusicList);
 
         List<String> songs = Arrays.asList(songList.split(","));
 

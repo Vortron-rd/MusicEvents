@@ -6,7 +6,6 @@ import musify.musicplayer.MusicPlayer;
 import musify.network.NetworkManager;
 import musify.network.recurrent.StructureInfoPacket;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -98,13 +97,15 @@ public class RecurrentMusicHandler {
                 }
 
                 try {
-                    int minX = Integer.parseInt(minCoords[0]) - 5;
-                    int minY = Integer.parseInt(minCoords[1]) - 5;
-                    int minZ = Integer.parseInt(minCoords[2]) - 5;
+                    int extraDistance = BiomeMusicConfig.frecurrentComplexOptions.recurrentComplexExtraDistance;
 
-                    int maxX = Integer.parseInt(maxCoords[0]) + 5;
-                    int maxY = Integer.parseInt(maxCoords[1]) + 5;
-                    int maxZ = Integer.parseInt(maxCoords[2]) + 5;
+                    int minX = Integer.parseInt(minCoords[0]) - extraDistance;
+                    int minY = Integer.parseInt(minCoords[1]) - extraDistance;
+                    int minZ = Integer.parseInt(minCoords[2]) - extraDistance;
+
+                    int maxX = Integer.parseInt(maxCoords[0]) + extraDistance;
+                    int maxY = Integer.parseInt(maxCoords[1]) + extraDistance;
+                    int maxZ = Integer.parseInt(maxCoords[2]) + extraDistance;
 
                     // Check if player is inside this bounding box
                     if (playerX >= minX && playerX <= maxX &&
@@ -130,7 +131,7 @@ public class RecurrentMusicHandler {
     public static void handleRecurrentMusic(EntityPlayer player, boolean checkOnly) {
         NetworkManager.INSTANCE.sendToServer(new StructureInfoPacket.Request(
                 checkOnly,
-                BiomeMusicConfig.recurrentComplexOptions.recurrentComplexMusicList
+                BiomeMusicConfig.frecurrentComplexOptions.recurrentComplexMusicList
         ));
     }
 
@@ -180,22 +181,22 @@ public class RecurrentMusicHandler {
             return; // Already playing this music
         }
         if (activeTagMusic != null) {
-            activeTagMusic.stopWithFadeOut(BiomeMusicConfig.fadeOptions.customMusicFadeOutTime);
+            activeTagMusic.stopWithFadeOut(BiomeMusicConfig.lfadeOptions.customMusicFadeOutTime);
             activeTagMusic = null;
         }
         if (combatMusicPlayer != null) {
-            combatMusicPlayer.stopWithFadeOut(BiomeMusicConfig.fadeOptions.customMusicFadeOutTime);
+            combatMusicPlayer.stopWithFadeOut(BiomeMusicConfig.lfadeOptions.customMusicFadeOutTime);
             combatMusicPlayer = null;
         }
         if (activeMusic != null) {
-            activeMusic.stopWithFadeOut(BiomeMusicConfig.fadeOptions.customMusicFadeOutTime);
+            activeMusic.stopWithFadeOut(BiomeMusicConfig.lfadeOptions.customMusicFadeOutTime);
             activeMusic = null;
             activeMusic = new MusicPlayer(musicFile, true);
-            activeMusic.playWithFadeIn(BiomeMusicConfig.fadeOptions.customMusicFadeInTime);
+            activeMusic.playWithFadeIn(BiomeMusicConfig.lfadeOptions.customMusicFadeInTime);
             currentMusicFile = musicFile;
         } else if (activeMusic == null) {
             activeMusic = new MusicPlayer(musicFile, true);
-            activeMusic.playWithFadeIn(BiomeMusicConfig.fadeOptions.customMusicFadeInTime);
+            activeMusic.playWithFadeIn(BiomeMusicConfig.lfadeOptions.customMusicFadeInTime);
             currentMusicFile = musicFile;
         }
         stopVanillaMusic();

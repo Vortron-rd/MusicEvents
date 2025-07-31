@@ -12,7 +12,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import java.util.List;
 import java.util.Objects;
 
-import static musify.config.BiomeMusicConfig.bossMusicOptions;
+import static musify.config.BiomeMusicConfig.dbossMusicOptions;
 import static musify.handlers.BiomeMusicEventHandler.*;
 
 @SideOnly(Side.CLIENT)
@@ -23,15 +23,15 @@ public class BossTargetUtils {
 
     @SideOnly(Side.CLIENT)
     public static String bossMusicFile(EntityPlayer player) {
-        if (bossMusicOptions.enableBossMusic) {
-            for (String entry : bossMusicOptions.bossMusicList) {
+        if (dbossMusicOptions.enableBossMusic) {
+            for (String entry : dbossMusicOptions.bossMusicList) {
                 String[] parts = entry.split(",");
                 if (parts.length != 2) continue;
                 String mobId = parts[0].trim();
                 String musicFile = parts[1].trim();
                 AxisAlignedBB searchBox = new AxisAlignedBB(
-                        player.posX - bossMusicOptions.bossMusicRange, player.posY - bossMusicOptions.bossMusicRange, player.posZ - bossMusicOptions.bossMusicRange,
-                        player.posX + bossMusicOptions.bossMusicRange, player.posY + bossMusicOptions.bossMusicRange, player.posZ + bossMusicOptions.bossMusicRange
+                        player.posX - dbossMusicOptions.bossMusicRange, player.posY - dbossMusicOptions.bossMusicRange, player.posZ - dbossMusicOptions.bossMusicRange,
+                        player.posX + dbossMusicOptions.bossMusicRange, player.posY + dbossMusicOptions.bossMusicRange, player.posZ + dbossMusicOptions.bossMusicRange
                 );
                 List<Entity> nearbyEntities = player.world.getEntitiesWithinAABB(Entity.class, searchBox, entity -> {
                     ResourceLocation entityID = EntityList.getKey(entity);

@@ -24,33 +24,33 @@ public class HandleCombatMusic {
         if (!isCombatMusicPlaying && backgroundCombatMusic) {
             isCombatMusicPlaying = true;
             if (activeMusic != null && !activeMusic.isFading()) {
-                activeMusic.fadeOut(fadeOptions.combatMusicFadeInTime);
+                activeMusic.fadeOut(lfadeOptions.combatMusicFadeInTime);
             }
             if (activeTagMusic != null && !activeTagMusic.isFading()) {
-                activeTagMusic.fadeOut(fadeOptions.combatMusicFadeInTime);
+                activeTagMusic.fadeOut(lfadeOptions.combatMusicFadeInTime);
             }
 
             if (!isVanillaMusicFading) {
-                if (!adambientMode) {
+                if (!bdambientMode) {
                     stopVanillaMusic();
                 }
             }
-            combatMusicPlayer.fadeIn(fadeOptions.combatMusicFadeInTime);
+            combatMusicPlayer.fadeIn(lfadeOptions.combatMusicFadeInTime);
         } else if (!isCombatMusicPlaying && !backgroundCombatMusic) {
             isCombatMusicPlaying = true;
 
             String linkedMusic = null;
-            if (Objects.equals(combatOptions.combatMusicList, "default_music")) {
+            if (Objects.equals(hcombatOptions.combatMusicList, "default_music")) {
                 Musify.LOGGER.warn("No combat music specified. If you do not plan on using combat music, please disable it in the config.");
                 return;
             }
             linkedMusic = getRandomSongForCombat();
             if (activeMusic != null && !activeMusic.isFading()) {
-                activeMusic.stopWithFadeOut(fadeOptions.combatMusicFadeInTime);
+                activeMusic.stopWithFadeOut(lfadeOptions.combatMusicFadeInTime);
                 activeMusic = null;
             }
             if (activeTagMusic != null && !activeTagMusic.isFading()) {
-                activeTagMusic.stopWithFadeOut(fadeOptions.combatMusicFadeInTime);
+                activeTagMusic.stopWithFadeOut(lfadeOptions.combatMusicFadeInTime);
                 activeTagMusic = null;
             }
             startCombatMusicWithFadeIn(linkedMusic);
@@ -65,7 +65,7 @@ public class HandleCombatMusic {
 
     public static void startCombatMusicWithFadeIn(String music) {
         combatMusicPlayer = new MusicPlayer(music, true);
-        combatMusicPlayer.playWithFadeIn(fadeOptions.combatMusicFadeInTime);
+        combatMusicPlayer.playWithFadeIn(lfadeOptions.combatMusicFadeInTime);
         backgroundCombatMusic = true;
     }
     public static boolean isCombatMusicPlaying() {

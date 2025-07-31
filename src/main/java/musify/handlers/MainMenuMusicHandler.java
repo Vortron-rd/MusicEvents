@@ -40,7 +40,7 @@ public class MainMenuMusicHandler {
         ticksSinceStart++;
         if (ticksSinceStart < 20) return; // wait 1 second (20 ticks)
 
-        String mainMenuMusicPath = BiomeMusicConfig.acmainMenuMusic;
+        String mainMenuMusicPath = BiomeMusicConfig.ccmainMenuMusic;
         Minecraft mc = Minecraft.getMinecraft();
 
         if (mc == null) return;
@@ -137,7 +137,7 @@ public class MainMenuMusicHandler {
             return;
         }
 
-        String mainMenuMusicConfig = BiomeMusicConfig.acmainMenuMusic;
+        String mainMenuMusicConfig = BiomeMusicConfig.ccmainMenuMusic;
         String[] musicFiles = mainMenuMusicConfig.split(",");
         String mainMenuMusic = musicFiles[(int) (Math.random() * musicFiles.length)].trim();
 

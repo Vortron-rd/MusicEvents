@@ -20,64 +20,62 @@ import java.util.stream.Collectors;
 @Config(modid = Musify.MODID)
 public class BiomeMusicConfig {
 
-	@Config.Comment("What music to play on the main menu. DEFAULT: [default_music]")
-	@Config.Name("Main Menu Music")
-	public static String acmainMenuMusic = "default_music";
-
 	@Config.Name("Available Music Files")
 	@Config.Comment("List of recognized .ogg music files. \nWhen setting up custom music, include .ogg extension and make sure to spell the name of the file correctly. \nThe mod will work even if the music you specify is not in this list if the music is in the correct folder, \nas this is just a second verification step to make sure the music file is correctly placed.")
-	public static String[] abavailableMusicFiles = new String[0]; // Start with an empty array
-
-	@Config.Name("Biome Music Map")
-	@Config.Comment("Biome Music Mapping. List of all recognised biomes and a corresponding input field for the music. Music specified in here will overwrite the music from biome tags.")
-	public static Map<String, String> biomeMusicMap = new HashMap<>();
-
-	@Config.Name("Biome Tag Music Map")
-	@Config.Comment("Biome Tag Music Mapping. List of all Biome Tags. \nExample: If you want a certain music to play in all biomes with snow, use the snowy tag.")
-	public static Map<String, String> biomeTagMusicMap = new HashMap<>();
-
-	@Config.Name("Fade Options")
-	@Config.Comment("Fade Options. These control the music fading. \nDO NOT TOUCH UNLESS YOU KNOW EXACTLY WHAT YOU ARE DOING, THIS CAN AND WILL BREAK THE MOD IF GIVEN INCORRECT VALES. DEFAULTS: [20000,20000,140,10000]")
-	public static final FadeOptions fadeOptions = new FadeOptions();
+	public static String[] aavailableMusicFiles = new String[0]; // Start with an empty array
 
 	@Config.Name("Ambient Mode")
 	@Config.Comment("Enable or Disable Ambient mode. In this mode vanilla music will not be turned off when a custom music is set for a biome." +
-					"\nEnable if you want to use this mod for ambience sound tracks instead of music.")
-	public static boolean adambientMode = false;
+			"\nEnable if you want to use this mod for ambience sound tracks instead of music.")
+	public static boolean bdambientMode = false;
 
-	@Config.Name("Combat Music Options")
-	@Config.Comment("Combat options to toggle or set.")
-	public static final CombatOptions combatOptions = new CombatOptions();
-
-	@Config.Comment("Link normal music to battle music here!")
-	public static Map<String, String> musicLink = new HashMap<>();
-
-	@Config.Name("Cavern Music Options")
-	@Config.Comment("Cavern Music Options.")
-	public static final UndergroundOptions cpundergroundOptions = new UndergroundOptions();
+	@Config.Comment("What music to play on the main menu. DEFAULT: [default_music]")
+	@Config.Name("Main Menu Music")
+	public static String ccmainMenuMusic = "default_music";
 
 	@Config.Name("Boss Music Options")
 	@Config.Comment("Boss Music Options.")
-	public static final BossMusicOptions bossMusicOptions = new BossMusicOptions();
-
-	@Config.Name("Dungeon Definition Options")
-	@Config.Comment("Dungeon Definition Options. This is used to define what a dungeon is and what music to play in it." +
-					"\nA dungeon consists of a certain block and a certain amount of spawners within a radius." +
-					"\nThis option is moreso for custom and modded dungeons than vanilla ones.")
-	public static final DungeonDefinitionOptions dungeonDefinitionOptions = new DungeonDefinitionOptions();
-
-	@Config.Name("Recurrent Complex Structure Options")
-	@Config.Comment("Recurrent Complex Structure Options. This is used to define what music to play in Recurrent Complex structures.")
-	public static final RecurrentComplexOptions recurrentComplexOptions = new RecurrentComplexOptions();
+	public static final BossMusicOptions dbossMusicOptions = new BossMusicOptions();
 
 	@Config.Name("Doomlike Dungeons Options")
 	@Config.Comment("Doomlike Dungeons Options. This is used to define what music to play in Doomlike Dungeons structures. It works based on the Doomlike Dungeon Themes.")
-	public static final DoomlikeDungeonsOptions doomlikeDungeonsOptions = new DoomlikeDungeonsOptions();
+	public static final DoomlikeDungeonsOptions edoomlikeDungeonsOptions = new DoomlikeDungeonsOptions();
 
+	@Config.Name("Recurrent Complex Structure Options")
+	@Config.Comment("Recurrent Complex Structure Options. This is used to define what music to play in Recurrent Complex structures.")
+	public static final RecurrentComplexOptions frecurrentComplexOptions = new RecurrentComplexOptions();
+
+	@Config.Name("Dungeon Definition Options")
+	@Config.Comment("Dungeon Definition Options. This is used to define what a dungeon is and what music to play in it. \nA dungeon can be defined through of a certain block and a certain amount of spawners within a radius. \nThis option is moreso for custom dungeons that are not from Recurrent Complex or Doomlike Dungeons.")
+	public static final DungeonDefinitionOptions gdungeonDefinitionOptions = new DungeonDefinitionOptions();
+
+	@Config.Name("Combat Music Options")
+	@Config.Comment("Combat options to toggle or set.")
+	public static final CombatOptions hcombatOptions = new CombatOptions();
+
+	@Config.Name("Cavern Music Options")
+	@Config.Comment("Cavern Music Options.")
+	public static final UndergroundOptions iundergroundOptions = new UndergroundOptions();
+
+	@Config.Name("Biome Music Map")
+	@Config.Comment("Biome Music Mapping. List of all recognised biomes and a corresponding input field for the music. Music specified in here will overwrite the music from biome tags.\n Example input for a biome: [plainsmusic.ogg,otherplainsmusic.ogg]")
+	public static Map<String, String> jbiomeMusicMap = new HashMap<>();
+
+	@Config.Name("Biome Tag Music Map")
+	@Config.Comment("Biome Tag Music Mapping. List of all Biome Tags. \nExample: If you want a certain music to play in all biomes with snow, use the snowy tag.")
+	public static Map<String, String> kbiomeTagMusicMap = new HashMap<>();
+
+	@Config.Name("Fade Options")
+	@Config.Comment("Fade Options. These control the music fading. \nDO NOT TOUCH UNLESS YOU KNOW EXACTLY WHAT YOU ARE DOING, THIS CAN AND WILL BREAK THE MOD IF GIVEN INCORRECT VALES.")
+	public static final FadeOptions lfadeOptions = new FadeOptions();
+
+	@Config.Name("Combat Music Track Link")
+	@Config.Comment("Link normal music to battle music here! Used if you have two of the same tracks, but one is a combat version of the other. \nThis track will be started silently in the background when its counterpart is played for synchronization, and will overwrite the random combat music from the combat music list.")
+	public static Map<String, String> mmusicLink = new HashMap<>();
 
 	@Config.Name("Misc Options.")
-	@Config.Comment("Miscelanious Options.")
-	public static final MiscOptions miscOptions = new MiscOptions();
+	@Config.Comment("Miscellaneous Options.")
+	public static final MiscOptions nmiscOptions = new MiscOptions();
 
 	@Mod.EventBusSubscriber(modid = Musify.MODID)
 	public static class EventHandler {
@@ -97,7 +95,7 @@ public class BiomeMusicConfig {
 		IForgeRegistry<Biome> biomeRegistry = RegistryManager.ACTIVE.getRegistry(Biome.class);
 		for (Biome biome : biomeRegistry) {
 			String biomeName = biome.getRegistryName().toString();
-			biomeMusicMap.putIfAbsent(biomeName, "default_music");
+			jbiomeMusicMap.putIfAbsent(biomeName, "default_music");
 		}
 		ConfigManager.sync(Musify.MODID, Config.Type.INSTANCE);
 	}
@@ -111,7 +109,7 @@ public class BiomeMusicConfig {
 				.collect(Collectors.toSet());
 
 		for (String tag : allTags) {
-			biomeTagMusicMap.putIfAbsent(tag, "default_music");
+			kbiomeTagMusicMap.putIfAbsent(tag, "default_music");
 		}
 
 		ConfigManager.sync(Musify.MODID, Config.Type.INSTANCE);
@@ -121,10 +119,10 @@ public class BiomeMusicConfig {
 	public static void updateMusicList() {
 
 		String[] musicFiles = MusicFileHandler.getAvailableMusicFiles().toArray(new String[0]);
-		abavailableMusicFiles = musicFiles;
+		aavailableMusicFiles = musicFiles;
 
 		for (String music : musicFiles) {
-			musicLink.putIfAbsent(music, "");
+			mmusicLink.putIfAbsent(music, "");
 		}
 		ConfigManager.sync(Musify.MODID, Config.Type.INSTANCE);
 	}
@@ -140,19 +138,21 @@ public class BiomeMusicConfig {
 //		public int vanillaMusicFadeOutTime = 7000;
 
 		@Config.Name("Biome Music Fade-in")
-		@Config.Comment("Custom Music Fade-in Time. Default: 20000 | [INT / MS]")
+		@Config.Comment("Custom Music Fade-in Time. Default: 12500 | [INT / MS]")
 		public int customMusicFadeInTime = 12500;
 
 		@Config.Name("Biome Music Fade-out")
-		@Config.Comment("Custom Music Fade-out Time. Default: 20000 | [INT / MS]")
+		@Config.Comment("Custom Music Fade-out Time. Default: 10000 | [INT / MS]")
 		public int customMusicFadeOutTime = 10000;
 
 		@Config.Name("Combat Music Fade-in Time")
-		@Config.Comment("Custom Combat Music Fade-in Time. Default: 10000 | [INT / MS]")
+		@Config.Comment("Custom Combat Music Fade-in Time. Default: 8500 | [INT / MS]")
 		public int combatMusicFadeInTime = 8500;
 
 		@Config.Name("Music Volume Multiplier")
 		@Config.Comment("The Volume Multiplier for custom music.")
+		@Config.SlidingOption
+		@Config.RangeDouble(min = 0.01, max = 5.0)
 		public double musicVolumeMultiplier = 0.8;
 	}
 
@@ -163,7 +163,7 @@ public class BiomeMusicConfig {
 		public boolean enableCombatMusic = false;
 
 		@Config.Name("Combat Music List")
-		@Config.Comment("Put any music you want to be played during combat encounters in here.")
+		@Config.Comment("Put any music you want to be played during combat encounters in here. Example: [combatmusic1.ogg,newcombat_music.mp3]")
 		public String combatMusicList = "default_music";
 
 		@Config.Name("Combat Music Range")
@@ -194,7 +194,7 @@ public class BiomeMusicConfig {
 		public int undergroundMusicYLevelStop = 50;
 
 		@Config.Name("Cavern Music list:")
-		@Config.Comment("The Cavern Music that will play underground.")
+		@Config.Comment("The Cavern Music that will play underground. Example: [cavern_music1.ogg,cavern_music2.ogg]")
 		public String CavernMusic = "default_music";
 	}
 
@@ -205,7 +205,7 @@ public class BiomeMusicConfig {
 		public boolean enableBossMusic = false;
 
 		@Config.Name("Boss Music List")
-		@Config.Comment("Set A boss mob and its music here! boss mob followed by a comma for its music e.g. [lycanitesmobs:rahovart,doomfear.ogg]")
+		@Config.Comment("Set a boss mob and its music here! boss mob followed by a comma for its music e.g. [lycanitesmobs:rahovart,doomfear.ogg]")
 		public String[] bossMusicList = new String[0];
 
 		@Config.Name("Boss mob detection range.")
@@ -222,24 +222,24 @@ public class BiomeMusicConfig {
 
 	public static class DungeonDefinitionOptions {
 
-		@Config.Name("Enable Dungeon Music")
+		@Config.Name("Dungeon Music")
 		@Config.Comment("Enable or Disable Dungeon Music.")
 		public boolean enableDungeonMusic = false;
 
 		@Config.Name("Dungeon Music List")
-		@Config.Comment("Put any music you want to be played in dungeons in here.")
+		@Config.Comment("Put any music you want to be played in dungeons in here. Example: [minecraft:stone_bricks:music_file.ogg]")
 		public String[] dungeonDefinitionList = new String[0];
 
 		@Config.Name("Dungeon check Radius")
-		@Config.Comment("The radius in which the mod will detect a dungeon. Default: 40.")
-		public int dungeonRadius = 40;
+		@Config.Comment("The radius in which the mod will detect a dungeon. Default: 30. \nWARNING: This feature can have a high impact on performance when set to high values. It is recommended to keep it below 50.")
+		public int dungeonRadius = 30;
 
 		@Config.Name("Min Spawners to consider a dungeon")
-		@Config.Comment("The minimum amount of spawners that need to be present in a dungeon for the music to play. Default: 3.")
-		public int minSpawners = 3;
+		@Config.Comment("The minimum amount of spawners that need to be present in a dungeon for the music to play. Default: 2.")
+		public int minSpawners = 2;
 
 		@Config.Name("Min blocks")
-		@Config.Comment("The minimum amount of blocks defined in the dungeon list that need to be present to consider a dungeon. Default: 10.")
+		@Config.Comment("The minimum amount of blocks of the type defined in the dungeon list that need to be present to consider a dungeon. Default: 20.")
 		public int minBlocks = 20;
 	}
 
@@ -249,20 +249,25 @@ public class BiomeMusicConfig {
 		public boolean enableRecurrentComplexMusic = false;
 
 		@Config.Name("Recurrent Complex Music List")
-		@Config.Comment("Put any music you want to be played in Recurrent Complex structures in here. \nThis will play when a Recurrent Complex structure is detected." + "\nExample: [structure_name:music_file.ogg]\n")
+		@Config.Comment("Put any music you want to be played in Recurrent Complex structures in here. \nThis will play when a Recurrent Complex structure is detected. \nExample: [structure_name:music_file.ogg]\n")
 		public String[] recurrentComplexMusicList = new String[0];
 
 		@Config.Name("Recurrent Complex minimal structure volume")
-		@Config.Comment("The minimum volume of a Recurrent Complex structure to be considered for music playback. \nThis is calculated as width * height * depth of the structure. Default: 200.")
+		@Config.Comment("The minimum volume a Recurrent Complex structure needs to have for its data to be saved for music playback. \nThis is calculated as width * height * depth of the structure. Default: 200. \nIgnoring very small or common structures like reccomplex's custom trees helps keep the csv file size low and performance high.")
 		public int recurrentMinimalStructureVolume = 200;
 
 		@Config.Name("Recurrent Complex ignored structures list")
-		@Config.Comment("The Recurrent Complex structures that the mod should ignore. \nThis is useful for structures that are too small or not suitable for music playback.")
+		@Config.Comment("The Recurrent Complex structures that the mod should ignore. \nThis is useful for structures that are too small or not suitable for music playback. \nIgnoring very small or common structures like reccomplex's custom trees helps keep the csv file size low and performance high.")
 		public String[] recurrentComplexIgnoreStructure = new String[]{"LodgepolePine", "AlascaCedar", "WhiteWillowLarge", "QuakingAspen", "Basswood", "Fiberpalm"};
 
 		@Config.Name("Recurrent Complex ignore structure if name contains")
-		@Config.Comment("The mod will not save data on Recurrent Complex structure if their name contains any of the specified strings. \nThis is useful to ignore trees for example.")
+		@Config.Comment("The mod will not save data on Recurrent Complex structure if their name contains any of the specified strings. \nThis is useful to ignore trees for example. \nIgnoring very small or common structures like reccomplex's custom trees helps keep the csv file size low and performance high.")
 		public String[] recurrentComplexIgnoreNameContains = new String[]{"Tree"};
+
+		@Config.Name("Recurrent Complex extra distance")
+		@Config.Comment("The distance a player can be from a Recurrent Complex structure for the music to still play. \nThe music will always play if the player is inside the structure bounding box, but this allows for a bit of leeway. \nDefault: 5.")
+		@Config.RangeInt(min = 0, max = 50)
+		public int recurrentComplexExtraDistance = 5;
 	}
 
 	public static class DoomlikeDungeonsOptions {
@@ -272,15 +277,15 @@ public class BiomeMusicConfig {
 		public boolean enableDoomlikeDungeonsMusic = false;
 
 		@Config.Name("Doomlike Dungeons Music List")
-		@Config.Comment("Put any music you want to be played for any Doomlike Dungeon theme in here. \nThis will play when a Doomlike Dungeon is detected." + "\nExample: [structure_name:music_file.ogg]\n")
+		@Config.Comment({"Put any music you want to be played for any Doomlike Dungeon theme in here. \nThis will play when a Doomlike Dungeon is detected. \nExample: [vulcanic:dungeon_music.ogg] \nYou can find the dungeon themes in the Doomlike Dungeons config folder"})
 		public String[] doomlikeDungeonsMusicList = new String[0];
 
 		@Config.Name("Doomlike Dungeons max distance")
-		@Config.Comment("The maximum distance from the player in which the mod will detect a Doomlike Dungeon. Default: 40.")
+		@Config.Comment("The maximum distance the player can be from a saved Doomlike Dungeons position point for music to play. Default: 40.")
 		public int DoomlikeDistance = 40;
 
-		@Config.Name("Doomlike Dungeons max Y level")
-		@Config.Comment("The maximum Y level difference in which the mod will detect a Doomlike Dungeon. Default: 7.")
+		@Config.Name("Doomlike Dungeons max Y level difference")
+		@Config.Comment("The maximum Y pos difference in which the mod will detect a Doomlike Dungeon. Default: 7.")
 		public int DoomlikeMaxYLevel = 7;
 	}
 }

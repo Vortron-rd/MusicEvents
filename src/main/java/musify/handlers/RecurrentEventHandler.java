@@ -3,7 +3,6 @@ package musify.handlers;
 import ivorius.reccomplex.events.StructureGenerationEventLite;
 import musify.Musify;
 import musify.config.BiomeMusicConfig;
-import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
 import net.minecraft.world.gen.structure.StructureBoundingBox;
 import net.minecraftforge.fml.common.eventhandler.EventPriority;
@@ -24,12 +23,12 @@ public class RecurrentEventHandler {
         StructureBoundingBox bb = event.getBoundingBox();
         int dim = event.getWorld().provider.getDimension();
 
-        if (Arrays.asList(BiomeMusicConfig.recurrentComplexOptions.recurrentComplexIgnoreStructure)
+        if (Arrays.asList(BiomeMusicConfig.frecurrentComplexOptions.recurrentComplexIgnoreStructure)
                 .contains(structureName)) {
             return;
         }
 
-        for (String ignore : BiomeMusicConfig.recurrentComplexOptions.recurrentComplexIgnoreNameContains) {
+        for (String ignore : BiomeMusicConfig.frecurrentComplexOptions.recurrentComplexIgnoreNameContains) {
             if (structureName.toLowerCase().contains(ignore.toLowerCase())) {
                 return;
             }
@@ -41,7 +40,7 @@ public class RecurrentEventHandler {
 
         int volume = width * height * depth;
 
-        int minVolume = BiomeMusicConfig.recurrentComplexOptions.recurrentMinimalStructureVolume;
+        int minVolume = BiomeMusicConfig.frecurrentComplexOptions.recurrentMinimalStructureVolume;
 
         if (volume < minVolume) {
             return;

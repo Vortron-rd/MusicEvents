@@ -1,9 +1,7 @@
 package musify.utils;
 
-import musify.Musify;
 import musify.config.BiomeMusicConfig;
 import net.minecraft.block.Block;
-import net.minecraft.init.Blocks;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityMobSpawner;
 import net.minecraft.util.math.BlockPos;
@@ -38,10 +36,10 @@ public class DungeonUtils {
         World world = player.world;
         BlockPos playerPos = player.getPosition();
 
-        String[] dungeonDefs = BiomeMusicConfig.dungeonDefinitionOptions.dungeonDefinitionList;
-        int minBlocks = BiomeMusicConfig.dungeonDefinitionOptions.minBlocks;
-        int minSpawners = BiomeMusicConfig.dungeonDefinitionOptions.minSpawners;
-        int radius = BiomeMusicConfig.dungeonDefinitionOptions.dungeonRadius;
+        String[] dungeonDefs = BiomeMusicConfig.gdungeonDefinitionOptions.dungeonDefinitionList;
+        int minBlocks = BiomeMusicConfig.gdungeonDefinitionOptions.minBlocks;
+        int minSpawners = BiomeMusicConfig.gdungeonDefinitionOptions.minSpawners;
+        int radius = BiomeMusicConfig.gdungeonDefinitionOptions.dungeonRadius;
 
         for (String def : dungeonDefs) {
             String[] parts = def.split(":");

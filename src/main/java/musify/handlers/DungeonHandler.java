@@ -80,8 +80,8 @@ public class DungeonHandler {
 
                         // Check horizontal distance and vertical position
                         if (distance <= maxDistance &&
-                                player.posY >= minY - BiomeMusicConfig.doomlikeDungeonsOptions.DoomlikeMaxYLevel &&
-                                player.posY <= maxY + BiomeMusicConfig.doomlikeDungeonsOptions.DoomlikeMaxYLevel) {
+                                player.posY >= minY - BiomeMusicConfig.edoomlikeDungeonsOptions.DoomlikeMaxYLevel &&
+                                player.posY <= maxY + BiomeMusicConfig.edoomlikeDungeonsOptions.DoomlikeMaxYLevel) {
 
                             if (biome.equals("hell")) {
                                 if (player.dimension != -1) {
@@ -145,7 +145,7 @@ public class DungeonHandler {
         NetworkManager.INSTANCE.sendToServer(new DungeonMusicPacket.Request(
                 distance,
                 checkOnly,
-                BiomeMusicConfig.doomlikeDungeonsOptions.doomlikeDungeonsMusicList
+                BiomeMusicConfig.edoomlikeDungeonsOptions.doomlikeDungeonsMusicList
         ));
     }
 
@@ -160,24 +160,24 @@ public class DungeonHandler {
         doomlikeCount = 200;
 
         if (activeTagMusic != null) {
-            activeTagMusic.stopWithFadeOut(BiomeMusicConfig.fadeOptions.customMusicFadeOutTime);
+            activeTagMusic.stopWithFadeOut(BiomeMusicConfig.lfadeOptions.customMusicFadeOutTime);
             activeTagMusic = null;
         }
         if (combatMusicPlayer != null) {
-            combatMusicPlayer.stopWithFadeOut(BiomeMusicConfig.fadeOptions.customMusicFadeOutTime);
+            combatMusicPlayer.stopWithFadeOut(BiomeMusicConfig.lfadeOptions.customMusicFadeOutTime);
             combatMusicPlayer = null;
         }
 
         if (activeMusic != null) {
-            activeMusic.stopWithFadeOut(BiomeMusicConfig.fadeOptions.customMusicFadeOutTime);
+            activeMusic.stopWithFadeOut(BiomeMusicConfig.lfadeOptions.customMusicFadeOutTime);
             activeMusic = new MusicPlayer(musicFile, true);
             currentMusicFile = musicFile;
-            activeMusic.playWithFadeIn(BiomeMusicConfig.fadeOptions.customMusicFadeInTime);
+            activeMusic.playWithFadeIn(BiomeMusicConfig.lfadeOptions.customMusicFadeInTime);
         }
         else if (activeMusic == null) {
             activeMusic = new MusicPlayer(musicFile, true);
             currentMusicFile = musicFile;
-            activeMusic.playWithFadeIn(BiomeMusicConfig.fadeOptions.customMusicFadeInTime);
+            activeMusic.playWithFadeIn(BiomeMusicConfig.lfadeOptions.customMusicFadeInTime);
         }
         stopVanillaMusic();
     }

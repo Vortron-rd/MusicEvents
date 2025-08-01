@@ -115,7 +115,6 @@ public class MusicPlayer implements Runnable {
                     line.open(decodedFormat);
                     gainControl = (FloatControl) line.getControl(FloatControl.Type.MASTER_GAIN);
 
-                    // Fade-in: start at min volume
                     float targetVolume = Minecraft.getMinecraft().gameSettings.getSoundLevel(SoundCategory.MUSIC);
                     float min = gainControl.getMinimum();
                     float max = gainControl.getMaximum();
@@ -125,7 +124,6 @@ public class MusicPlayer implements Runnable {
 
                     line.start();
 
-                    // Start fade-in in a separate thread
                     float finalTargetDb = targetDb;
                     Thread fadeThread = new Thread(() -> {
                         int steps = 50;
@@ -194,7 +192,6 @@ public class MusicPlayer implements Runnable {
                     line.open(decodedFormat);
                     gainControl = (FloatControl) line.getControl(FloatControl.Type.MASTER_GAIN);
 
-                    // Set volume to minimum (silent)
                     float min = gainControl.getMinimum();
                     gainControl.setValue(min);
 

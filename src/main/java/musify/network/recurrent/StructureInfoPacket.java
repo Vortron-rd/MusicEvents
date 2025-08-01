@@ -45,7 +45,6 @@ public class StructureInfoPacket {
         }
     }
 
-    // Response sent from server to client
     public static class Response implements IMessage {
         private String musicFile;
         private String structureName;
@@ -74,21 +73,17 @@ public class StructureInfoPacket {
         }
     }
 
-    // Handler for client->server requests
     public static class RequestHandler implements IMessageHandler<Request, Response> {
         @Override
         public Response onMessage(Request message, MessageContext ctx) {
             EntityPlayerMP player = ctx.getServerHandler().player;
 
-            // Check if player is in a structure
             String structureName = findPlayerStructure(player);
 
             if (structureName != null && !structureName.isEmpty()) {
                 if (message.checkOnly) {
-                    // Just checking if still in structure
                     return new Response(structureName, "", true);
                 } else {
-                    // Select appropriate music for the structure
                     String musicFile = findStructureMusic(structureName, message.musicList);
                     if (musicFile != null) {
                         return new Response(structureName, musicFile, true);
@@ -100,14 +95,11 @@ public class StructureInfoPacket {
         }
     }
 
-    // Handler for server->client responses
     public static class ResponseHandler implements IMessageHandler<Response, IMessage> {
         @Override
         public IMessage onMessage(Response message, MessageContext ctx) {
-            // This runs on the client side
             net.minecraft.client.Minecraft.getMinecraft().addScheduledTask(() -> {
                 if (message.hasStructure) {
-                    Musify.LOGGER.info("Player is in structure: {}", message.structureName);
 
                     if (message.musicFile != null) {
                         if (!message.musicFile.isEmpty()) {

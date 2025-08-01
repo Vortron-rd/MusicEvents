@@ -45,7 +45,6 @@ public class TargetingUtils {
 
         int count = 0;
         for (EntityLiving mob : entities) {
-            // Only count mobs that are alive and not peaceful
             if (!mob.isEntityAlive() || mob.isAIDisabled()) continue;
 
             if (mob.getAttackTarget() != null && mob.getAttackTarget().getUniqueID().equals(Minecraft.getMinecraft().player.getUniqueID())) {

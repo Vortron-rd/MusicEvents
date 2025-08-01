@@ -31,20 +31,15 @@ public class DungeonHandler {
         World world = player.getEntityWorld();
         File file;
 
-        // Handle client-side path differently
         if (world.isRemote) {
             String worldName = player.getEntityWorld().getWorldInfo().getWorldName();
-            // Try to construct the correct path on client side
             File gameDir = new File(".");
             file = new File(new File(gameDir, "saves"), worldName + "/dungeon_rooms.csv");
 
-            // If still not found, try alternative paths
             if (!file.exists()) {
-                // Try parent directory (common in dev environments)
                 file = new File(new File(gameDir.getParentFile(), "saves"), worldName + "/dungeon_rooms.csv");
             }
         } else {
-            // Server side - normal path
             File worldDir = world.getSaveHandler().getWorldDirectory();
             file = new File(worldDir, "dungeon_rooms.csv");
         }
@@ -72,20 +67,18 @@ public class DungeonHandler {
                         double z = Double.parseDouble(parts[4]);
                         String biome = parts[5];
 
-                        // Calculate horizontal distance (2D)
                         double distance = Math.sqrt(
                                 Math.pow(player.posX - x, 2) +
                                         Math.pow(player.posZ - z, 2)
                         );
 
-                        // Check horizontal distance and vertical position
                         if (distance <= maxDistance &&
                                 player.posY >= minY - BiomeMusicConfig.edoomlikeDungeonsOptions.DoomlikeMaxYLevel &&
                                 player.posY <= maxY + BiomeMusicConfig.edoomlikeDungeonsOptions.DoomlikeMaxYLevel) {
 
                             if (biome.equals("hell")) {
                                 if (player.dimension != -1) {
-                                    continue; // Skip hell biomes if not in Nether
+                                    continue;
                                 }
                             }
                             return new DungeonInfo(theme, x, minY, maxY, z, biome, distance);
@@ -141,7 +134,6 @@ public class DungeonHandler {
 
     @SideOnly(Side.CLIENT)
     public static void HandleDoomlikeDungeonsMusic(EntityPlayer player, int distance, boolean checkOnly) {
-        // Include client's music list configuration in the request
         NetworkManager.INSTANCE.sendToServer(new DungeonMusicPacket.Request(
                 distance,
                 checkOnly,
@@ -196,7 +188,6 @@ public class DungeonHandler {
             int originalCount = 0;
             int uniqueCount = 0;
 
-            // Read all unique lines
             try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
                 String line;
                 while ((line = reader.readLine()) != null) {
@@ -207,14 +198,12 @@ public class DungeonHandler {
                 }
             }
 
-            // Write unique lines to temp file
             try (FileWriter writer = new FileWriter(tempFile)) {
                 for (String line : uniqueLines) {
                     writer.write(line + "\n");
                 }
             }
 
-            // Replace original with temp file
             if (tempFile.exists() && file.delete() && tempFile.renameTo(file)) {
                 Musify.LOGGER.info("Successfully removed {} duplicate entries from dungeon_rooms.csv",
                         (originalCount - uniqueCount));
@@ -245,7 +234,7 @@ public class DungeonHandler {
                 continue;
             }
 
-            String[] parts = entry.split(":", 2); // Split at the first colon
+            String[] parts = entry.split(":", 2);
             if (parts.length != 2) {
                 continue;
             }
@@ -253,19 +242,13 @@ public class DungeonHandler {
             String entryTheme = parts[0].trim().toLowerCase();
             String musicFilesStr = parts[1].trim();
 
-            // Check if this entry matches the theme
             if (normalizedTheme.contains(entryTheme)) {
-                // Split the music files string by comma to get all options
                 String[] musicFiles = musicFilesStr.split(",");
                 if (musicFiles.length == 0) {
                     continue;
                 }
 
-                // Randomly select one music file from the options
-                String selectedMusic = musicFiles[new java.util.Random().nextInt(musicFiles.length)].trim();
-                Musify.LOGGER.info("Found music for dungeon theme {}: {} (selected from {} options)",
-                        theme, selectedMusic, musicFiles.length);
-                return selectedMusic;
+                return musicFiles[new java.util.Random().nextInt(musicFiles.length)].trim();
             }
         }
 

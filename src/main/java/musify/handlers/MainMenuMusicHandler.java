@@ -38,7 +38,7 @@ public class MainMenuMusicHandler {
         }
 
         ticksSinceStart++;
-        if (ticksSinceStart < 20) return; // wait 1 second (20 ticks)
+        if (ticksSinceStart < 20) return;
 
         String mainMenuMusicPath = BiomeMusicConfig.ccmainMenuMusic;
         Minecraft mc = Minecraft.getMinecraft();
@@ -147,7 +147,6 @@ public class MainMenuMusicHandler {
             return;
         }
 
-        // Stop previous player if running
         if (mainMenuMusicPlayer != null && mainMenuMusicPlayer.isPlaying()) {
             mainMenuMusicPlayer.stop();
         }

@@ -28,7 +28,7 @@ public class PauseEventHandler {
     public static void onClientTick(TickEvent.ClientTickEvent event) {
 
         ticksSinceStart++;
-        if (ticksSinceStart < 20) return; // wait 1 second (20 ticks)
+        if (ticksSinceStart < 20) return;
 
         Minecraft mc = Minecraft.getMinecraft();
 

@@ -60,7 +60,6 @@ public class RecurrentEventHandler {
         try {
             File worldDir;
 
-            // Try to get world directory from server
             if (net.minecraftforge.fml.common.FMLCommonHandler.instance().getMinecraftServerInstance() != null) {
                 WorldServer world = net.minecraftforge.fml.common.FMLCommonHandler.instance()
                         .getMinecraftServerInstance()
@@ -76,7 +75,6 @@ public class RecurrentEventHandler {
                                     .getMinecraftServerInstance().getFolderName(), "");
                 }
             } else {
-                // Fallback for integrated server
                 worldDir = new File(".", "saves/" + net.minecraft.client.Minecraft.getMinecraft().getIntegratedServer().getFolderName());
                 Musify.LOGGER.warn("Using fallback world directory: {}", worldDir.getAbsolutePath());
             }

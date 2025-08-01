@@ -72,21 +72,17 @@ public class DungeonMusicPacket {
         }
     }
 
-    // Handler for client->server requests
     public static class RequestHandler implements IMessageHandler<Request, Response> {
         @Override
         public Response onMessage(Request message, MessageContext ctx) {
             EntityPlayerMP player = ctx.getServerHandler().player;
 
-            // Use existing method to find dungeon
             DungeonHandler.DungeonInfo dungeon = DungeonHandler.findNearbyDungeons(player, message.distance);
 
             if (dungeon != null) {
                 if (message.checkOnly) {
-                    // Just checking if still in dungeon
                     return new Response("", true);
                 } else {
-                    // Using client's music list instead of server's
                     String theme = dungeon.getTheme();
                     String musicFile = DungeonHandler.findDungeonMusic(theme, message.musicList);
 
@@ -100,18 +96,14 @@ public class DungeonMusicPacket {
         }
     }
 
-    // Handler for server->client responses
     public static class ResponseHandler implements IMessageHandler<Response, IMessage> {
         @Override
         public IMessage onMessage(Response message, MessageContext ctx) {
-            // This runs on the client side
             if (message.hasDungeon) {
                 net.minecraft.client.Minecraft.getMinecraft().addScheduledTask(() -> {
                     if (!message.musicFile.isEmpty()) {
-                        // Play the new music
                         DungeonHandler.playDungeonMusic(message.musicFile);
                     } else {
-                        // Just extend current music duration
                         DungeonHandler.setDungeonCount();
                     }
                 });

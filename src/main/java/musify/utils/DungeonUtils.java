@@ -18,7 +18,6 @@ public class DungeonUtils {
         long now = System.currentTimeMillis();
         if (now - lastScanTime > SCAN_INTERVAL_MS) {
             lastScanTime = now;
-            // Run scan in a background thread
             new Thread(() -> {
                 cachedDungeonMusic = scanForDungeonMusic(player);
             }, "DungeonMusicScanThread").start();

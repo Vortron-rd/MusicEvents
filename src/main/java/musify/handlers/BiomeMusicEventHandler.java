@@ -334,7 +334,6 @@ public class BiomeMusicEventHandler {
             }
 
             if (musicFile != null && !configSet.equals("default_music") && !BiomeDictionary.hasType(biome, BiomeDictionary.Type.RIVER)) {
-                // specific music not null, tag null
                 if (activeMusic != null && !isMusicBiomeCorrect(currentMusicFile, configSet) && !activeMusic.isFading() && activeTagMusic == null) {
                     if (activeTagMusic != null) {
                         activeTagMusic.stopWithFadeOut(lfadeOptions.customMusicFadeOutTime);
@@ -345,7 +344,6 @@ public class BiomeMusicEventHandler {
                     currentMusicFile = musicFile;
                     activeMusic.playWithFadeIn(lfadeOptions.customMusicFadeInTime);
                 }
-                //specific music null, tag not null
                 else if (activeMusic == null && activeTagMusic != null && !activeTagMusic.isFading()) {
                     activeMusic = new MusicPlayer(musicFile, false);
                     currentMusicFile = musicFile;
@@ -358,7 +356,6 @@ public class BiomeMusicEventHandler {
                         activeTagMusic = null;
                     }
                 }
-                // specific music null, tag null
                 else if (activeMusic == null && activeTagMusic == null) {
                     activeMusic = new MusicPlayer(musicFile, false);
                     currentMusicFile = musicFile;
@@ -373,7 +370,6 @@ public class BiomeMusicEventHandler {
                     }
                 }
             } else {
-                // getting the biome and checking the config
                 Set<BiomeDictionary.Type> biomeTags = BiomeDictionary.getTypes(biome);
                 if (!biomeTags.isEmpty() && biome != Biomes.RIVER) {
                     String randomTagMusicFile = biomeTags.stream()
@@ -385,7 +381,6 @@ public class BiomeMusicEventHandler {
                     if (!randomTagMusicFile.equals("default_music")) {
 
                         Set<String> possibleSongs = new HashSet<>();
-                        // picking one random song from the config list
                         for (BiomeDictionary.Type type : biomeTags) {
                             String possibleSongList = BiomeMusicConfig.kbiomeTagMusicMap.getOrDefault(type.getName().toLowerCase(), "default_music");
                             String[] songList = possibleSongList.split(",");

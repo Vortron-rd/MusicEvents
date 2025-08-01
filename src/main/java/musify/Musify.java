@@ -27,7 +27,7 @@ public class Musify {
     public static final String NAME = "Musify!";
     public static final Logger LOGGER = LogManager.getLogger();
 
-    //TODO: Add multimusic support to recurrent and doomlikes and dungeon definitions
+    //TODO: add roguelike music support
 	
     @SidedProxy(clientSide = "musify.proxy.ClientProxy", serverSide = "musify.proxy.CommonProxy")
     public static CommonProxy PROXY;

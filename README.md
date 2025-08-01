@@ -29,15 +29,16 @@ The mod will take .ogg and .mp3 sound files from the folder called "music". This
 ![image](https://github.com/user-attachments/assets/e1c3f13d-3f9c-44c0-88c5-eff1e8559d73)
 ### 2. Set up the config.
 While it is possible to use the config file to set up the mod, it is recommended to use the Forge in-game config menu in the Forge mod list.
+
 <img width="251" height="306" alt="image" src="https://github.com/user-attachments/assets/12dd244d-e4ae-4fb7-a30d-6fa89e61742a" />
 <img width="1189" height="635" alt="image" src="https://github.com/user-attachments/assets/657b6387-2ace-4682-b323-c13ec16e0df2" />
 
 ### 3. Set up the music.
 By default most features are disabled. 
-<br>This is because while leaving enabled features empty does not impact performance too much, they do still use some resources in the background. 
-<br>At the top of the config menu there will be a list called "Available Music Files", this can be used to see what sound files in the music folder are recognized and can be used. 
-<br>For all music configurations except boss music; recurrent complex music and doomlike dungeons music, you can specify more then one music track by seperating them with a comma e.g. [song1.ogg,song2.ogg]. 
-<br>If ambient Mode is enabled custom music will not stop vanilla music.
+This is because while leaving enabled features empty does not impact performance too much, they do still use some resources in the background. 
+At the top of the config menu there will be a list called "Available Music Files", this can be used to see what sound files in the music folder are recognized and can be used. 
+For all music configurations except boss music; recurrent complex music and doomlike dungeons music, you can specify more then one music track by seperating them with a comma e.g. [song1.ogg,song2.ogg]. 
+If ambient Mode is enabled custom music will not stop vanilla music.
 
 ### Here is an explanation of how this mods features work in order:
 For **Boss Music**, There is an option to set the detection range for bosses. If a boss is detected within that radius the music will change if the mob is specified as a boss mob. To set up the music for a boss mob there is the [Boss Music List]. For each boss mob you want to set up music for, create a new line and specify the mob and the music seperated by a comma: [modid:mobid,bossmusic1.ogg]. Keep in mind to not forget the Mod Id from the mob! (e.g. [lycanitesmobs:rahovart,bossmusic1.ogg]). The Boss Music has priority based on the index of the list. It will always try to play the music for the boss mob it can find first in the list. So if you have both the wither and the Ender Dragon in the list and you spawn in both of them, it will play the music from whichever mob is first in the list.

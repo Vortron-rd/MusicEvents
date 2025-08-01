@@ -37,7 +37,7 @@ While it is possible to use the config file to set up the mod, it is recommended
 <br>**By default most features are disabled.**
 This is because while leaving enabled features empty does not impact performance too much, they do still use some resources in the background. 
 At the top of the config menu there will be a list called "Available Music Files", this can be used to see what sound files in the music folder are recognized and can be used. 
-For all music configurations except boss music; recurrent complex music and doomlike dungeons music, you can specify more then one music track by seperating them with a comma e.g. [song1.ogg,song2.ogg]. 
+For all music configurations except boss music and Dungeon Definitions, you can specify more then one music track by seperating them with a comma e.g. [song1.ogg,song2.ogg]. 
 If ambient Mode is enabled custom music will not stop vanilla music.
 
 ### Here is an explanation of how this mods features work in order:

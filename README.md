@@ -14,7 +14,7 @@
 - **Cavern Music!** Want to feel a true Dwarf when mining underground? Customize your worlds underground music for a new experience when mining!
 - **Customizable Biome Music!** This Mod allows you to customize and set up music for specific biomes, or for certain biome types. Great for that immersive feel when exploring!
 
-<sup>* Polling order here means that the mod will check for conditions in the order specified above. it will first check for jukeboxes, then bosses, ect.
+<sup>* Polling order here means that the mod will check for conditions in the order specified above. it will first check for jukeboxes, then bosses, ect. </sup>
 
 - **Main Menu Music!** Set up some custom music for Minecraft's main menu to personalize your modpack or client!
 - **Ambient Mode!** Want to use sound effects or ambient tracks instead of music? Enable ambient mode to add to vanilla music instead of replacing it!
@@ -24,17 +24,17 @@
 The mod will take .ogg and .mp3 sound files from the folder called "music". This folder is located in the minecraft instance path (the same folder where your clients mods, resource packs and config folders are located.) which is usually your .minecraft directory, but can be in a different directory depending on if you are using another launcher like CurseForge. If this folder does not exist it will be created by the mod upon first startup. If you are a modpack developer that wants to use this mod you will have to mark this folder for export. Once you have created the folder or once the mod has created the folder for you, you can put any .ogg or .mp3 sound files you need in the folder.
 
 <img width="151" height="201" alt="folder2" src="https://github.com/user-attachments/assets/b99b517a-b76d-4d1e-8049-7e6b8e155d36" />
-<br><sup>Put the .ogg or .mp3 files in the music folder. Make sure they are .ogg or .mp3 files!
+<br><sup>Put the .ogg or .mp3 files in the music folder. Make sure they are .ogg or .mp3 files! </br></sup>
 
 ![image](https://github.com/user-attachments/assets/e1c3f13d-3f9c-44c0-88c5-eff1e8559d73)
-### 2. Set up the config.
+### 2. Set up the music in the config.
 While it is possible to use the config file to set up the mod, it is recommended to use the Forge in-game config menu in the Forge mod list.
 
 <img width="251" height="306" alt="image" src="https://github.com/user-attachments/assets/12dd244d-e4ae-4fb7-a30d-6fa89e61742a" />
 <img width="1189" height="635" alt="image" src="https://github.com/user-attachments/assets/657b6387-2ace-4682-b323-c13ec16e0df2" />
 
-### 3. Set up the music.
-By default most features are disabled. 
+
+<br>**By default most features are disabled.**
 This is because while leaving enabled features empty does not impact performance too much, they do still use some resources in the background. 
 At the top of the config menu there will be a list called "Available Music Files", this can be used to see what sound files in the music folder are recognized and can be used. 
 For all music configurations except boss music; recurrent complex music and doomlike dungeons music, you can specify more then one music track by seperating them with a comma e.g. [song1.ogg,song2.ogg]. 

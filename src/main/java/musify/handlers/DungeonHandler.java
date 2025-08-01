@@ -227,13 +227,48 @@ public class DungeonHandler {
         }
     }
 
+    /**
+     * Finds appropriate music file for a dungeon theme
+     * @param theme The dungeon theme to match
+     * @param musicEntries Available music tracks in format "dungeonTheme:musicFile.ogg" or "dungeonTheme:music1.ogg,music2.ogg"
+     * @return The selected music file name or null if not found
+     */
     public static String findDungeonMusic(String theme, String[] musicEntries) {
+        if (theme == null || theme.isEmpty() || musicEntries == null) {
+            return null;
+        }
+
+        String normalizedTheme = theme.trim().toLowerCase();
+
         for (String entry : musicEntries) {
+            if (entry == null || entry.isEmpty()) {
+                continue;
+            }
+
             String[] parts = entry.split(":", 2); // Split at the first colon
-            if (parts.length == 2 && theme.trim().toLowerCase().contains(parts[0].trim().toLowerCase())) {
-                return parts[1].trim();
+            if (parts.length != 2) {
+                continue;
+            }
+
+            String entryTheme = parts[0].trim().toLowerCase();
+            String musicFilesStr = parts[1].trim();
+
+            // Check if this entry matches the theme
+            if (normalizedTheme.contains(entryTheme)) {
+                // Split the music files string by comma to get all options
+                String[] musicFiles = musicFilesStr.split(",");
+                if (musicFiles.length == 0) {
+                    continue;
+                }
+
+                // Randomly select one music file from the options
+                String selectedMusic = musicFiles[new java.util.Random().nextInt(musicFiles.length)].trim();
+                Musify.LOGGER.info("Found music for dungeon theme {}: {} (selected from {} options)",
+                        theme, selectedMusic, musicFiles.length);
+                return selectedMusic;
             }
         }
+
         return null;
     }
 

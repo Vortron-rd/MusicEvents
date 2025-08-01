@@ -138,7 +138,7 @@ public class RecurrentMusicHandler {
     /**
      * Finds the appropriate music file for a structure
      * @param structureName The name of the structure
-     * @param musicList Available music tracks in format "structureName:musicFile.ogg"
+     * @param musicList Available music tracks in format "structureName:musicFile.ogg" or "structureName:music1.ogg,music2.mp3,music3.ogg"
      * @return The music file name or null if not found
      */
     public static String findStructureMusic(String structureName, String[] musicList) {
@@ -146,7 +146,6 @@ public class RecurrentMusicHandler {
             return null;
         }
 
-        // Normalize structure name for comparison
         String normalizedName = structureName.toLowerCase().trim();
 
         for (String entry : musicList) {
@@ -154,19 +153,24 @@ public class RecurrentMusicHandler {
                 continue;
             }
 
-            // Split the entry into structure name and music file
             String[] parts = entry.split(":", 2);
             if (parts.length != 2) {
                 continue;
             }
 
             String entryStructureName = parts[0].toLowerCase().trim();
-            String musicFile = parts[1];
+            String musicFilesStr = parts[1];
 
-            // Check if this entry matches the structure name
             if (normalizedName.equals(entryStructureName)) {
-                Musify.LOGGER.info("Found music for structure {}: {}", structureName, musicFile);
-                return musicFile;
+                String[] musicFiles = musicFilesStr.split(",");
+                if (musicFiles.length == 0) {
+                    continue;
+                }
+
+                String selectedMusic = musicFiles[new java.util.Random().nextInt(musicFiles.length)];
+                Musify.LOGGER.info("Found music for structure {}: {} (selected from {} options)",
+                        structureName, selectedMusic, musicFiles.length);
+                return selectedMusic;
             }
         }
         Musify.LOGGER.info("No specific music found for structure: {}", structureName);

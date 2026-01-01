@@ -37,6 +37,10 @@ public class BiomeMusicConfig {
 	@Config.Comment("Boss Music Options.")
 	public static final BossMusicOptions dbossMusicOptions = new BossMusicOptions();
 
+	@Config.Name("Roguelike Dungeons Options")
+	@Config.Comment("Roguelike Dungeons Options. This is used to define what music to play in Roguelike Dungeons structures.")
+	public static final RoguelikeDungeonsOptions ecroguelikeDungeonsOptions = new RoguelikeDungeonsOptions();
+
 	@Config.Name("Doomlike Dungeons Options")
 	@Config.Comment("Doomlike Dungeons Options. This is used to define what music to play in Doomlike Dungeons structures. It works based on the Doomlike Dungeon Themes.")
 	public static final DoomlikeDungeonsOptions edoomlikeDungeonsOptions = new DoomlikeDungeonsOptions();
@@ -287,5 +291,14 @@ public class BiomeMusicConfig {
 		@Config.Name("Doomlike Dungeons max Y level difference")
 		@Config.Comment("The maximum Y pos difference in which the mod will detect a Doomlike Dungeon. Default: 7.")
 		public int DoomlikeMaxYLevel = 7;
+	}
+
+	public static class RoguelikeDungeonsOptions {
+
+		@Config.Name("Roguelike Dungeons Music")
+		@Config.Comment("Enable or Disable Roguelike Dungeons Music. This will play music when a Roguelike Dungeon is detected.")
+		public boolean enableRoguelikeDungeonsMusic = false;
+
+
 	}
 }

@@ -1,10 +1,7 @@
 package musify;
 
-import com.llamalad7.mixinextras.MixinExtrasBootstrap;
 import fermiumbooter.FermiumRegistryAPI;
 import net.minecraftforge.fml.relauncher.IFMLLoadingPlugin;
-import org.spongepowered.asm.launch.MixinBootstrap;
-import org.spongepowered.asm.mixin.Mixins;
 
 import java.util.Map;
 
@@ -15,6 +12,7 @@ public class MixinLoader implements IFMLLoadingPlugin {
     public MixinLoader() throws ClassNotFoundException {
         try {
             Class<?> mixinLoader = Class.forName("fermiumbooter.FermiumRegistryAPI");
+            FermiumRegistryAPI.enqueueMixin(true, "mixins.musify.roguelike.json");
             FermiumRegistryAPI.enqueueMixin(true, "mixins.musify.doomlike.json");
         } catch (ClassNotFoundException ignored) {
             System.out.println("====================================MUSIFY====================================");

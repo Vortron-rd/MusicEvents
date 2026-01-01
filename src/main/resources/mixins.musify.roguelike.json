@@ -1,11 +1,11 @@
 {
   "required": false,
   "minVersion": "0.8",
-  "package": "musify.recurrent",
+  "package": "musify.roguelike",
   "refmap": "musify.refmap.json",
   "target": "@env(SERVER)",
   "mixins": [
-    "RecurrentStructureLoggerMixin"
+    "RogueLikeLogHandler"
   ],
   "injectors": {
     "maxShiftBy": 10,

@@ -5,7 +5,6 @@ import jaredbgreat.dldungeons.planner.Node;
 import jaredbgreat.dldungeons.planner.mapping.MapMatrix;
 import jaredbgreat.dldungeons.rooms.Room;
 import jaredbgreat.dldungeons.themes.Theme;
-import musify.Musify;
 import net.minecraft.world.World;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
@@ -14,7 +13,6 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.Arrays;
 
 @Mixin(MapMatrix.class)
 public class MapMatrixMixin {

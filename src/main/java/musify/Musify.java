@@ -6,6 +6,7 @@ import musify.handlers.PauseEventHandler;
 import musify.network.NetworkManager;
 import musify.proxy.CommonProxy;
 import musify.handlers.RecurrentEventHandler;
+import musify.roguelike.RogueLikeLogHandler;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.common.Mod;
@@ -23,7 +24,7 @@ import java.io.File;
 @Mod(modid = Musify.MODID, version = Musify.VERSION, name = Musify.NAME, clientSideOnly = true)
 public class Musify {
     public static final String MODID = "musify";
-    public static final String VERSION = "Beta 1.2.1";
+    public static final String VERSION = "Beta 1.2.2";
     public static final String NAME = "Musify!";
     public static final Logger LOGGER = LogManager.getLogger();
 
@@ -53,6 +54,9 @@ public class Musify {
     public void init(FMLInitializationEvent event) {
         if (Loader.isModLoaded("reccomplex")) {
             MinecraftForge.EVENT_BUS.register(RecurrentEventHandler.class);
+        }
+        if (Loader.isModLoaded("roguelike")) {
+            MinecraftForge.EVENT_BUS.register(RogueLikeLogHandler.class);
         }
         MinecraftForge.EVENT_BUS.register(new PauseEventHandler());
         NetworkManager.registerPackets();

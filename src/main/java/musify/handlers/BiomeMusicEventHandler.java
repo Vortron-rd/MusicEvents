@@ -210,6 +210,15 @@ public class BiomeMusicEventHandler {
                 isBossMusicPlaying = false;
             }
 
+            // ----------------------- ROGUELIKE DUNGEONS HANDLING -----------------------
+
+            if (ecroguelikeDungeonsOptions.enableRoguelikeDungeonsMusic && Loader.isModLoaded("roguelike")) {
+                if (tickCounter % (lfadeOptions.pollingRate * 2) == 0) {
+
+                }
+            }
+
+
             // ----------------------- DOOMLIKE DUNGEONS HANDLING -----------------------
 
             if (edoomlikeDungeonsOptions.enableDoomlikeDungeonsMusic && Loader.isModLoaded("dldungeonsjbg")) {

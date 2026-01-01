@@ -141,7 +141,6 @@ public class DungeonHandler {
         ));
     }
 
-
     public static void setDungeonCount() {
         doomlikeCount = 200;
     }

@@ -2,6 +2,9 @@
 
 ### *Musify!* is a versatile client-side mod designed to improve the immersion and auditory experience of Minecraft for both modpack developers and regular players. This mod allows for dynamic music customization based on in-game events like PvE Combat, Biome Exploration, Caving, and more, giving you complete control over Minecraft's soundtrack. Whether you’re crafting an immersive modpack or just want to personalize your solo adventures, *Musify!* provides a way to bring your world to life with the perfect soundtrack.
 
+Developers note:
+Hi guys, I figured I owed an explanation on why i havent updated this mod in a while! I started my training in the military and kind of went off the grid for a couple of months. I hope to start developing again regularly soon! Happy new years!
+
 ## Features
 **Musify supports both .ogg and .mp3 files now!**
 <br>This mod has a bunch of different features revolving around Minecraft's soundtrack. The following features are available and are polled in the specified order*:
@@ -76,3 +79,4 @@ The [Polling Rate] option is the heart of the mod. Every action the mod takes is
 - Please do not forget to set values back to "default_music" when you want to disable something. It might break certain functions if left empty.
 - For Doomlike Dungeons compatibility this mod uses a mixin. To make this work, please also install FermiumBooter. The mod will load fine without FermiumBooter, but Doomlike Dungeons support will NOT work (dungeon positions will not be saved).
 - While the mod supports both mp3 and ogg files, i personally recommend the use of .ogg sound files, because of their superior sound quality and lower file size.
+

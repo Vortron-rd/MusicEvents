@@ -29,6 +29,12 @@ public class Musify {
     public static final Logger LOGGER = LogManager.getLogger();
 
     //TODO: add roguelike music support
+    /*
+    TODO: 1. Add method to check if player is inside roguelike structure.
+          2. Add networking for roguelike structures. Needs config list getter from client.
+          3. Add method to get music for roguelike structure.
+
+     */
 	
     @SidedProxy(clientSide = "musify.proxy.ClientProxy", serverSide = "musify.proxy.CommonProxy")
     public static CommonProxy PROXY;

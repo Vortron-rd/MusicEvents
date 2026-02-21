@@ -12,7 +12,7 @@ public class MixinLoader implements IFMLLoadingPlugin {
     public MixinLoader() throws ClassNotFoundException {
         try {
             Class<?> mixinLoader = Class.forName("fermiumbooter.FermiumRegistryAPI");
-            FermiumRegistryAPI.enqueueMixin(true, "mixins.musify.roguelike.json");
+//            FermiumRegistryAPI.enqueueMixin(true, "mixins.musify.roguelike.json");
             FermiumRegistryAPI.enqueueMixin(true, "mixins.musify.doomlike.json");
         } catch (ClassNotFoundException ignored) {
             System.out.println("====================================MUSIFY====================================");

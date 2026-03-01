@@ -159,6 +159,8 @@ public class BiomeMusicEventHandler {
             return;
         }
 
+        // TODO: roguelike dungeons stop handling. like the two functions below.
+
         if (recurrentCount > 0 && activeMusic != null && !activeMusic.isPaused()) {
             recurrentCount--;
             if (recurrentCount % 50 == 0) {

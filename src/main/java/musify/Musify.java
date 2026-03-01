@@ -30,9 +30,9 @@ public class Musify {
 
     //TODO: add roguelike music support
     /*
-    TODO: 1. Add method to check if player is inside roguelike structure.
-          2. Add networking for roguelike structures. Needs config list getter from client.
-          3. Add method to get music for roguelike structure.
+    TODO: 1. Add method to check if player is inside roguelike structure. DONE
+          2. Add networking for roguelike structures. Needs config list getter from client. DONE
+          3. Add method to get music for roguelike structure. DONE
 
 
     TODO:        STRUCTURE:

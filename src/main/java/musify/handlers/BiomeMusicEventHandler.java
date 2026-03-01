@@ -150,6 +150,16 @@ public class BiomeMusicEventHandler {
             }
         }
 
+
+        if (roguelikeCount > 0 && activeMusic != null && !activeMusic.isPaused()) {
+            roguelikeCount--;
+            if (roguelikeCount % 50 == 0) {
+                handleRoguelikeDungeonsMusic(true);
+            }
+            stopVanillaMusic();
+            return;
+        }
+
         if (doomlikeCount > 0 && activeMusic != null && !activeMusic.isPaused()) {
             doomlikeCount--;
             if (doomlikeCount % 50 == 0) {

@@ -34,6 +34,11 @@ public class Musify {
           2. Add networking for roguelike structures. Needs config list getter from client.
           3. Add method to get music for roguelike structure.
 
+
+    TODO:        STRUCTURE:
+                - Check if player is inside structure, by sending a handle request to the server.
+                - Server checks if player is inside structure, and if so, sends back the music file to play.
+                - Client receives music file.
      */
 	
     @SidedProxy(clientSide = "musify.proxy.ClientProxy", serverSide = "musify.proxy.CommonProxy")

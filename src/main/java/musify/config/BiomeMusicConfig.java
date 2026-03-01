@@ -299,6 +299,10 @@ public class BiomeMusicConfig {
 		@Config.Comment("Enable or Disable Roguelike Dungeons Music. This will play music when a Roguelike Dungeon is detected.")
 		public boolean enableRoguelikeDungeonsMusic = false;
 
+        @Config.Name("Roguelike Dungeons Music List")
+        @Config.Comment({"Put any music you want to be played for any Roguelike Dungeon structure in here. \nThis will play when a Roguelike Dungeon is detected. \nExample: [dungeon_structure_name:music_file.ogg] \nYou can find the structure names in the roguelike config files in your instance folder, or through the recurrent_structures.csv file.."})
+        public String[] roguelikeDungeonsMusicList = new String[0];
+
 
 	}
 }

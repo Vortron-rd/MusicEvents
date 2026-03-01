@@ -128,12 +128,12 @@ public class DungeonHandler {
     }
 
     @SideOnly(Side.CLIENT)
-    public static void HandleDoomlikeDungeonsMusic(EntityPlayer player, int distance) {
-        HandleDoomlikeDungeonsMusic(player, distance, false);
+    public static void handleDoomlikeDungeonsMusic(EntityPlayer player, int distance) {
+        handleDoomlikeDungeonsMusic(player, distance, false);
     }
 
     @SideOnly(Side.CLIENT)
-    public static void HandleDoomlikeDungeonsMusic(EntityPlayer player, int distance, boolean checkOnly) {
+    public static void handleDoomlikeDungeonsMusic(EntityPlayer player, int distance, boolean checkOnly) {
         NetworkManager.INSTANCE.sendToServer(new DungeonMusicPacket.Request(
                 distance,
                 checkOnly,

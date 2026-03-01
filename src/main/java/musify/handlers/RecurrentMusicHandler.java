@@ -116,7 +116,7 @@ public class RecurrentMusicHandler {
     }
 
     @SideOnly(Side.CLIENT)
-    public static void handleRecurrentMusic(EntityPlayer player, boolean checkOnly) {
+    public static void handleRecurrentMusic(boolean checkOnly) {
         NetworkManager.INSTANCE.sendToServer(new StructureInfoPacket.Request(
                 checkOnly,
                 BiomeMusicConfig.frecurrentComplexOptions.recurrentComplexMusicList

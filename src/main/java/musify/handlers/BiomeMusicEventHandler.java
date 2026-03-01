@@ -33,6 +33,7 @@ import static musify.handlers.HandleCombatMusic.*;
 import static musify.handlers.HandleUndergroundMusic.handleUndergroundMusic;
 import static musify.handlers.HandleUndergroundMusic.isUndergroundMusicPlaying;
 import static musify.handlers.RecurrentMusicHandler.handleRecurrentMusic;
+import static musify.roguelike.RoguelikeMusicHandler.handleRoguelikeDungeonsMusic;
 import static musify.utils.BossTargetUtils.handleBossMusic;
 import static musify.utils.BossTargetUtils.isBossMusicPlaying;
 
@@ -56,6 +57,7 @@ public class BiomeMusicEventHandler {
     private static int dungeonCount = 0;
     public static int recurrentCount = 0;
     public static int doomlikeCount = 0;
+    public static int roguelikeCount = 0;
 
     private static int jukeboxTicks = 0;
     private static boolean jukeboxPause = false;
@@ -151,7 +153,7 @@ public class BiomeMusicEventHandler {
         if (doomlikeCount > 0 && activeMusic != null && !activeMusic.isPaused()) {
             doomlikeCount--;
             if (doomlikeCount % 50 == 0) {
-                HandleDoomlikeDungeonsMusic(player, edoomlikeDungeonsOptions.DoomlikeDistance, true);
+                handleDoomlikeDungeonsMusic(player, edoomlikeDungeonsOptions.DoomlikeDistance, true);
             }
             stopVanillaMusic();
             return;
@@ -160,7 +162,7 @@ public class BiomeMusicEventHandler {
         if (recurrentCount > 0 && activeMusic != null && !activeMusic.isPaused()) {
             recurrentCount--;
             if (recurrentCount % 50 == 0) {
-                handleRecurrentMusic(event.player, true);
+                handleRecurrentMusic(true);
             }
             stopVanillaMusic();
             return;
@@ -214,7 +216,7 @@ public class BiomeMusicEventHandler {
 
             if (ecroguelikeDungeonsOptions.enableRoguelikeDungeonsMusic && Loader.isModLoaded("roguelike")) {
                 if (tickCounter % (lfadeOptions.pollingRate * 2) == 0) {
-
+                    handleRoguelikeDungeonsMusic(false);
                 }
             }
 
@@ -223,7 +225,7 @@ public class BiomeMusicEventHandler {
 
             if (edoomlikeDungeonsOptions.enableDoomlikeDungeonsMusic && Loader.isModLoaded("dldungeonsjbg")) {
                 if (tickCounter % (lfadeOptions.pollingRate * 2) == 0) {
-                    HandleDoomlikeDungeonsMusic(event.player, edoomlikeDungeonsOptions.DoomlikeDistance);
+                    handleDoomlikeDungeonsMusic(event.player, edoomlikeDungeonsOptions.DoomlikeDistance);
                 }
             }
 
@@ -233,7 +235,7 @@ public class BiomeMusicEventHandler {
             if (doomlikeCount == 0) {
                 if ((tickCounter % (lfadeOptions.pollingRate * 2) == 0)) {
                     if (frecurrentComplexOptions.enableRecurrentComplexMusic && Loader.isModLoaded("reccomplex")) {
-                        handleRecurrentMusic(event.player, false);
+                        handleRecurrentMusic(false);
                         if (isDungeonMusicPlaying) {
                             isDungeonMusicPlaying = false;
                             return;

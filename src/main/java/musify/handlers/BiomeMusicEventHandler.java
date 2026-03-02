@@ -150,7 +150,6 @@ public class BiomeMusicEventHandler {
             }
         }
 
-
         if (roguelikeCount > 0 && activeMusic != null && !activeMusic.isPaused()) {
             roguelikeCount--;
             if (roguelikeCount % 50 == 0) {
@@ -168,8 +167,6 @@ public class BiomeMusicEventHandler {
             stopVanillaMusic();
             return;
         }
-
-        // TODO: roguelike dungeons stop handling. like the two functions below.
 
         if (recurrentCount > 0 && activeMusic != null && !activeMusic.isPaused()) {
             recurrentCount--;

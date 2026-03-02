@@ -303,6 +303,15 @@ public class BiomeMusicConfig {
         @Config.Comment({"Put any music you want to be played for any Roguelike Dungeon structure in here. \nThis will play when a Roguelike Dungeon is detected. \nExample: [dungeon_structure_name:music_file.ogg] \nYou can find the structure names in the roguelike config files in your instance folder, or through the recurrent_structures.csv file.."})
         public String[] roguelikeDungeonsMusicList = new String[0];
 
+		@Config.Name("Roguelike Dungeons max Y level difference")
+		@Config.Comment("The maximum Y level a player can be above or below a roguelike dungeon for music to play.")
+		public int roguelikeMaxYLevel = 10;
+
+		@Config.Name("Roguelike Dungeons max horizontal distance")
+		@Config.Comment("The maximum horizontal distance (in X and Z axes) a player can be from a Roguelike Dungeon bounding box for music to play. This allows music to trigger when a player is close to but not strictly inside the structure. Default: 5.")
+		@Config.RangeInt(min = 0, max = 200)
+		public int roguelikeDistance = 5;
+
 
 	}
 }

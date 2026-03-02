@@ -87,12 +87,19 @@ public class RoguelikeMusicHandler {
                     int realMaxZ = Math.max(minZ, maxZ);
 
                     // Allow Y to be within 15 blocks above or below the dungeon's Y range
-                    int yLowerBound = realMinY - 15;
-                    int yUpperBound = realMaxY + 15;
+                    int yLowerBound = realMinY - BiomeMusicConfig.ecroguelikeDungeonsOptions.roguelikeMaxYLevel;
+                    int yUpperBound = realMaxY + BiomeMusicConfig.ecroguelikeDungeonsOptions.roguelikeMaxYLevel;
 
-                    if (playerX >= realMinX && playerX <= realMaxX &&
+                    // Allow some horizontal leeway in X and Z based on config (roguelikeDistance)
+                    int horizPadding = BiomeMusicConfig.ecroguelikeDungeonsOptions.roguelikeDistance;
+                    int xLowerBound = realMinX - horizPadding;
+                    int xUpperBound = realMaxX + horizPadding;
+                    int zLowerBound = realMinZ - horizPadding;
+                    int zUpperBound = realMaxZ + horizPadding;
+
+                    if (playerX >= xLowerBound && playerX <= xUpperBound &&
                         playerY >= yLowerBound && playerY <= yUpperBound &&
-                        playerZ >= realMinZ && playerZ <= realMaxZ) {
+                        playerZ >= zLowerBound && playerZ <= zUpperBound) {
                         return structureName;
                     }
                 } catch (NumberFormatException e) {

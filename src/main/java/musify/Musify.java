@@ -27,19 +27,6 @@ public class Musify {
     public static final String VERSION = "Beta 1.2.2";
     public static final String NAME = "Musify!";
     public static final Logger LOGGER = LogManager.getLogger();
-
-    //TODO: add roguelike music support
-    /*
-    TODO: 1. Add method to check if player is inside roguelike structure. DONE
-          2. Add networking for roguelike structures. Needs config list getter from client. DONE
-          3. Add method to get music for roguelike structure. DONE
-
-
-    TODO:        STRUCTURE:
-                - Check if player is inside structure, by sending a handle request to the server.
-                - Server checks if player is inside structure, and if so, sends back the music file to play.
-                - Client receives music file.
-     */
 	
     @SidedProxy(clientSide = "musify.proxy.ClientProxy", serverSide = "musify.proxy.CommonProxy")
     public static CommonProxy PROXY;

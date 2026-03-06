@@ -55,7 +55,6 @@ public class RoguelikeMusicHandler {
                 if (line.trim().isEmpty()) {
                     continue;
                 }
-                // Format: structurename,dimension,x1,y1,z1,x2,y2,z2 (may or may not start with fnar:)
                 String[] parts = line.split(",");
                 if (parts.length < 8) {
                     continue;
@@ -71,35 +70,28 @@ public class RoguelikeMusicHandler {
                     continue;
                 }
                 try {
-                    int minX = Integer.parseInt(parts[2]);
-                    int minY = Integer.parseInt(parts[3]);
-                    int minZ = Integer.parseInt(parts[4]);
-                    int maxX = Integer.parseInt(parts[5]);
-                    int maxY = Integer.parseInt(parts[6]);
-                    int maxZ = Integer.parseInt(parts[7]);
+                    double minX = Double.parseDouble(parts[2]);
+                    double minY = Double.parseDouble(parts[3]);
+                    double minZ = Double.parseDouble(parts[4]);
+                    double maxX = Double.parseDouble(parts[5]);
+                    double maxY = Double.parseDouble(parts[6]);
+                    double maxZ = Double.parseDouble(parts[7]);
 
                     // Ensure min <= max
-                    int realMinX = Math.min(minX, maxX);
-                    int realMaxX = Math.max(minX, maxX);
-                    int realMinY = Math.min(minY, maxY);
-                    int realMaxY = Math.max(minY, maxY);
-                    int realMinZ = Math.min(minZ, maxZ);
-                    int realMaxZ = Math.max(minZ, maxZ);
+                    double realMinX = Math.min(minX, maxX);
+                    double realMaxX = Math.max(minX, maxX);
+                    double realMinY = Math.min(minY, maxY);
+                    double realMaxY = Math.max(minY, maxY);
+                    double realMinZ = Math.min(minZ, maxZ);
+                    double realMaxZ = Math.max(minZ, maxZ);
 
                     // Allow Y to be within 15 blocks above or below the dungeon's Y range
-                    int yLowerBound = realMinY - BiomeMusicConfig.ecroguelikeDungeonsOptions.roguelikeMaxYLevel;
-                    int yUpperBound = realMaxY + BiomeMusicConfig.ecroguelikeDungeonsOptions.roguelikeMaxYLevel;
+                    double yLowerBound = realMinY - BiomeMusicConfig.ecroguelikeDungeonsOptions.roguelikeMaxYLevel;
+                    double yUpperBound = realMaxY + BiomeMusicConfig.ecroguelikeDungeonsOptions.roguelikeMaxYLevel;
 
-                    // Allow some horizontal leeway in X and Z based on config (roguelikeDistance)
-                    int horizPadding = BiomeMusicConfig.ecroguelikeDungeonsOptions.roguelikeDistance;
-                    int xLowerBound = realMinX - horizPadding;
-                    int xUpperBound = realMaxX + horizPadding;
-                    int zLowerBound = realMinZ - horizPadding;
-                    int zUpperBound = realMaxZ + horizPadding;
-
-                    if (playerX >= xLowerBound && playerX <= xUpperBound &&
+                    if (playerX >= realMinX && playerX <= realMaxX &&
                         playerY >= yLowerBound && playerY <= yUpperBound &&
-                        playerZ >= zLowerBound && playerZ <= zUpperBound) {
+                        playerZ >= realMinZ && playerZ <= realMaxZ) {
                         return structureName;
                     }
                 } catch (NumberFormatException e) {
@@ -107,7 +99,6 @@ public class RoguelikeMusicHandler {
                 }
             }
         } catch (IOException e) {
-            Musify.LOGGER.error("Failed to read Roguelike structure file", e);
         }
         return null;
     }
@@ -140,7 +131,8 @@ public class RoguelikeMusicHandler {
                 if (musicFiles.length == 0) {
                     continue;
                 }
-                return musicFiles[new java.util.Random().nextInt(musicFiles.length)];
+                String selectedMusic = musicFiles[new java.util.Random().nextInt(musicFiles.length)];
+                return selectedMusic;
             }
         }
         return null;
@@ -157,10 +149,7 @@ public class RoguelikeMusicHandler {
     @SideOnly(Side.CLIENT)
     public static void playRoguelikeMusic(String musicFile) {
         roguelikeCount = 200;
-        isDungeonMusicPlaying = true;
-        if (currentMusicFile != null && currentMusicFile.equals(musicFile)) {
-            return;
-        }
+
         if (activeTagMusic != null) {
             activeTagMusic.stopWithFadeOut(BiomeMusicConfig.lfadeOptions.customMusicFadeOutTime);
             activeTagMusic = null;

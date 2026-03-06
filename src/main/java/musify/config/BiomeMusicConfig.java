@@ -307,11 +307,5 @@ public class BiomeMusicConfig {
 		@Config.Comment("The maximum Y level a player can be above or below a roguelike dungeon for music to play.")
 		public int roguelikeMaxYLevel = 10;
 
-		@Config.Name("Roguelike Dungeons max horizontal distance")
-		@Config.Comment("The maximum horizontal distance (in X and Z axes) a player can be from a Roguelike Dungeon bounding box for music to play. This allows music to trigger when a player is close to but not strictly inside the structure. Default: 5.")
-		@Config.RangeInt(min = 0, max = 200)
-		public int roguelikeDistance = 5;
-
-
 	}
 }

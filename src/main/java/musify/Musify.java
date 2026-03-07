@@ -24,7 +24,7 @@ import java.io.File;
 @Mod(modid = Musify.MODID, version = Musify.VERSION, name = Musify.NAME, clientSideOnly = true)
 public class Musify {
     public static final String MODID = "musify";
-    public static final String VERSION = "Beta 1.2.2";
+    public static final String VERSION = "Beta 1.2.3";
     public static final String NAME = "Musify!";
     public static final Logger LOGGER = LogManager.getLogger();
 	
@@ -54,7 +54,16 @@ public class Musify {
             MinecraftForge.EVENT_BUS.register(RecurrentEventHandler.class);
         }
         if (Loader.isModLoaded("roguelike")) {
-            MinecraftForge.EVENT_BUS.register(RogueLikeLogHandler.class);
+            try {
+                Class.forName("com.github.fnar.roguelike.events.StructurePartsGenerationEvent");
+                MinecraftForge.EVENT_BUS.register(RogueLikeLogHandler.class);
+            } catch (ClassNotFoundException e) {
+                LOGGER.error("====================================MUSIFY====================================");
+                LOGGER.error("You are using a version of RogueLike Dungeons that is not compatible with Musify.");
+                LOGGER.error("Please update RogueLike Dungeons to the latest version.");
+                LOGGER.error("==============================================================================");
+                return;
+            }
         }
         MinecraftForge.EVENT_BUS.register(new PauseEventHandler());
         NetworkManager.registerPackets();

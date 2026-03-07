@@ -53,7 +53,9 @@ If ambient Mode is enabled custom music will not stop vanilla music.
 ### Here is an explanation of how this mods features work in order:
 <details>
 <summary>Boss Music</summary>
-For **Boss Music**, There is an option to set the detection range for bosses. If a boss is detected within that radius the music will change if the mob is specified as a boss mob. To set up the music for a boss mob there is the [Boss Music List]. For each boss mob you want to set up music for, create a new line and specify the mob and the music seperated by a comma: [modid:mobid,bossmusic1.ogg]. Keep in mind to not forget the Mod Id from the mob! (e.g. [lycanitesmobs:rahovart,bossmusic1.ogg]). The Boss Music has priority based on the index of the list. It will always try to play the music for the boss mob it can find first in the list. So if you have both the wither and the Ender Dragon in the list and you summon both of them, it will play the music from whichever mob is first in the list.
+For **Boss Music**, There is an option to set the detection range for bosses. If a boss is detected within that radius the music will change if the mob is specified as a boss mob. To set up the music for a boss mob there is the [Boss Music List]. For each boss mob you want to set up music for, create a new line and specify the mob and the music seperated by a comma: [modid:mobid,bossmusic1.ogg]. Keep in mind to not forget the Mod Id from the mob! (e.g. [lycanitesmobs:rahovart,bossmusic1.ogg]). 
+  
+The Boss Music has priority based on the index of the list. It will always try to play the music for the boss mob it can find first in the list. So if you have both the wither and the Ender Dragon in the list and you summon both of them, it will play the music from whichever mob is first in the list.
 </details>
 
 <details>
@@ -63,21 +65,32 @@ For **Roguelike Dungeons** music, the mod will automatically save the position R
 
 <details>
 <summary>Doomlike Dungeons Music</summary>
-For **Doomlike Dungeons** music, the mod will automatically save key position points from Doomlike Dungeons to a dungeon_rooms.csv file in the instances saves folder when the dungeon is generated. The important part here is that this only happens once a dungeon generates. This means that if you add Musify to your modpack after having an established world, existing Doomlike Dungeons will _NOT_ support music playback (unless you add the position points manually). The saving of doomlike dungeons happens on the server side, so for servers, the dungeon_rooms.csv file needs only to exist on the server side.
+For **Doomlike Dungeons** music, the mod will automatically save key position points from Doomlike Dungeons to a dungeon_rooms.csv file in the instances saves folder when the dungeon is generated. The important part here is that this only happens once a dungeon generates. This means that if you add Musify to your modpack after having an established world, existing Doomlike Dungeons will NOT support music playback (unless you add the position points manually). 
+  
+The saving of doomlike dungeons happens on the server side, so for servers, the dungeon_rooms.csv file needs only to exist on the server side.
+
 For music playback in these dungeons, you can specify the dungeons theme, and the music to play there. Example: [vulcanic:dungeonmusic1.ogg]. You can find a list of existing themes in the Doomlike Dungeons config folder.
+
 The [Max Distance] option for Doomlike Dungeons is the distance from the saved dungeon position (in x and z axis) a player can be for the music playback to activate. The [Max Y Level Difference] option is to specify how many blocks above or below a dungeon a player can be for music player to happen.
 </details>
 
 <details>
 <summary>Recurrent Complex Structures</summary>
-For **Recurrent Complex Structures**, the mod will save all Recurrent structures to a recurrent_structures.csv file upon generation if that structure passes the specified conditions. This happens in the same way as for Doomlike Dungeons. To prevent the recurrent csv file from becoming too large and filled with miscellaneous structures like trees and boulders, a series of editable check have been implemented. The first check is [ignoring a structure if the name contains] a certain string. By default this is set to one entry "Tree", to prevent most of the default recurrent trees from being saved, but you can add or remove entries as you wish. The second check is a specific [ignore structure list]. All structures whos name maches an entry in this list will be ignored as well. The last check is a [volume] check, here you can set how large a structure needs to be for its data to be saved. This is to ignore structures that are too small for proper music playback.
+For **Recurrent Complex Structures**, the mod will save all Recurrent structures to a recurrent_structures.csv file upon generation if that structure passes the specified conditions. This happens in the same way as for Doomlike Dungeons. 
+
+To prevent the recurrent csv file from becoming too large and filled with miscellaneous structures like trees and boulders, a series of editable check have been implemented. The first check is [ignoring a structure if the name contains] a certain string. By default this is set to one entry "Tree", to prevent most of the default recurrent trees from being saved, but you can add or remove entries as you wish. 
+
+The second check is a specific [ignore structure list]. All structures whos name maches an entry in this list will be ignored as well. The last check is a [volume] check, here you can set how large a structure needs to be for its data to be saved. This is to ignore structures that are too small for proper music playback.
+
 For music playback, you can specify a structure name and its music in the [Recurrent Complex Music List]. Example: [structure_name:musicfile.ogg].
+
 The [Extra Distance option] is to have some leeway for the structures bounding box. If set to 0, music will play only once the player is actually inside the bounding box of the structure. For some structures however, this might not be ideal. This option exists to create a bit of leeway for that, and allows the player to be a bit outside the bounding box of the structure while preserving music playback.
 </details>
 
 <details>
 <summary>Dungeon Definition Options</summary>
 The **Dungeon Definition** option is an option which i personally do not recommend using, but left in anyways because it might be nice to have for certain users. This feature exists for custom dungeons that are not part of Recurrent or Doomlike's.
+
 It works by specifying a block and music for a dungeon. When the option is enabled, it scans the players surroundings for blocks in the list, and if enough of the specified block and spawners are found in the radius, it will assume the player is in the specified dungeon and play the music. Example: [minecraft:stone_bricks:stonedungeonmusic1.mp3]. The dungeon check radius can be a bit performance heavy, so if you have to use this option, i recommend to not put it above 40 blocks, preferably 30 or under.
 </details>
 
@@ -95,6 +108,7 @@ For **Cavern Music** you are able to set the [Starting Y Level] at which cavern 
   <summary>Biome Music Options</summary>
 For **Biome Music**, there are two options to consider:
 The [Biome Music Mapping] is used to specify custom music for individual biomes, this will overwrite the music set for tags of the biome. As with most music, multiple music options can be specified by seperating them with a comma.
+
 Setting music for a biome tag in the [Biome Tag Music Mapping] will play this music in all biomes with that tag. If a biome has more than one tag, a random song from any tag will play with slight priority set in the biomes tag order. 
 For example, if you set up two music tracks for the dry and the savanna tags, it will play one of them randomly when you enter a savanna, but will more often choose a song from the savanna tag list then from the dry tag list, because savanna is the first tag for the savanna biome. If a custom song is already playing and you enter a new biome the song will not change if the song is specified in one of the tags for that biome, unless you specify a different song in the [Biome Music Mapping].
 </details>
@@ -118,5 +132,6 @@ The [Polling Rate] option is the heart of the mod. Every action the mod takes is
 - Please do not forget to add the .ogg/.mp3 to the sound files when setting up music. Without .ogg/.mp3 behind the file name it will not work!
 - Please do not forget to set values back to "default_music" when you want to disable something. It might break certain functions if left empty.
 - While the mod supports both mp3 and ogg files, i personally recommend the use of .ogg sound files, because of their superior sound quality and lower file size.
+
 
 

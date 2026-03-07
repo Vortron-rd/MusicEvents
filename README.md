@@ -78,7 +78,7 @@ The [Max Distance] option for Doomlike Dungeons is the distance from the saved d
 <summary>Recurrent Complex Structures</summary>
 For **Recurrent Complex Structures**, the mod will save all Recurrent structures to a recurrent_structures.csv file upon generation if that structure passes the specified conditions. This happens in the same way as for Doomlike Dungeons. 
 
-To prevent the recurrent csv file from becoming too large and filled with miscellaneous structures like trees and boulders, a series of editable check have been implemented. The first check is [ignoring a structure if the name contains] a certain string. By default this is set to one entry "Tree", to prevent most of the default recurrent trees from being saved, but you can add or remove entries as you wish. 
+To prevent the recurrent csv file from becoming too large and filled with miscellaneous structures like trees and boulders, a series of editable checks have been implemented. The first check is [ignoring a structure if the name contains] a certain string. By default this is set to one entry "Tree", to prevent most of the default recurrent trees from being saved, but you can add or remove entries as you wish. 
 
 The second check is a specific [ignore structure list]. All structures whos name maches an entry in this list will be ignored as well. The last check is a [volume] check, here you can set how large a structure needs to be for its data to be saved. This is to ignore structures that are too small for proper music playback.
 
@@ -132,6 +132,7 @@ The [Polling Rate] option is the heart of the mod. Every action the mod takes is
 - Please do not forget to add the .ogg/.mp3 to the sound files when setting up music. Without .ogg/.mp3 behind the file name it will not work!
 - Please do not forget to set values back to "default_music" when you want to disable something. It might break certain functions if left empty.
 - While the mod supports both mp3 and ogg files, i personally recommend the use of .ogg sound files, because of their superior sound quality and lower file size.
+
 
 
 

@@ -22,7 +22,7 @@ import static musify.handlers.HandleCombatMusic.combatMusicPlayer;
 public class DungeonHandler {
 
     /**
-     * Checks if the player is near any dungeon from the CSV file
+     * Checks if the player is near any dungeon from the Doomlike Dungeons CSV file
      * @param player The player to check
      * @param maxDistance The maximum horizontal distance to consider "nearby"
      * @return The first dungeon that satisfies the distance conditions, or null if none found

@@ -41,7 +41,6 @@ minecraft {
 
             property 'forge.logging.markers', 'SCAN,REGISTRIES,REGISTRYDUMP'
             property 'forge.logging.console.level', 'debug'
-            property 'fml.coreMods.load', 'musify.MixinLoader'
         }
 
         server {
@@ -53,7 +52,6 @@ minecraft {
 
             property 'forge.logging.markers', 'SCAN,REGISTRIES,REGISTRYDUMP'
             property 'forge.logging.console.level', 'debug'
-            property 'fml.coreMods.load', 'musify.MixinLoader'
         }
     }
 }
@@ -92,17 +90,9 @@ dependencies {
     implementation 'com.googlecode.soundlibs:vorbisspi:1.0.3.3'
     implementation 'com.googlecode.soundlibs:tritonus-share:0.3.7.4'
 
-    implementation 'org.spongepowered:mixin:0.8.7'
-    annotationProcessor('org.spongepowered:mixin:0.8.7:processor')
-    testAnnotationProcessor('org.spongepowered:mixin:0.8.7:processor')
-    implementation "io.github.llamalad7:mixinextras-common:0.4.1"
-    annotationProcessor "io.github.llamalad7:mixinextras-common:0.4.1"
-
-    implementation fg.deobf("curse.maven:fermiumbooter-968474:5067768")
-
     compileOnly files('RecurrentComplex-1.4.8.6.jar')
     implementation name: 'RecurrentComplex-1.4.8.6'
-    implementation name: 'DoomlikeDungeons-1.14.12-MC1.12.2'
+    implementation name: 'dldungeonsjbg-1.14.17-MC1.12.2'
     implementation name: 'IvToolkit-1.3.3-1.12'
     implementation name: 'RLTweaker-1.12.2-0.5.3'
     implementation name: 'Roguelike-New'
@@ -165,7 +155,6 @@ jar {
                 "FMLCorePluginContainsFMLMod": "true",
                 "ForceLoadAsMod": "true", // Comment out for dev environment, uncomment for build
                 'FMLAT': 'biomemusic_at.cfg',  // Point to the access transformer config
-                'FMLCorePlugin': 'musify.MixinLoader',
         ])
     }
     duplicatesStrategy = DuplicatesStrategy.EXCLUDE

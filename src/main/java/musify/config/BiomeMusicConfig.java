@@ -70,7 +70,7 @@ public class BiomeMusicConfig {
 	public static Map<String, String> kbiomeTagMusicMap = new HashMap<>();
 
 	@Config.Name("Fade Options")
-	@Config.Comment("Fade Options. These control the music fading. \nDO NOT TOUCH UNLESS YOU KNOW EXACTLY WHAT YOU ARE DOING, THIS CAN AND WILL BREAK THE MOD IF GIVEN INCORRECT VALES.")
+	@Config.Comment("Fade Options. These control the music fading. \nDO NOT TOUCH UNLESS YOU KNOW EXACTLY WHAT YOU ARE DOING, THIS CAN AND WILL BREAK THE MOD IF GIVEN INCORRECT VALUES.")
 	public static final FadeOptions lfadeOptions = new FadeOptions();
 
 	@Config.Name("Combat Music Track Link")

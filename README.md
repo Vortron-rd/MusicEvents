@@ -53,19 +53,19 @@ If ambient Mode is enabled custom music will not stop vanilla music.
 ### Here is an explanation of how this mods features work in order:
 <details>
 <summary>Boss Music</summary>
-For **Boss Music**, There is an option to set the detection range for bosses. If a boss is detected within that radius the music will change if the mob is specified as a boss mob. To set up the music for a boss mob there is the [Boss Music List]. For each boss mob you want to set up music for, create a new line and specify the mob and the music seperated by a comma: [modid:mobid,bossmusic1.ogg]. Keep in mind to not forget the Mod Id from the mob! (e.g. [lycanitesmobs:rahovart,bossmusic1.ogg]). 
+For Boss Music, There is an option to set the detection range for bosses. If a boss is detected within that radius the music will change if the mob is specified as a boss mob. To set up the music for a boss mob there is the [Boss Music List]. For each boss mob you want to set up music for, create a new line and specify the mob and the music seperated by a comma: [modid:mobid,bossmusic1.ogg]. Keep in mind to not forget the Mod Id from the mob! (e.g. [lycanitesmobs:rahovart,bossmusic1.ogg]). 
   
 The Boss Music has priority based on the index of the list. It will always try to play the music for the boss mob it can find first in the list. So if you have both the wither and the Ender Dragon in the list and you summon both of them, it will play the music from whichever mob is first in the list.
 </details>
 
 <details>
   <summary>Roguelike Dungeons Music</summary>
-For **Roguelike Dungeons** music, the mod will automatically save the position Roguelike Dungeons to the roguelike_dungeons.csv file in world save folder when a roguelike structure is generated. This process happens on the server side. To use roguelike music, define the dungeon and its music in the config. The format is as follows: "structuretheme:structurename,music1.file,music2.file" ect. The structuretheme in this case is the main type of structure. This can be "Buildin:" for the default structures, or something else if the structure was added by another mod or a modpack creator.
+For Roguelike Dungeons music, the mod will automatically save the position Roguelike Dungeons to the roguelike_dungeons.csv file in world save folder when a roguelike structure is generated. This process happens on the server side. To use roguelike music, define the dungeon and its music in the config. The format is as follows: "structuretheme:structurename,music1.file,music2.file" ect. The structuretheme in this case is the main type of structure. This can be "Buildin:" for the default structures, or something else if the structure was added by another mod or a modpack creator.
 </details>
 
 <details>
 <summary>Doomlike Dungeons Music</summary>
-For **Doomlike Dungeons** music, the mod will automatically save key position points from Doomlike Dungeons to a dungeon_rooms.csv file in the instances saves folder when the dungeon is generated. The important part here is that this only happens once a dungeon generates. This means that if you add Musify to your modpack after having an established world, existing Doomlike Dungeons will NOT support music playback (unless you add the position points manually). 
+For Doomlike Dungeons music, the mod will automatically save key position points from Doomlike Dungeons to a dungeon_rooms.csv file in the instances saves folder when the dungeon is generated. The important part here is that this only happens once a dungeon generates. This means that if you add Musify to your modpack after having an established world, existing Doomlike Dungeons will NOT support music playback (unless you add the position points manually). 
   
 The saving of doomlike dungeons happens on the server side, so for servers, the dungeon_rooms.csv file needs only to exist on the server side.
 
@@ -76,7 +76,7 @@ The [Max Distance] option for Doomlike Dungeons is the distance from the saved d
 
 <details>
 <summary>Recurrent Complex Structures</summary>
-For **Recurrent Complex Structures**, the mod will save all Recurrent structures to a recurrent_structures.csv file upon generation if that structure passes the specified conditions. This happens in the same way as for Doomlike Dungeons. 
+For Recurrent Complex Structures, the mod will save all Recurrent structures to a recurrent_structures.csv file upon generation if that structure passes the specified conditions. This happens in the same way as for Doomlike Dungeons. 
 
 To prevent the recurrent csv file from becoming too large and filled with miscellaneous structures like trees and boulders, a series of editable checks have been implemented. The first check is [ignoring a structure if the name contains] a certain string. By default this is set to one entry "Tree", to prevent most of the default recurrent trees from being saved, but you can add or remove entries as you wish. 
 
@@ -89,24 +89,24 @@ The [Extra Distance option] is to have some leeway for the structures bounding b
 
 <details>
 <summary>Dungeon Definition Options</summary>
-The **Dungeon Definition** option is an option which i personally do not recommend using, but left in anyways because it might be nice to have for certain users. This feature exists for custom dungeons that are not part of Recurrent or Doomlike's.
+The Dungeon Definition option is an option which i personally do not recommend using, but left in anyways because it might be nice to have for certain users. This feature exists for custom dungeons that are not part of Recurrent or Doomlike's.
 
 It works by specifying a block and music for a dungeon. When the option is enabled, it scans the players surroundings for blocks in the list, and if enough of the specified block and spawners are found in the radius, it will assume the player is in the specified dungeon and play the music. Example: [minecraft:stone_bricks:stonedungeonmusic1.mp3]. The dungeon check radius can be a bit performance heavy, so if you have to use this option, i recommend to not put it above 40 blocks, preferably 30 or under.
 </details>
 
 <details>
   <summary>Combat Music Options</summary>
-For **Combat Music**, you can set the range in which it tries to look for aggro'd mobs, the amount of aggro'd mobs you need to start the combat music, and the amount of mobs that need to be left to stop the combat music. In The [Combat Music List] you can set general combat soundtracks, If there is no [Linked SoundTrack] specified in the [Combat Music Track Link] option a random song from here will play when combat music engages. Example of Combat music list entry: [combat_music1.mp3,combatmusic2.ogg,combatmusic3.ogg]
+For Combat Music, you can set the range in which it tries to look for aggro'd mobs, the amount of aggro'd mobs you need to start the combat music, and the amount of mobs that need to be left to stop the combat music. In The [Combat Music List] you can set general combat soundtracks, If there is no [Linked SoundTrack] specified in the [Combat Music Track Link] option a random song from here will play when combat music engages. Example of Combat music list entry: [combat_music1.mp3,combatmusic2.ogg,combatmusic3.ogg]
 </details>
 
 <details>
 <summary>Cavern Music Options</summary>
-For **Cavern Music** you are able to set the [Starting Y Level] at which cavern music starts, and the [Stop Y Level] at which it stops. Please keep in mind to place the stop Y level sufficiently above the Start Y level as to not fade-in and fade-out the cavern music too much, which can be annoying. You can set what cavern music you want in the [Cavern Music List]. Example: [undergroundmusic1.ogg,cavernmusic.mp3]
+For Cavern Music you are able to set the [Starting Y Level] at which cavern music starts, and the [Stop Y Level] at which it stops. Please keep in mind to place the stop Y level sufficiently above the Start Y level as to not fade-in and fade-out the cavern music too much, which can be annoying. You can set what cavern music you want in the [Cavern Music List]. Example: [undergroundmusic1.ogg,cavernmusic.mp3]
 </details>
 
 <details>
   <summary>Biome Music Options</summary>
-For **Biome Music**, there are two options to consider:
+For Biome Music, there are two options to consider:
 The [Biome Music Mapping] is used to specify custom music for individual biomes, this will overwrite the music set for tags of the biome. As with most music, multiple music options can be specified by seperating them with a comma.
 
 Setting music for a biome tag in the [Biome Tag Music Mapping] will play this music in all biomes with that tag. If a biome has more than one tag, a random song from any tag will play with slight priority set in the biomes tag order. 
@@ -115,14 +115,14 @@ For example, if you set up two music tracks for the dry and the savanna tags, it
 
 <details>
   <summary>Music Fade Options</summary>
-**Fade Options** are an important but dangerous config to change on a whim. I cannot stress this enough, **If you do not know what you are doing, do not change these options.** Changing these option to bad values can and will break the mod. 
+Fade Options are an important but dangerous config to change on a whim. I cannot stress this enough, **If you do not know what you are doing, do not change these options.** Changing these option to bad values can and will break the mod. 
 The [Fade-in] and [Fade-out] options control how fast or slow music fades in or out when changing, while you can set these to different values to customize the mod to your liking, please do not set them to excessively low or high values.
 The [Polling Rate] option is the heart of the mod. Every action the mod takes is controlled by the polling rate, which acts as a sort of timer. Increasing the polling rate value slow down how fast the mod reacts to changes and the other way around for decreasing the polling rate. In general it is recommended to only try higher values for a slower and less intrusive experience if you find that the music still changes too fast even after first setting up the rest of the mod completely.
 </details>
 
 <details>
   <summary>MusicLink Options</summary>
-**MusicLink**. The [Combat Music Track Link] option is used if you have two of the same soundstracks of which one is a combat track. To use this, look for the normal track in the list, and in the input field give the combat variant of that track. This will cause the combat variant of the track to start silently in the background if the normal track starts playing. If the music switches to combat music, it will fade to the combat track synchronized with the normal track. If there is no musiclink specified, it will play a random song from the [Combat Music List] in the combat options.
+MusicLink. The [Combat Music Track Link] option is used if you have two of the same soundstracks of which one is a combat track. To use this, look for the normal track in the list, and in the input field give the combat variant of that track. This will cause the combat variant of the track to start silently in the background if the normal track starts playing. If the music switches to combat music, it will fade to the combat track synchronized with the normal track. If there is no musiclink specified, it will play a random song from the [Combat Music List] in the combat options.
 </details>
 
 ## Disclaimer

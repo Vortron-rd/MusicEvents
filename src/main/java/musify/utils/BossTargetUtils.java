@@ -1,5 +1,6 @@
 package musify.utils;
 
+import musify.config.BiomeMusicConfig;
 import musify.musicplayer.MusicPlayer;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityList;
@@ -50,25 +51,25 @@ public class BossTargetUtils {
 
         if (!isBossMusicPlaying && activeMusic != null && !activeMusic.isFading()) {
             isBossMusicPlaying = true;
-            activeMusic.stopWithFadeOut(7500);
+            activeMusic.stopWithFadeOut(BiomeMusicConfig.lfadeOptions.customMusicFadeOutTime);
             activeMusic = new MusicPlayer(musicFile, true);
-            activeMusic.playWithFadeIn(8500);
+            activeMusic.playWithFadeIn(BiomeMusicConfig.lfadeOptions.customMusicFadeInTime);
             currentBossMusic = musicFile;
             currentMusicFile = musicFile;
         }
         else if (!isBossMusicPlaying && activeMusic == null) {
             if (activeTagMusic != null && !activeTagMusic.isFading()) {
-                activeTagMusic.stopWithFadeOut(7500);
+                activeTagMusic.stopWithFadeOut(BiomeMusicConfig.lfadeOptions.customMusicFadeOutTime);
             }
             isBossMusicPlaying = true;
             activeMusic = new MusicPlayer(musicFile, true);
-            activeMusic.playWithFadeIn(8500);
+            activeMusic.playWithFadeIn(BiomeMusicConfig.lfadeOptions.customMusicFadeInTime);
             currentBossMusic = musicFile;
             currentMusicFile = musicFile;
         } else if (isBossMusicPlaying && !Objects.equals(currentBossMusic, musicFile)) {
-            activeMusic.stopWithFadeOut(7500);
+            activeMusic.stopWithFadeOut(BiomeMusicConfig.lfadeOptions.customMusicFadeOutTime);
             activeMusic = new MusicPlayer(musicFile, true);
-            activeMusic.playWithFadeIn(8500);
+            activeMusic.playWithFadeIn(BiomeMusicConfig.lfadeOptions.customMusicFadeInTime);
             currentBossMusic = musicFile;
             currentMusicFile = musicFile;
         }

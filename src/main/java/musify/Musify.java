@@ -25,7 +25,7 @@ import java.io.File;
 @Mod(modid = Musify.MODID, version = Musify.VERSION, name = Musify.NAME, clientSideOnly = true)
 public class Musify {
     public static final String MODID = "musify";
-    public static final String VERSION = "Beta 1.2.3";
+    public static final String VERSION = "Beta 1.2.4";
     public static final String NAME = "Musify!";
     public static final Logger LOGGER = LogManager.getLogger();
 	

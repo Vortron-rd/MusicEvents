@@ -42,40 +42,11 @@ public class DLDEventHandler {
                                         dungeon.biome.getBiomeName() + "\n"
 
                         );
-                        System.out.println("WRITTEN TO FILE?");
                     }
                 }
             }
         } catch (IOException | ReflectiveOperationException e) {
             e.printStackTrace();
         }
-
-        System.out.println("------------------------------ DUNGEON THEME AND INFO ------------------------------");
-        System.out.println(" ");
-        dungeon = event.getDungeon();
-        for(Node node : dungeon.nodes) {
-            if (node != null) {
-                Room room = node.getHubRoom();
-                if (room != null) {
-                    float worldBeginX = (float)dungeon.map.origenX + room.realX;
-                    float worldBeginZ = (float)dungeon.map.origenZ + room.realZ;
-                    System.out.println("-------------------------------room-----------------------------");
-                    System.out.println(event.getDungeon().theme);
-                    System.out.println("DUNGEON MAP X: " + dungeon.map.origenX);
-                    System.out.println("DUNGEON MAP Z: " + dungeon.map.origenZ);
-                    System.out.println("ROOM REAL X: " + room.realX);
-                    System.out.println("ROOM REAL Z: " + room.realZ);
-                    System.out.println("ROOM FLOOR Y: " + room.floorY);
-                    System.out.println("ROOM CEIL Y: " + room.ceilY);
-                    System.out.println("WORLD BEGIN X: " + worldBeginX);
-                    System.out.println("WORLD BEGIN Z: " + worldBeginZ);
-                    System.out.println("------------------------------------------------------------");
-                    System.out.println(dungeon.biome.getBiomeName());
-                }
-            }
-        }
-
-        System.out.println(" ");
-        System.out.println("------------------------------------------------------------");
     }
 }

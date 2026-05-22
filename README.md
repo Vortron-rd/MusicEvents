@@ -126,7 +126,6 @@ MusicLink. The [Combat Music Track Link] option is used if you have two of the s
 </details>
 
 ## Disclaimer
-- **For Doomlike Dungeons compatibility this mod uses a mixin. To make this work, please also install FermiumBooter. The mod will load fine without FermiumBooter, but Doomlike Dungeons support will NOT work (dungeon positions will not be saved).**
 - **This mod can be installed client-side only, but the structure music for the three mods mentioned above will not work. For that, this mod also needs to be installed on the server side!**
 - While the mod does work with *most* Modded entities and biomes, some might not work. The mod was tested with mods like DefiledLands and Lycanites, But some mobs from other mods with which the mod was not tested might not be compatible. Similarly for some custom biomes from other mods, they might not be recognized. However, Even if the mod does not recognize a biome, as long as they either have a parent biome or biome tags, the music set using biome tags will still work.
 - Please do not forget to add the .ogg/.mp3 to the sound files when setting up music. Without .ogg/.mp3 behind the file name it will not work!

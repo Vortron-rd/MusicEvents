@@ -18,7 +18,6 @@ public class HandleUndergroundMusic {
 
     @SuppressWarnings("ConstantConditions")
     public static void handleUndergroundMusic() {
-        System.out.println("***********\nCalled handleUndergroundMusic\n**************");
         if (!isUndergroundMusicPlaying) {
             String musicFile = getRandomSongForCavern();
 

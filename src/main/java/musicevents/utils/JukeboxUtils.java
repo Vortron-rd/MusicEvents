@@ -1,4 +1,4 @@
-package musify.utils;
+package musicevents.utils;
 
 import net.minecraft.block.BlockJukebox;
 import net.minecraft.entity.player.EntityPlayer;

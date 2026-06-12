@@ -1,6 +1,5 @@
-package musify.handlers;
+package musicevents.handlers;
 
-import musify.Musify;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.*;
 import net.minecraft.client.gui.achievement.GuiStats;
@@ -12,10 +11,8 @@ import net.minecraftforge.fml.common.gameevent.TickEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-import static musify.handlers.BiomeMusicEventHandler.activeMusic;
-import static musify.handlers.BiomeMusicEventHandler.activeTagMusic;
-import static musify.handlers.HandleCombatMusic.getCombatMusicPlayer;
-import static musify.handlers.HandleCombatMusic.isCombatMusicPlaying;
+import static musicevents.handlers.EventHandler.activeMusic;
+
 
 @SideOnly(Side.CLIENT)
 @Mod.EventBusSubscriber
@@ -37,10 +34,7 @@ public class PauseEventHandler {
                 activeMusic.stop();
                 activeMusic = null;
             }
-            if (activeTagMusic != null) {
-                activeTagMusic.stop();
-                activeTagMusic = null;
-            }
+
         }
 
         if (isPauseMenuOpen(mc) && !donePause) {
@@ -49,36 +43,17 @@ public class PauseEventHandler {
                     activeMusic.pause();
                 }
             }
-            if (activeTagMusic != null) {
-                if (!activeTagMusic.isPaused()) {
-                    activeTagMusic.pause();
-                }
-            }
-            if (getCombatMusicPlayer() != null) {
-                getCombatMusicPlayer().pause();
-            }
+
+
             donePause = true;
         } else if (donePause && !isPauseMenuOpen(mc)) {
             if (activeMusic != null) {
-                if (activeMusic.isPaused() && !isCombatMusicPlaying()) {
+                if (activeMusic.isPaused()) {
                     activeMusic.resume();
                     activeMusic.adjustVolume();
                 }
             }
-            if (activeTagMusic != null) {
-                if (activeTagMusic.isPaused() && !isCombatMusicPlaying()) {
-                    activeTagMusic.resume();
-                    activeTagMusic.adjustVolume();
-                }
-            }
-            if (getCombatMusicPlayer() != null) {
-                if (getCombatMusicPlayer().isPaused()) {
-                    getCombatMusicPlayer().resume();
-                    if (isCombatMusicPlaying()) {
-                        getCombatMusicPlayer().adjustVolume();
-                    }
-                }
-            }
+
             donePause = false;
         }
     }

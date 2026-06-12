@@ -1,12 +1,12 @@
-#  *Musify!*
+#  *musicevents!*
 
-### *Musify!* is a versatile client-side mod designed to improve the immersion and auditory experience of Minecraft for both modpack developers and regular players. This mod allows for dynamic music customization based on in-game events like PvE Combat, Biome Exploration, Caving, and more, giving you complete control over Minecraft's soundtrack. Whether you’re crafting an immersive modpack or just want to personalize your solo adventures, *Musify!* provides a way to bring your world to life with the perfect soundtrack.
+### *musicevents!* is a versatile client-side mod designed to improve the immersion and auditory experience of Minecraft for both modpack developers and regular players. This mod allows for dynamic music customization based on in-game events like PvE Combat, Biome Exploration, Caving, and more, giving you complete control over Minecraft's soundtrack. Whether you’re crafting an immersive modpack or just want to personalize your solo adventures, *musicevents!* provides a way to bring your world to life with the perfect soundtrack.
 
 Developers note:
-Musify! 1.2.3 is OUT NOW!
+musicevents! 1.2.3 is OUT NOW!
 
 ## Features
-**Musify supports both .ogg and .mp3 files now!**
+**musicevents supports both .ogg and .mp3 files now!**
 <br>This mod has a bunch of different features revolving around Minecraft's soundtrack. The following features are available and are polled in the specified order*:
 - **JukeBox Music Mute** The mod will mute custom music when a JukeBox is playing a record, and will resume the music once the record stops playing.
 - **Boss Music!** Customize music for boss mobs for a truely unique experience!
@@ -65,7 +65,7 @@ For Roguelike Dungeons music, the mod will automatically save the position Rogue
 
 <details>
 <summary>Doomlike Dungeons Music</summary>
-For Doomlike Dungeons music, the mod will automatically save key position points from Doomlike Dungeons to a dungeon_rooms.csv file in the instances saves folder when the dungeon is generated. The important part here is that this only happens once a dungeon generates. This means that if you add Musify to your modpack after having an established world, existing Doomlike Dungeons will NOT support music playback (unless you add the position points manually). 
+For Doomlike Dungeons music, the mod will automatically save key position points from Doomlike Dungeons to a dungeon_rooms.csv file in the instances saves folder when the dungeon is generated. The important part here is that this only happens once a dungeon generates. This means that if you add musicevents to your modpack after having an established world, existing Doomlike Dungeons will NOT support music playback (unless you add the position points manually). 
   
 The saving of doomlike dungeons happens on the server side, so for servers, the dungeon_rooms.csv file needs only to exist on the server side.
 
@@ -129,7 +129,7 @@ MusicLink. The [Combat Music Track Link] option is used if you have two of the s
 - **This mod can be installed client-side only, but the structure music for the three mods mentioned above will not work. For that, this mod also needs to be installed on the server side!**
 - While the mod does work with *most* Modded entities and biomes, some might not work. The mod was tested with mods like DefiledLands and Lycanites, But some mobs from other mods with which the mod was not tested might not be compatible. Similarly for some custom biomes from other mods, they might not be recognized. However, Even if the mod does not recognize a biome, as long as they either have a parent biome or biome tags, the music set using biome tags will still work.
 - Please do not forget to add the .ogg/.mp3 to the sound files when setting up music. Without .ogg/.mp3 behind the file name it will not work!
-- Please do not forget to set values back to "default_music" when you want to disable something. It might break certain functions if left empty.
+- Please do not forget to set values back to "" when you want to disable something. It might break certain functions if left empty.
 - While the mod supports both mp3 and ogg files, i personally recommend the use of .ogg sound files, because of their superior sound quality and lower file size.
 
 

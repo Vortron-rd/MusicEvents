@@ -1,7 +1,7 @@
-package musify.handlers;
+package musicevents.handlers;
 
-import musify.Musify;
-import musify.config.BiomeMusicConfig;
+import musicevents.MusicEvents;
+import musicevents.config.MusicEventsConfig;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.audio.ISound;
 import net.minecraft.client.audio.MusicTicker;
@@ -16,14 +16,13 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.lang.reflect.Field;
 
-import static musify.handlers.BiomeMusicEventHandler.activeMusic;
-import static musify.handlers.BiomeMusicEventHandler.activeTagMusic;
+import static musicevents.handlers.EventHandler.activeMusic;
 
 @Mod.EventBusSubscriber
 @SideOnly(Side.CLIENT)
 public class MainMenuMusicHandler {
 
-    private static musify.musicplayer.MusicPlayer mainMenuMusicPlayer = null;
+    private static musicevents.musicplayer.MusicPlayer mainMenuMusicPlayer = null;
     private static boolean errq = false;
 
     public static boolean isMainMenuMusicPlaying = false;
@@ -32,7 +31,7 @@ public class MainMenuMusicHandler {
     private static int ticksSinceStart = 0;
 
     @SubscribeEvent
-    public static void onClientTick(TickEvent.ClientTickEvent event) throws Exception {
+    public static void onClientTick(TickEvent.ClientTickEvent event) {
         if (event.phase != TickEvent.Phase.END) {
             return;
         }
@@ -40,12 +39,12 @@ public class MainMenuMusicHandler {
         ticksSinceStart++;
         if (ticksSinceStart < 20) return;
 
-        String mainMenuMusicPath = BiomeMusicConfig.ccmainMenuMusic;
+        String mainMenuMusicPath = MusicEventsConfig.mainMenuMusic;
         Minecraft mc = Minecraft.getMinecraft();
 
         if (mc == null) return;
 
-        if (mainMenuMusicPath != null && !mainMenuMusicPath.equals("default_music")) {
+        if (mainMenuMusicPath != null && !mainMenuMusicPath.isEmpty()) {
 
             if (!Loader.isModLoaded("custommainmenu")) {
 
@@ -93,7 +92,7 @@ public class MainMenuMusicHandler {
             }
         }
         else {
-            if (mainMenuMusicPath.equals("default_music") && isMainMenuMusicPlaying && mainMenuMusicPlayer != null) {
+            if (mainMenuMusicPath.equals("") && isMainMenuMusicPlaying && mainMenuMusicPlayer != null) {
                 mainMenuMusicPlayer.stop();
 
                 isMainMenuMusicPlaying = false;
@@ -105,10 +104,6 @@ public class MainMenuMusicHandler {
         if (activeMusic != null) {
             activeMusic.stop();
             activeMusic = null;
-        }
-        if (activeTagMusic != null) {
-            activeTagMusic.stop();
-            activeTagMusic = null;
         }
 
         try {
@@ -122,7 +117,7 @@ public class MainMenuMusicHandler {
                 playMainMenuMusic();
             }
         } catch (Exception e) {
-            Musify.LOGGER.error("Failed to play main menu music. File not found or invalid: {}", mainMenuMusicPath, e);
+            MusicEvents.LOGGER.error("Failed to play main menu music. File not found or invalid: {}", mainMenuMusicPath, e);
         }
     }
 
@@ -131,18 +126,18 @@ public class MainMenuMusicHandler {
         return mc.currentScreen instanceof GuiMainMenu;
     }
 
-    private static void playMainMenuMusic() throws Exception {
+    private static void playMainMenuMusic() {
 
         if (isMainMenuMusicPlaying || errq) {
             return;
         }
 
-        String mainMenuMusicConfig = BiomeMusicConfig.ccmainMenuMusic;
+        String mainMenuMusicConfig = MusicEventsConfig.mainMenuMusic;
         String[] musicFiles = mainMenuMusicConfig.split(",");
         String mainMenuMusic = musicFiles[(int) (Math.random() * musicFiles.length)].trim();
 
-        if (mainMenuMusic.equals("default_music")) {
-            Musify.LOGGER.warn("Main menu music enabled, but set to default. Please disable it or set a custom music file.");
+        if (mainMenuMusic.isEmpty()) {
+            MusicEvents.LOGGER.warn("Main menu music enabled, but set to default. Please disable it or set a custom music file.");
             errq = true;
             return;
         }
@@ -151,7 +146,7 @@ public class MainMenuMusicHandler {
             mainMenuMusicPlayer.stop();
         }
 
-        mainMenuMusicPlayer = new musify.musicplayer.MusicPlayer(mainMenuMusic, false);
+        mainMenuMusicPlayer = new musicevents.musicplayer.MusicPlayer(mainMenuMusicConfig);
         mainMenuMusicPlayer.play();
 
         isMainMenuMusicPlaying = true;

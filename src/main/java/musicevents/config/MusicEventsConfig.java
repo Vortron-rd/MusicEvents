@@ -1,0 +1,146 @@
+package musicevents.config;
+
+import musicevents.MusicEvents;
+import net.minecraft.world.biome.Biome;
+import net.minecraftforge.common.BiomeDictionary;
+import net.minecraftforge.common.config.Config;
+import net.minecraftforge.common.config.ConfigManager;
+import net.minecraftforge.fml.client.event.ConfigChangedEvent;
+import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.registries.IForgeRegistry;
+import net.minecraftforge.registries.RegistryManager;
+
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Set;
+import java.util.stream.Collectors;
+
+
+@Config(modid = MusicEvents.MODID)
+public class MusicEventsConfig {
+
+	@Config.Name("Available Music Files")
+	@Config.Comment("List of recognized .ogg music files. \nWhen setting up custom music, include .ogg extension and make sure to spell the name of the file correctly. \nThe mod will work even if the music you specify is not in this list if the music is in the correct folder, \nas this is just a second verification step to make sure the music file is correctly placed.")
+	public static String[] availableMusicFiles = new String[0]; // Start with an empty array
+
+	@Config.Name("Ambient Mode")
+	@Config.Comment("Enable or Disable Ambient mode. In this mode vanilla music will not be turned off when a custom music is set for a biome." +
+			"\nEnable if you want to use this mod for ambience sound tracks instead of music.")
+	public static boolean ambientMode = false;
+
+	@Config.Comment("What music to play on the main menu. DEFAULT: []")
+	@Config.Name("Main Menu Music")
+	public static String mainMenuMusic = "";
+
+	@Config.Name("Cavern Music Options")
+	@Config.Comment("Cavern Music Options.")
+	public static final UndergroundOptions undergroundOptions = new UndergroundOptions();
+
+	@Config.Name("Biome Music Map")
+	@Config.Comment("Biome Music Mapping. List of all recognised biomes and a corresponding input field for the music. Music specified in here will overwrite the music from biome tags.\n Example input for a biome: [plainsmusic.ogg,otherplainsmusic.ogg]")
+	public static Map<String, String> biomeMusicMap = new HashMap<>();
+
+	@Config.Name("Biome Tag Music Map")
+	@Config.Comment("Biome Tag Music Mapping. List of all Biome Tags. \nExample: If you want a certain music to play in all biomes with snow, use the snowy tag.")
+	public static Map<String, String> biomeTagMusicMap = new HashMap<>();
+
+	@Config.Name("Fade Options")
+	@Config.Comment("Fade Options. These control the music fading. \nDO NOT TOUCH UNLESS YOU KNOW EXACTLY WHAT YOU ARE DOING, THIS CAN AND WILL BREAK THE MOD IF GIVEN INCORRECT VALUES.")
+	public static final FadeOptions fadeOptions = new FadeOptions();
+
+	@Config.Name("Misc Options.")
+	@Config.Comment("Miscellaneous Options.")
+	public static final MiscOptions miscOptions = new MiscOptions();
+
+	@Mod.EventBusSubscriber(modid = MusicEvents.MODID)
+	public static class EventHandler {
+
+		@SubscribeEvent
+		public static void onConfigChanged(ConfigChangedEvent.OnConfigChangedEvent event) {
+			if (event.getModID().equals(MusicEvents.MODID)) {
+				ConfigManager.sync(MusicEvents.MODID, Config.Type.INSTANCE);
+				updateBiomeList();
+				updateBiomeTagList();
+				updateMusicList();
+			}
+		}
+	}
+
+	public static void updateBiomeList() {
+		IForgeRegistry<Biome> biomeRegistry = RegistryManager.ACTIVE.getRegistry(Biome.class);
+		for (Biome biome : biomeRegistry) {
+			String biomeName = biome.getRegistryName().toString();
+			biomeMusicMap.putIfAbsent(biomeName, "");
+		}
+		ConfigManager.sync(MusicEvents.MODID, Config.Type.INSTANCE);
+	}
+
+	public static void updateBiomeTagList() {
+		IForgeRegistry<Biome> biomeRegistry = RegistryManager.ACTIVE.getRegistry(Biome.class);
+
+		Set<String> allTags = biomeRegistry.getValuesCollection().stream()
+				.flatMap(biome -> BiomeDictionary.getTypes(biome).stream())
+				.map(type -> type.getName().toLowerCase())
+				.collect(Collectors.toSet());
+
+		for (String tag : allTags) {
+			biomeTagMusicMap.putIfAbsent(tag, "");
+		}
+
+		ConfigManager.sync(MusicEvents.MODID, Config.Type.INSTANCE);
+	}
+
+
+	public static void updateMusicList() {
+        availableMusicFiles = MusicFileHandler.getAvailableMusicFiles().toArray(new String[0]);
+		ConfigManager.sync(MusicEvents.MODID, Config.Type.INSTANCE);
+	}
+
+	public static class FadeOptions {
+
+		@Config.Name("Polling Rate")
+		@Config.Comment("Polling rate for the music change. Must be above zero. Default: 140 | [INT / TICKS]")
+		public int pollingRate = 140;
+
+		@Config.Name("Biome Music Fade-in")
+		@Config.Comment("Custom Music Fade-in Time. Default: 12500 | [INT / MS]")
+		public int customMusicFadeInTime = 12500;
+
+		@Config.Name("Biome Music Fade-out")
+		@Config.Comment("Custom Music Fade-out Time. Default: 10000 | [INT / MS]")
+		public int customMusicFadeOutTime = 10000;
+
+		@Config.Name("Music Volume Multiplier")
+		@Config.Comment("The Volume Multiplier for custom music.")
+		@Config.SlidingOption
+		@Config.RangeDouble(min = 0.01, max = 5.0)
+		public double musicVolumeMultiplier = 0.8;
+	}
+
+
+	public static class UndergroundOptions {
+		@Config.Name("Cavern Music")
+		@Config.Comment("Enable for music under a certain Y level. Good for cavern music.")
+		public boolean enableUndergroundMusic = false;
+
+		@Config.Name("Cavern Music Start Level")
+		@Config.Comment("The Y level at which cavern music starts.")
+		public int undergroundMusicYLevelStart = 40;
+
+		@Config.Name("Cavern Music Stop Level")
+		@Config.Comment("The Y Level at which Cavern Music Stops. To prevent frequent switching when at the start level, please set this value higher then the start Y level.")
+		public int undergroundMusicYLevelStop = 50;
+
+		@Config.Name("Cavern Music list:")
+		@Config.Comment("The Cavern Music that will play underground. Example: [cavern_music1.ogg,cavern_music2.ogg]")
+		public String CavernMusic = "";
+	}
+
+	public static class MiscOptions {
+
+		@Config.Name("Jukebox Detection range")
+		@Config.Comment("Range in which the mod will detect Jukeboxes and silence the music when in range of Jukebox that is playing.")
+		public int jukeboxRange = 25;
+	}
+}

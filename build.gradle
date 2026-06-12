@@ -56,7 +56,7 @@ minecraft {
     }
 }
 mixin {
-    add sourceSets.main, 'musify.refmap.json'
+    add sourceSets.main, 'musicevents.refmap.json'
 }
 sourceSets.main.resources { srcDir 'src/generated/resources' }
 
@@ -89,13 +89,8 @@ dependencies {
     implementation 'com.googlecode.soundlibs:mp3spi:1.9.5.4'
     implementation 'com.googlecode.soundlibs:vorbisspi:1.0.3.3'
     implementation 'com.googlecode.soundlibs:tritonus-share:0.3.7.4'
-
-    compileOnly files('RecurrentComplex-1.4.8.6.jar')
-    implementation name: 'RecurrentComplex-1.4.8.6'
-    implementation name: 'dldungeonsjbg-1.14.17-MC1.12.2'
-    implementation name: 'IvToolkit-1.3.3-1.12'
-    implementation name: 'RLTweaker-1.12.2-0.5.3'
-    implementation name: 'Roguelike-New'
+    implementation 'curse.maven:ivToolkit-224535:2443253'
+    implementation 'curse.maven:rlTweaker-370420:3846836'
 }
 
 
@@ -154,7 +149,7 @@ jar {
                 "Implementation-Timestamp": new Date().format("yyyy-MM-dd'T'HH:mm:ssZ"),
                 "FMLCorePluginContainsFMLMod": "true",
                 "ForceLoadAsMod": "true", // Comment out for dev environment, uncomment for build
-                'FMLAT': 'biomemusic_at.cfg',  // Point to the access transformer config
+                'FMLAT': 'musicevents_at.cfg',  // Point to the access transformer config
         ])
     }
     duplicatesStrategy = DuplicatesStrategy.EXCLUDE

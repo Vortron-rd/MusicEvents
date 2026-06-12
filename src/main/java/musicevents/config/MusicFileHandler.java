@@ -1,6 +1,6 @@
-package musify.config;
+package musicevents.config;
 
-import musify.Musify;
+import musicevents.MusicEvents;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -14,7 +14,7 @@ public class MusicFileHandler {
     public static List<String> getAvailableMusicFiles() {
         List<String> musicFiles = new ArrayList<>();
 
-        File folder = Musify.musicFolder;
+        File folder = MusicEvents.musicFolder;
 
         if (folder != null && folder.exists() && folder.isDirectory()) {
             File[] files = folder.listFiles((dir, name) -> name.toLowerCase().endsWith(".ogg"));

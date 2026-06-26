@@ -20,6 +20,11 @@ The following rules are applied from bottom to top when selecting the music play
 All the music files referenced in the config should be placed in the /music folder in the Minecraft folder. Currently, only .mp3 and .ogg file types are supported.
 After this, they may be referenced directly such as "music.mp3" or "music.ogg". 
 
+## Creating a playlist
+A playlist typically looks something like this: [music1.mp3,music2.ogg,music3.ogg]
+Files are separated using a comma. You must include the file extension in the name. (.mp3, .ogg)
+MusicEvents will select a random song from the list to play, and when that is done, it will randomly select another song. A song cannot be played twice in a row, unless it is the only file in the playlist.
+
 ## In-Game Config
 Under Settings→Mod-Options→MusicEvents, you should be able to hot-swap values in the config file for easier testing. All the options there are fully described with tool-tips.
 
